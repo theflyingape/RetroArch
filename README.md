@@ -1,2 +1,4 @@
 # RetroArch
-my digital things and content in support of retrogaming from 1976
+my digital things and content in support of retrogaming / [retrocomputing](https://robert.hurst-ri.us/rob/retrocomputing) from 1976
+
+Individual digital content available out of my [Drive folder](https://drive.google.com/drive/folders/1DspvB89066kRyLET83xgrOT3VGT6IpBz?usp=drive_link), which also holds a 256gb boot image into a Debian Bullseye console or desktop with a full RetroArch library set running on a Raspberry Pi 4/400.
