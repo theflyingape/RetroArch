@@ -5,5 +5,5 @@ Individual digital content available out of my [Drive folder](https://drive.goog
 
 ```bash
 $ lsblk -S  # find your target device NAME (SD card, USB stick)
-$ xzcat RA-playlists-pi4.img.xz | sudo dd of=/dev/[SD card] bs=131072 status=progress
+$ xzcat RA-playlists-pi4.img.xz | sudo dd of=/dev/[SD card] bs=4k status=progress sync
 ```
