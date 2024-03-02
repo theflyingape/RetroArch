@@ -1013,11 +1013,12 @@ r|U)
 		audio "Radio Edit Alpha Team.mp3" &
 		sudo apt update &> /dev/null || continue
 		reset
+		git pull
 		sudo apt list --upgradable && sudo apt -y upgrade
 		sudo rm -fv /boot/firmware/.bootloader_revision /boot/firmware/.firmware_revision &> /dev/null
 		sudo rpi-eeprom-update -a
 		out
-		out "${RIGHT}${RIGHT}${LEFT}  Press ${KEY} y ${OFF} to continue with firmware update"
+		out " ${RIGHT}${ON}${RIGHT}${OFF}  Press ${KEY}${RED} y ${OFF} to continue with firmware update"
 		out
 		sudo rpi-update
 	fi
@@ -1321,18 +1322,3 @@ menu
 done
 
 exit
-
-# NOTES
-# Bookworm post ops to get bluetooth service working ... 
-# sudo apt install bluetooth bluez*
-# wget -O /lib/firmware/brcm/BCM4345C5.hcd https://github.com/armbian/firmware/raw/master/brcm/BCM4345C5.hcd
-# wget -O /lib/firmware/brcm/BCM4345C0.hcd https://github.com/armbian/firmware/raw/master/BCM4345C0.hcd
-# rfkill list
-# rfkill unblock bluetooth
-# hciconfig -a
-# sudo hciconfig hci0 up
-# bluetoothctl power on
-# bluetoothctl scan on
-# bluetoothctl list
-# ... and add your adapter here to enable it on KDE Plasma desktop startup:
-# micro ~/.local/bluedevilglobalrc
