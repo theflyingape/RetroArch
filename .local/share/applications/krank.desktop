@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Krank
+Categories=Game;LogicGame;ArcadeGame;
+Keywords=logic;dexterity;stones;mouse;
+Comment=a little casual game
+Comment[ru]=небольшая казуальная игрушка
+Comment[de]=ein kleines Geschicklichkeitsspiel
+Exec=krank -s 1280x1024
+Icon=krank
+Terminal=false
+Type=Application
+StartupNotify=false
+

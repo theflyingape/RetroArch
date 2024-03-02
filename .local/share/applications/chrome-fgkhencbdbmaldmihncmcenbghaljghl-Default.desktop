@@ -1,0 +1,19 @@
+[Desktop Entry]
+Comment[en_US]=the return of Hack & Slash
+Comment=the return of Hack & Slash
+Exec=/usr/bin/chromium-browser --profile-directory=Default --app-id=fgkhencbdbmaldmihncmcenbghaljghl
+GenericName[en_US]=the return of Hack & Slash
+GenericName=the return of Hack & Slash
+Icon=chrome-fgkhencbdbmaldmihncmcenbghaljghl-Default
+MimeType=
+Name[en_US]=Dank Domain
+Name=Dank Domain
+Path=
+StartupNotify=true
+StartupWMClass=crx_fgkhencbdbmaldmihncmcenbghaljghl
+Terminal=false
+TerminalOptions=
+Type=Application
+Version=1.0
+X-KDE-SubstituteUID=false
+X-KDE-Username=

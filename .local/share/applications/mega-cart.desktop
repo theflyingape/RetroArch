@@ -1,0 +1,18 @@
+[Desktop Entry]
+Categories=Application;Game;
+Comment[en_US]=Mega-Cart
+Comment=Mega-Cart
+Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg' -L vice_xvic /retroarch/roms/Commodore/VIC-20.m3u
+GenericName[en_US]=The wonder computer of the 1980s
+GenericName=The wonder computer of the 1980s
+Icon=/usr/share/pixmaps/vic20icon-32x28.xpm
+MimeType=
+Name[en_US]=VIC 20
+Name=VIC 20
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-KDE-SubstituteUID=false
+X-KDE-Username=
