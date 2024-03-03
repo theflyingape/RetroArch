@@ -91,12 +91,13 @@ This table represents the emulation cores installed and referenced within the va
 
 ### Overclocking
 
-These are relatively safe values to bump the CPU + GPU clock up by 10% respectively in `/boot/firmware/config.txt`
+These are relatively safe values to bump the CPU + GPU clock up in `/boot/firmware/config.txt`
 
 ```ini
 [pi4]
 # enables highest gpu settings at the expense of dual displays
 hdmi_enable_4kp60=1
+# overclock +10%
 over_voltage=4
 arm_freq=1980
 gpu_freq=550
@@ -107,6 +108,7 @@ gpu_freq=550
 dtparam=nvme
 dtparam=pciex1_gen=3
 kernel=kernel8.img
+# overclock +15%
 over_voltage=3
 arm_freq=2760
 gpu_freq=920
