@@ -1,4 +1,4 @@
-# 🎮 RetroArch → 🕹️ 🛸 📺
+# ⛔ 🪙 → 🖱️ ⌨️ 🎮 → RetroArch → 🕹️ 🛸 👾 📺
 
 > _My harvesting and personal contributions of digital content in support of retrogaming / [retrocomputing](https://robert.hurst-ri.us/rob/retrocomputing) from **1976**_
 

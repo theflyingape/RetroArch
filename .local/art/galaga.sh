@@ -1,0 +1,16 @@
+# Galaga ship
+out "\e[84C              \e[1;37mah"
+out "\e[84C              \e[37mah"
+out "\e[84C            \e[37mahahah"
+out "\e[84C      \e[0;31mah    \e[1;37mahahah    \e[0;31mah"
+out "\e[84C      \e[0;31mah    \e[1;37mahahah    \e[0;31mah"
+out "\e[84C      \e[1;37mah  ahahahahah  ah"
+out "\e[84C\e[0;31mah    \e[1;37mah\e[0;34mah\e[1;37mahah\e[0;31mah\e[1;37mahah\e[0;34mah\e[1;37mah    \e[0;31mah"
+out "\e[84C\e[0;31mah    \e[34mah\e[1;37mahah\e[0;31mahahah\e[1;37mahah\e[0;34mah    \e[0;31mah"
+out "\e[84C\e[1;37mah  \e[37mahahahah\e[0;31mah\e[1;37mah\e[0;31mah\e[1;37mahahahah  ah"
+out "\e[84C\e[1;37mahahahahahahahahahahahahahahah"
+out "\e[84C\e[1;37mahahahahah\e[0;31mah\e[1;37mahahah\e[0;31mah\e[1;37mahahahahah"
+out "\e[84C\e[1;37mahahah  \e[0;31mahah\e[1;37mahahah\e[0;31mahah\e[1;37m  ahahah"
+out "\e[84C\e[1;37mahah    \e[0;31mahah  \e[1;37mah  \e[0;31mahah    \e[1;37mahah"
+out "\e[84C\e[1;37mah            ah            ah"
+

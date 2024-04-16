@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # console playlist menu written by Robert Hurst
-# 
+#
 sudo lastlog --clear --user $USER
 clear
 shopt -s expand_aliases
@@ -29,7 +29,7 @@ if ! pidof -q fbi ; then
 	touch "${SPLASH}"
 	sudo fbi --noverbose -a -vt 8 "${SPLASH}" &> /dev/null &
 	sleep 1
-	CLICK="Startup/$(( RANDOM % 4 )).wav"
+	CLICK="Startup/$(( RANDOM % 5 )).wav"
 fi
 
 which retroarch 2> /dev/null || export PATH=$HOME/.local/bin:$PATH
@@ -145,7 +145,7 @@ input() {
 				MASTER="$VOLUME"
 				CLICK="Click/0$(( RANDOM % 10 ))2.mp3"
 				click
-				echo "MASTER=\"$MASTER\"" > ~/src/menu/MASTER
+				echo "MASTER=\"$MASTER\"" > $HOME/.local/etc/MASTER
 				info="${DOT}${DOT}[${DIM}${MASTER}${OFF}]${DOT}${DOT}"
 				;;
 			DPAD_RIGHT|RIGHT|VOLUMEUP)
@@ -153,7 +153,7 @@ input() {
 				MASTER="$VOLUME"
 				CLICK="Click/0$(( RANDOM % 10 ))2.mp3"
 				click
-				echo "MASTER=\"$MASTER\"" > ~/src/menu/MASTER
+				echo "MASTER=\"$MASTER\"" > $HOME/.local/etc/MASTER
 				info="${DOT}${DOT}[${DIM}${MASTER}${OFF}]${DOT}${DOT}"
 				;;
 			*)
@@ -170,7 +170,7 @@ input() {
 		status=0
 		break
 	done < <( timeout -s SIGALRM $timer thd --dump --normalize $events 2> /dev/null )
-	[ "$got" = "PAUSE" ] && ~/bin/screenshot.sh
+	[ "$got" = "PAUSE" ] && $HOME/bin/screenshot.sh
 	return $status
 }
 
@@ -237,9 +237,10 @@ bookshelf() {
 }
 
 show() {
-	out -n "\e[m\r"
-	setterm --background white --foreground black --hbcolor bright white --store --clear=rest
-	mt ; stty echo
+	#out -n "\e[m\r"
+	#setterm --background white --foreground black --hbcolor bright white --store --clear=rest
+	#mt ; stty echo
+	reset
 	SHOW=( `ls --file-type $SAT | grep '.*/'` )
 	for show in ${SHOW[@]}; do
 		count=`ls ${SAT}${show}*.mp4 | wc -l`
@@ -266,7 +267,8 @@ show() {
 	pip "${SAT}Trailers/${SHOW%/*}.mp4" 1200
 	anykey 180 || return
 	volume "18%+"
-	nvlc --no-color --no-metadata-network-access --loop --start-paused "${SAT}${SHOW}"
+	#--loop
+	nvlc --no-color --no-metadata-network-access --start-paused "${SAT}${SHOW}"
 	gameover
 }
 
@@ -406,9 +408,8 @@ pip() {
 }
 
 src() {
-	[ -n "$2" ] && folder="$2" || folder=menu
-	rom=`basename "${1%.*}"`
-	script="$HOME/src/${folder}/${rom}.sh"
+	rom=$( basename "${1%.*}" )
+	script="$HOME/.local/${FOLDER}/${rom}.sh"
 	[ -f "$script" ] || return
 	touch "$script"
 	source "$script"
@@ -459,7 +460,13 @@ laserdiscs() {
 	DISCS=( "" 1 2 3 4 5 6 )
 	LABEL=( "" "Astron Belt" "Cliff Hanger" "Dragon's Lair" "Dragon's Lair II: Time Warp" "Space Ace" "Super Don Quixote" )
 	ROM=( "" "astron" "cliff" "dle21" "lair2" "sae" "sdq" )
-	INFO=( "" "You fly through the universe battling alien ships to make your way to fight the main\n${LPAD}Alien Battle Cruiser. Along the way, you fly across alien planets, through tunnels,\t\t\t   ${RPAD}\n${LPAD}through trenches, and get involved in a few astro-dogfights with enemy space fighters.\t\t\t   ${RPAD}" "Cliff is on a mission to save Clarissa from being forced to marry the evil Count Draco.\n${LPAD}The game consists of animated scenes, during which the player has to press direction buttons\t\t   ${RPAD}\n${LPAD}or the sword button in the right moment to trigger the next segment of the movie.\t\t\t\t   ${RPAD}\n${LPAD}The anime video used in the game are scenes from the Lupin III anime movies, mainly scenes\t\t\t   ${RPAD}\n${LPAD}from The Castle of Cagliostro and the Mystery of Mamo animated movies.\t\t\t\t\t   ${RPAD}" "Originally released in the arcades as a laserdisc game, Dragon's Lair is an interactive\n${LPAD}cartoon movie. Players control Dirk the Daring as he struggles his way through a dungeon\t\t\t   ${RPAD}\n${LPAD}to fight Singe, the Dragon, and rescue the beautiful Princess Daphne.\t\t\t\t\t   ${RPAD}\n${LPAD}The game consists of animated scenes, during which the player has to press direction buttons\t\t   ${RPAD}\n${LPAD}or the sword button in the right moment to trigger the next segment of the movie.\t\t\t\t   ${RPAD}" "Princess Daphne has been spirited away to a wrinkle in time by the Evil Wizard Mordroc\n${LPAD}who plans to force her into marriage. Only you, Dirk the Daring, can save her.\t\t\t\t   ${RPAD}\n${LPAD}Transported by a bumbling old time machine, you begin the rescue mission.\t\t\t\t\t   ${RPAD}\n${LPAD}But you must hurry, for once the Casket of Doom has opened, Mordroc will place the\t\t\t\t   ${RPAD}\n${LPAD}Death Ring upon Daphne's finger in marriage and she will be lost forever in the\t\t\t\t   ${RPAD}\n${LPAD}Time Warp!\e[97C   ${RPAD}" "Space Ace was unveiled in October 19${ON}83${OFF}, just four months after the Dragon's Lair game,\n${LPAD}then released in Spring 19${ON}84${OFF}, and like its predecessor featured film-quality\t\t\t\t   ${RPAD}\n${LPAD}animation played back from a laserdisc.\e[68C   ${RPAD}" "The idea for this game comes from the stories about Don Quixote, the legendary Spanish knight.\n${LPAD}In this game, the character looks very young and does not have a mustache. Also, he has a\t\t\t   ${RPAD}\n${LPAD}sword for a weapon and his faithful sidekick Sancho Panza follows him around although\t\t\t   ${RPAD}\n${LPAD}he does nothing (like ${ON}Jon${OFF}) to assist the hero (${ON}Randy${OFF}).\e[53C   ${RPAD}\n${LPAD}An assortment of mythical creatures including demons, dragons, skeletons and so on\t\t\t\t   ${RPAD}\n${LPAD}are encountered throughout the game.\e[71C   ${RPAD}\n${LPAD}The game ends when Don Quixote kills the evil witch and rescues Isabella.\t\t\t\t\t   ${RPAD}")
+	INFO=( "" \
+		"You fly through the universe battling alien ships to make your way to fight the main\n${LPAD}Alien Battle Cruiser. Along the way, you fly across alien planets, through tunnels,\t\t\t   ${RPAD}\n${LPAD}through trenches, and get involved in a few astro-dogfights with enemy space fighters.\t\t\t   ${RPAD}" \
+		"Cliff is on a mission to save Clarissa from being forced to marry the evil Count Draco.\n${LPAD}The game consists of animated scenes, during which the player has to press direction buttons\t\t   ${RPAD}\n${LPAD}or the sword button in the right moment to trigger the next segment of the movie.\t\t\t\t   ${RPAD}\n${LPAD}The anime video used in the game are scenes from the Lupin III anime movies, mainly scenes\t\t\t   ${RPAD}\n${LPAD}from The Castle of Cagliostro and the Mystery of Mamo animated movies.\t\t\t\t\t   ${RPAD}" \
+		"Originally released in the arcades as a laserdisc game, Dragon's Lair is an interactive\n${LPAD}cartoon movie. Players control Dirk the Daring as he struggles his way through a dungeon\t\t\t   ${RPAD}\n${LPAD}to fight Singe, the Dragon, and rescue the beautiful Princess Daphne.\t\t\t\t\t   ${RPAD}\n${LPAD}The game consists of animated scenes, during which the player has to press direction buttons\t\t   ${RPAD}\n${LPAD}or the sword button in the right moment to trigger the next segment of the movie.\t\t\t\t   ${RPAD}" \
+		"Princess Daphne has been spirited away to a wrinkle in time by the Evil Wizard Mordroc\n${LPAD}who plans to force her into marriage. Only you, Dirk the Daring, can save her.\t\t\t\t   ${RPAD}\n${LPAD}Transported by a bumbling old time machine, you begin the rescue mission.\t\t\t\t\t   ${RPAD}\n${LPAD}But you must hurry, for once the Casket of Doom has opened, Mordroc will place the\t\t\t\t   ${RPAD}\n${LPAD}Death Ring upon Daphne's finger in marriage and she will be lost forever in the\t\t\t\t   ${RPAD}\n${LPAD}Time Warp!\e[97C   ${RPAD}" \
+		"Space Ace was unveiled in October 19${ON}83${OFF}, just four months after the Dragon's Lair game,\n${LPAD}then released in Spring 19${ON}84${OFF}, and like its predecessor featured film-quality\t\t\t\t   ${RPAD}\n${LPAD}animation played back from a laserdisc.\e[68C   ${RPAD}" \
+		"The idea for this game comes from the stories about Don Quixote, the legendary Spanish knight.\n${LPAD}In this game, the character looks very young and does not have a mustache. Also, he has a\t\t\t   ${RPAD}\n${LPAD}sword for a weapon and his faithful sidekick Sancho Panza follows him around although\t\t\t   ${RPAD}\n${LPAD}he does nothing (like ${ON}Jon${OFF}) to assist the hero (${ON}Randy${OFF}).\e[53C   ${RPAD}\n${LPAD}An assortment of mythical creatures including demons, dragons, skeletons and so on\t\t\t\t   ${RPAD}\n${LPAD}are encountered throughout the game.\e[71C   ${RPAD}\n${LPAD}The game ends when Don Quixote kills the evil witch and rescues Isabella.\t\t\t\t\t   ${RPAD}")
 	i=0
 	disc=
 
@@ -514,18 +521,287 @@ laserdiscs() {
 	fi
 }
 
-menu() {
+main() {
 	crt
-	frame "${DOT}${DIM}0${OFF}  Big Menu   9,963    ${DOT}${DIM}5${OFF}  Break-Out!         (~2P)    ${DOT}${DIM}a${OFF}  Asteroids       (~2P)    ${DOT}${DIM}A${OFF}  Angband          (1P)"
-	frame "${DOT}${DIM}1${OFF}  Arcade     2,480    ${DOT}${DIM}6${OFF}  Sprite Invaders    (~2P)    ${DOT}${DIM}b${OFF}  Bubble Bobble   (~2P)    ${DOT}${DIM}C${OFF}  Cyberball       (~2P)"
-	frame "${DOT}${DIM}2${OFF}  Computers  2,610    ${DOT}${DIM}7${OFF}  Berzerk MMX         (1P)    ${DOT}${DIM}c${OFF}  Carnival        (~2P)    ${DOT}${DIM}D${OFF}  Defender        (~2P)"
-	frame "${DOT}${DIM}3${OFF}  Consoles   4,284    ${DOT}${DIM}8${OFF}  Omega Fury          (1P)    ${DOT}${DIM}d${OFF}  Mr. Do!         (~2P)    ${DOT}${DIM}G${OFF}  Gauntlet II     (~4P)"
-	frame "${DOT}${DIM}4${OFF}  Handhelds  2,752    ${DOT}${DIM}9${OFF}  Quikman+           (~2P)    ${DOT}${DIM}f${OFF}  Frogger         (~2P)    ${DOT}${DIM}H${OFF}  Hat Trick       (~2P)"
-	frame "${DOT}${DIM}n${OFF}  NetPlay    3,664    ${DOT}${DIM}L${OFF}  Laser Discs           6     ${DOT}${DIM}g${OFF}  Galaga          (~2P)    ${DOT}${DIM}K${OFF}  Karate Champ    (~2P)"
-	frame "                                                        ${DOT}${DIM}j${OFF}  Jumpman         (~4P)    ${DOT}${DIM}Q${OFF}  Q*bert          (~2P)"
-	frame "${DOT}${DIM}p${OFF}  Power off           ${DOT}${DIM}U${OFF}  Upgrade Linux & re-boot     ${DOT}${DIM}m${OFF}  Ms. Pac-Man     (~2P)    ${DOT}${DIM}S${OFF}  Space War        (2P)"
-	frame "${DOT}${DIM}r${OFF}  Re-boot             ${DOT}${DIM}Z${OFF}  Toggle boot to ${ON}${STARTUP}${OFF}    ${DOT}${DIM}s${OFF}  Sea Wolf II     (~2P)    ${DOT}${DIM}T${OFF}  Tempest         (~2P)"
-	frame "                                                        ${DOT}${DIM}t${OFF}  Trog            (~4P)    ${DOT}${DIM}W${OFF}  Wizard          (~6P)"
+	frame "${DOT}${DIM}0${OFF}  Big Menu  10,299    ${DOT}${DIM}5${OFF}  Board & Party         7     ${DOT}${DIM}a${OFF}  Asteroids       (~2P)    ${DOT}${DIM}A${OFF}  Astro Blaster   (~2P)"
+	frame "${DOT}${DIM}1${OFF}  Arcade     2,480    ${DOT}${DIM}6${OFF}  Pinball Sims          1     ${DOT}${DIM}b${OFF}  Bubble Bobble   (~2P)    ${DOT}${DIM}C${OFF}  Cyberball       (~2P)"
+	frame "${DOT}${DIM}2${OFF}  Computers  2,946    ${DOT}${DIM}7${OFF}  RTS & Turn-based      5     ${DOT}${DIM}c${OFF}  Carnival        (~2P)    ${DOT}${DIM}D${OFF}  Defender        (~2P)"
+	frame "${DOT}${DIM}3${OFF}  Consoles   4,284    ${DOT}${DIM}8${OFF}  Niche Controls       25     ${DOT}${DIM}d${OFF}  Mr. Do!         (~2P)    ${DOT}${DIM}G${OFF}  GORF            (~2P)"
+	frame "${DOT}${DIM}4${OFF}  Handhelds  2,752    ${DOT}${DIM}9${OFF}  Homebrews             5     ${DOT}${DIM}f${OFF}  Frogger         (~2P)    ${DOT}${DIM}H${OFF}  Hat Trick       (~2P)"
+	frame "${DOT}${DIM}n${OFF}  Netplay    3,664    ${DOT}${DIM}L${OFF}  Laserdiscs            6     ${DOT}${DIM}g${OFF}  Galaga          (~2P)    ${DOT}${DIM}K${OFF}  Karate Champ    (~2P)"
+	frame "                                                        ${DOT}${DIM}j${OFF}  Joust           (~2P)    ${DOT}${DIM}Q${OFF}  Q*bert          (~2P)"
+	frame "${DOT}${DIM}p${OFF}  Power off           ${DOT}${DIM}U${OFF}  Upgrade Linux & re-boot     ${DOT}${DIM}m${OFF}  Ms. Pac-Man     (~2P)    ${DOT}${DIM}S${OFF}  Space Duel      (~2P)"
+	frame "${DOT}${DIM}r${OFF}  Re-boot             ${DOT}${DIM}Z${OFF}  Toggle boot to ${ON}${STARTUP}${OFF}    ${DOT}${DIM}s${OFF}  Spiders         (~2P)    ${DOT}${DIM}T${OFF}  Time Pilot      (~2P)"
+	frame "                                                        ${DOT}${DIM}t${OFF}  Tapper          (~2P)    ${DOT}${DIM}W${OFF}  Wizard of Wor   (~2P)"
+}
+
+party() {
+	crt
+	frame "${DOT}${DIM}g${OFF}  Gauntlet   (~4P)    ${DOT}${DIM}G${OFF}  Gauntlet II   (~4P)"
+	frame "${DOT}${DIM}j${OFF}  Jumpman    (~4P)    ${DOT}${DIM}R${OFF}  Rampage       (~3P)"
+	frame "${DOT}${DIM}t${OFF}  Trog       (~4P)    ${DOT}${DIM}T${OFF}  Tecmo Bowl    (~4P)"
+	frame "                        ${DOT}${DIM}W${OFF}  Wizard        (~6P)"
+	frame
+	n=1
+
+	FOLDER=party
+	CHOICE=( "" "g" "j" "t" "G" "R" "T" "W" )
+	MENU=( "" "Gauntlet" "Jumpman" "Trog" "Gauntlet II" "Rampage" "Tecmo Bowl" "Wizard" )
+
+	frame 
+	frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
+	prompt "Party ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
+
+	dualsense
+	volume "$MASTER"
+	[ "$choice" = "attract" ] && choice=${CHOICE[$((RANDOM%${#MENU[@]}+1))]}
+
+	case $choice in
+	g)
+		src gauntlet
+		;;
+	j)
+		src jumpman
+		;;
+	t)
+		src trog
+		;;
+	G)
+		src gaunt2
+		;;
+	T)
+		src tbowl
+		;;
+	W)
+		src wizard
+		;;
+	esac
+	n=7
+}
+
+pinball() {
+	crt
+	frame "${DOT}${DIM}f${OFF}  Fantasies  (~8P)"
+	frame 
+	n=1
+
+	FOLDER=pinball
+	CHOICE=( "" "f" )
+	MENU=( "" "Pinball Fantasies" )
+
+	frame 
+	frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
+	prompt "Pinball ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
+
+	dualsense
+	volume "$MASTER"
+	[ "$choice" = "attract" ] && choice=${CHOICE[$((RANDOM%${#MENU[@]}+1))]}
+
+	case $choice in
+	f)
+		src pballf
+		;;
+	esac
+	n=8
+}
+
+strategy() {
+	crt
+	frame "${DOT}${DIM}a${OFF}  Angband             ${DOT}${DIM}E${OFF}  Empire"
+	frame "${DOT}${DIM}d${OFF}  Dank Domain         ${DOT}${DIM}S${OFF}  Super Trek"
+	frame "${DOT}${DIM}w${OFF}  Warcraft            ${DOT}${DIM}W${OFF}  Warcraft II"
+	frame 
+	n=1
+
+	FOLDER=strategy
+	CHOICE=( "" "a" "d" "w" "E" "S" "W" )
+	MENU=( "" "Angband" "Dank Domain" "Warcraft" "Empire" "Super Trek" "Warcraft II" )
+
+	frame 
+	frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
+	prompt "Strategy ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
+
+	dualsense
+	volume "$MASTER"
+	[ "$choice" = "attract" ] && choice=${CHOICE[$((RANDOM%${#MENU[@]}+1))]}
+
+	case $choice in
+	a)
+		src angband
+		;;
+	d)
+		src vt240
+		;;
+	w)
+		src warcraft
+		;;
+	E)
+		src empire
+		;;
+	S)
+		src supertrek
+		;;
+	W)
+		src warcraft2
+		;;
+	esac
+	n=9
+}
+
+niche() {
+	crt
+	frame "${ON}    Advanced                Dial/Spinner              Mouse/Trackball                    Lightgun"
+	frame "${DOT}${DIM}1${OFF}  Club Kart 2K3       ${DOT}${DIM}a${OFF}  Kick         (~2P)    ${DOT}${DIM}A${OFF}  Centipede             (~2P)    ${DOT}${DIM}X${OFF}  Crossbow         (1P)"
+	frame "${DOT}${DIM}2${OFF}  Lunar Lander        ${DOT}${DIM}b${OFF}  Megaball      (1P)    ${DOT}${DIM}B${OFF}  City Defense          (~2P)    ${DOT}${DIM}Y${OFF}  Duck Hunt       (~2P)"
+	frame "${DOT}${DIM}3${OFF}  Night Driver        ${DOT}${DIM}c${OFF}  Omega Race   (~2P)    ${DOT}${DIM}C${OFF}  Coors Light Bowling   (~2P)"
+	frame "${DOT}${DIM}4${OFF}  Pole Position       ${DOT}${DIM}d${OFF}  Seawolf       (1P)    ${DOT}${DIM}D${OFF}  Empire Strikes Back   (~2P)"
+	frame "${DOT}${DIM}5${OFF}  Spy Hunter          ${DOT}${DIM}e${OFF}  Seawolf II   (~2P)    ${DOT}${DIM}E${OFF}  Gridiron!             (~2P)"
+	frame "${DOT}${DIM}6${OFF}  Star Trek           ${DOT}${DIM}f${OFF}  Tempest      (~2P)    ${DOT}${DIM}F${OFF}  Mini Golf             (~2P)"
+	frame "${DOT}${DIM}7${OFF}  Toobin'                                       ${DOT}${DIM}G${OFF}  Missile Command       (~2P)"
+	frame "${DOT}${DIM}8${OFF}  Tron                                          ${DOT}${DIM}H${OFF}  Star Wars             (~2P)"
+	frame "                                                  ${DOT}${DIM}I${OFF}  Tail Gunner            (1P)"
+	frame 
+	n=1
+
+	FOLDER=niche
+	CHOICE=( "" "1" "2" "3" "4" "5" "6" "7" "8" \
+			"a" "b" "c" "d" "e" "f" \
+			"A" "B" "C" "D" "E" "F" "G" "H" "I" \
+			"X" "Y" )
+	MENU=( "" "Club Kart 2K3" "Lunar Lander" "Night Driver" "Pole Position" "Spy Hunter" "Star Trek" "Toobin'" \
+			"Tron" "Kick" "Megaball" "Omega Race" "Seawolf" "Seawolf II" "Tempest" \
+			"Centipede" "City Defense" "Coors Light Bowling" "Empire Strikes Back" "Gridiron!" "Mini Golf" \
+			"Missile Command" "Star Wars" "Tail Gunner" \
+			"Crossbow" "Duck Hunt" )
+
+	frame 
+	frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
+	prompt "Niche ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
+
+	dualsense
+	volume "$MASTER"
+	[ "$choice" = "attract" ] && choice=${CHOICE[$((RANDOM%${#MENU[@]}+1))]}
+
+	case $choice in
+	1)
+		src clubk2k3
+		;;
+	2)
+		src llander
+		;;
+	3)
+		src nitedrvr
+		;;
+	4)
+		src polepos
+		;;
+	5)
+		src spyhunt
+		;;
+	6)
+		src startrek
+		;;
+	7)
+		src toobin
+		;;
+	8)
+		src tron
+		;;
+	a)
+		src kick
+		;;
+	b)
+		src megaball
+		;;
+	c)
+		src omegrace
+		;;
+	d)
+		src seawolf
+		;;
+	e)
+		src seawolf2
+		;;
+	f)
+		src tempest
+		;;
+	A)
+		src centiped
+		;;
+	B)
+		src citydef
+		;;
+	C)
+		src clbowl
+		;;
+	D)
+		src esb
+		;;
+	E)
+		src gridiron
+		;;
+	F)
+		src minigolf
+		;;
+	G)
+		src missile
+		;;
+	H)
+		src starwars
+		;;
+	I)
+		src tailg
+		;;
+	X)
+		src crossbow
+		;;
+	Y)
+		src duckhunt
+		;;
+	esac
+	n=10
+}
+
+homebrew() {
+	crt
+	frame "${DOT}${DIM}1${OFF}  Berzerk MMX        (1P)"
+	frame "${DOT}${DIM}2${OFF}  Break-out!        (~2P)"
+	frame "${DOT}${DIM}3${OFF}  Omega Fury         (1P)"
+	frame "${DOT}${DIM}4${OFF}  Quikman+          (~2P)"
+	frame "${DOT}${DIM}5${OFF}  Sprite Invaders   (~2P)"
+	frame 
+	n=1
+
+	FOLDER=homebrew
+	CHOICE=( "" "1" "2" "3" "4" "5" )
+	MENU=( "" "Berzerk MMX" "Break-out!" "Omega Fury" "Quikman+" "Sprite Invaders" )
+
+	frame 
+	frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
+	prompt "Homebrew ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
+
+	dualsense
+	volume "$MASTER"
+	[ "$choice" = "attract" ] && choice=${CHOICE[$((RANDOM%${#MENU[@]}+1))]}
+
+	case $choice in
+	1)
+		src berzerk-mmx
+		;;
+	2)
+		src break-out
+		;;
+	3)
+		src omega-fury
+		;;
+	4)
+		src quikman+
+		;;
+	5)
+		src vic-sss
+		;;
+	esac
+	n=11
 }
 
 mt() {
@@ -554,69 +830,149 @@ prompt() {
 		;;
 	DELETE)
 		frame "\e[uInstructional Video${OFF}"
-		export ${val}="VIDEO"
+		frame "An overview on how to use these Playlists & Desktop."
+		frame "Mouse & Keyboard controls are in effect."
+		frame 
+		frame "Press \e[A${KEY} PrtScn \e[B\e[8D${RED} SysRq  ${OFF} off menu for quick reference guide."
+		if anykey ; then
+			volume "12%+"
+			ffplay -autoexit -loop 1 "$HOME/Bookshelf/HELP.mp4" &> /dev/null
+		fi
 		;;
 	ESC)
-		frame "\e[ustarting ${ON}KDE Plasma Display${OFF}"
 		export ${val}="ESC"
 		;;
 	F1)
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} VIC-20 (19${ON}81${OFF}-${ON}85${OFF})"
-		export ${val}="VIC20"
+		pip "$YT/Preview/vic20.mp4" 896
+		floppy "VIC20 - Friendly Guide.pdf" && qstart -L vice_xvic
 		;;
 	F2)
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} 16 (19${ON}84${OFF}-${ON}85${OFF})"
-		export ${val}="C16"
+		pip "$YT/Preview/c16.mp4" 896
+		floppy && qstart -L vice_xplus4
 		;;
 	F3)
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} 128 (19${ON}85${OFF}-${ON}89${OFF})"
-		export ${val}="C128"
+		pip "$YT/Preview/c128.mp4" 896
+		floppy "C128 - System Guide.pdf" && qstart -L vice_x128 "$RA/roms/Commodore/C128.m3u"
 		;;
 	F4)
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} 128D (19${ON}86${OFF}-${ON}89${OFF})"
-		export ${val}="C128D"
+		pip "$YT/Preview/c128d.mp4" 1084
+		floppy "C128D - System Guide.pdf" && qstart -L vice_x128 "$RA/roms/Commodore/C128-VDC.m3u"
 		;;
 	F5)
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} Amiga 2000 (19${ON}87${OFF}-${ON}92${OFF})"
-		export ${val}="A2000"
+		pip "$YT/Preview/a2000.mp4" 896
+		floppy 60 && qstart -L puae "$RA/roms/Commodore/A500 (MD).m3u"
 		;;
 	F6)
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} Amiga 3000T (19${ON}90${OFF}-${ON}92${OFF})"
-		export ${val}="A3000T"
+		pip "$YT/Preview/a3000.mp4" 896
+		floppy && qstart -L puae "$RA/roms/Commodore/A3030.m3u"
 		;;
 	F7)
 		frame "\e[uWireless settings"
-		export ${val}="F7"
+		frame
+		reset
+		iwconfig wlan0 | head -6
+		ip -f inet addr list dev wlan0 | head -2
+		out "Inspect \e[1m/etc/wpa_supplicant/wpa_supplicant.conf\e[m for any SSID(s):"
+		grep -e ssid -e psk /etc/wpa_supplicant/wpa_supplicant.conf
+		anykey
+		gameover
 		;;
 	F8)
 		frame "\e[uGame controllers"
-		export ${val}="F8"
+		frame
+		reset
+		neofetch --ascii_distro macos
+		out "List of any \e[1;36mUSB${OFF} devices connected:"
+		lsusb | grep -iv ' hub' # | grep -iv ' keyboard'
+		out
+		out "List of any \e[1;34mBluetooth${OFF} devices connected:"
+		bluetoothctl devices Connected
+		if [ ${#PS5[@]} -gt 0 ]; then
+			RGB=( "16 96 192" "192 96 16" "96 192 16" "96 192 64" "192 16 96" "96 16 192" )
+			out "[${DIM}P#${OFF}]${DIM}  PS5 Controller ID -  %  life${OFF}"
+			for j in `seq ${#PS5[@]}`; do
+				let i=j-1
+				out -n "[${ON}P$j${OFF}]  ${PS5[$i]} - ${DIM}"
+				dualsensectl -d ${PS5[$i]} lightbar ${RGB[$i]} 160
+				dualsensectl -d ${PS5[$i]} player-leds $j
+				dualsensectl -d ${PS5[$i]} battery
+			done
+		fi
+		out
+		anykey
+		gameover
 		;;
 	F9)
-		count=`ls ~/src/menu/[a-z]*.sh | wc -l`
-		frame "\e[uquick-pick from my $count shortcuts"
-		export ${val}="F9"
+		FOLDER=main
+		count=`ls $HOME/.local/${FOLDER}/*.sh | wc -l`
+		frame "\e[uquick-pick from my $FOLDER $count shortcuts"
+		reset
+		audio "pick.mp3" &
+		cd $HOME/.local/$FOLDER
+		ls -1 *.sh | sed 's/\.sh$//g' | awk '{ printf("     %-15s",$1) }'
+		cd - &> /dev/null
+		out
+		setterm --background cyan --foreground black --hbcolor bright white --store --clear=rest
+		frame "You pick: ${DIM}\e[s" 1
+		read -t 64 pick && killall -qw ffplay &> /dev/null
+		frame "\r\e[A\e[11C${DIM}\e[s" 1
+		pick="${pick%.*}"
+		src "${pick}"
+		gameover
 		;;
 	F10)
-		export ${val}="F10"
+		frame "\e[uplay next cartoon"
+		frame "" 2
+		frame "Use ${KEY} A ${OFF} ${KEY} Z ${OFF} ${KEY} M ${OFF} for Volume Up/Down/Mute"
+		frame "Press ${KEY} Q ${OFF} anytime to quit"
+		if anykey ; then
+			volume "18%+"
+			FILE="${SAT}LooneyTunes/`ls -t ${SAT}LooneyTunes | tail -1`"
+			frame "\e[uplay `basename "${FILE%.*}"`"
+			touch "${FILE}"
+			nvlc "${FILE}"
+			gameover
+		fi
 		;;
 	F11)
-		export ${val}="F11"
+		reset
+		fbtest
+		sleep 2
+		btop
+		gameover
 		;;
 	F12)
 		frame "\e[u" 1
 		frame "\e[11C${DIM}JOSHUA"
-		export ${val}="WOPR"
+		frame "Can you explain the removal of your user account on June 23, 19${ON}73${OFF}?"
+		reset
+		exit
 		;;
 	MODE)
-		export ${val}="Pi"
+		out "${KEY}${RED} Pi ${OFF} ${RIGHT}${ON} search ${OFF}cloud${ON} for a manual off my Bookshelf:"
+		bookshelf
+		frame 
 		;;
 	*LOCK)
 		out "\q"
-		export ${val}="KEYLOCK"
+		frame "\e[uplay Saturday TV or Cinema matinee ${PAD}"
+		frame "" 2
+		show
+		frame
 		;;
 	SYSRQ)
-		export ${val}="HELP"
+		frame "\e[uHELP"
+		frame 
+		frame "Press \e[A${KEY} Delete \e[B\e[8D${RED} Ins    ${OFF} off menu for Instructional Video."
+		rsync -a Bookshelf/*.pdf Documents/ &> /dev/null
+		view "$HOME/Documents/HELP.pdf"
+		frame
 		;;
 	?)
 		export ${val}=${sym:(-1)}
@@ -825,7 +1181,7 @@ out "\x0f\e[3C$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$
 
 # fetch next ANSI art
 out -n '\n\e[s\e[H\x0e'
-ART=`ls -t $HOME/src/menu/*.art | tail -1`
+ART=`ls -t $HOME/.local/art/*.sh | tail -1`
 source "${ART}"
 touch "${ART}"
 out -n "\x0f\e[u"
@@ -833,7 +1189,7 @@ out -n "\x0f\e[u"
 systemctl is-enabled sddm > /dev/null \
  && STARTUP="Playlists" \
  || STARTUP="Desktop  "
-menu
+main
 
 #pidof -q sddm && sudo chvt 2 || sudo chvt 1
 sudo chvt 1
@@ -851,13 +1207,19 @@ NETWORK=`curl --connect-timeout 3.14 ifconfig.me 2> /dev/null || curl --connect-
 PS5=
 dualsense
 
-source ~/src/menu/MASTER
+source $HOME/.local/etc/MASTER
 volume "$MASTER"
 
 while [ true ]; do
 
-CHOICE=( "" "R" 0 1 2 3 4 "n" "p" "r" "ESC" "F10" "KEYLOCK" "Pi" "HELP" )
-MENU=( "" "Rob's quick-pick" "Party time! `driver $RA/big`" "Arcade emporium `driver $RA/myarcade`" "Computer craze `driver $RA/computers`" "Console mania `driver $RA/consoles`" "Handheld hero `driver $RA/handhelds`" "NetPlay friends (~3P remote) `driver $RA/netplay`" "Power off" "Re-boot" "KDE Plasma desktop" "next cartoon" "Saturday TV or cinema matinee" "Bookshelf" "Read me!" )
+FOLDER=main
+CHOICE=( "" "R" 0 1 2 3 4 5 6 7 8 9 "L" "n" "p" "r" "ESC" "F10" "KEYLOCK" "Pi" "HELP" )
+MENU=( "" "Rob's quick-pick" "BIG `driver $RA/big`" "Arcade emporium `driver $RA/myarcade`" \
+	"Computer craze `driver $RA/computers`" "Console mania `driver $RA/consoles`" \
+	"Handheld hero `driver $RA/handhelds`" "Board & Party games" "Pinball wizard" \
+	"Get Ready" "Plug it in" "Homebrew magic" "Interactive movies" \
+	"Netplay friends (~3P remote) `driver $RA/netplay`" "Power off" "Re-boot" "KDE Plasma desktop" \
+	"next cartoon" "Saturday TV or cinema matinee" "Bookshelf manuals" "Read me!" )
 
 frame 
 frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
@@ -905,19 +1267,40 @@ case $choice in
 	gameover
 	;;
 5)
-	src 5
+	out "Party time!"
+	party
 	;;
 6)
-	src 6
+	out "Pinball wizard"
+	pinball
 	;;
 7)
-	src 7
+	out "Strategy games"
+	strategy
 	;;
 8)
-	src 8
+	out "Time to shoot?"
+	click wait
+	frame "Calibrate a lightgun? \e[s" 1
+	input 6
+	while [ "$got" = "y" ]; do
+		cd $HOME/src/Lightgun/Application > /dev/null
+		timeout -s SIGALRM 100 mono LightgunMono.exe sdl 30
+		cd - > /dev/null
+		frame "Retry lightgun calibration? \e[s" 1
+		input 6
+	done
+#	cd $HOME/src/Lightgun/Application > /dev/null
+#	mono-service LightgunMono.exe
+#	cd - > /dev/null
+#	play --appendconfig="$PLAY|$RA/lightgun.cfg"
+#	pkill mono
+#	rm -f /tmp/LightgunMono*
+	niche
 	;;
 9)
-	src 9
+	out "a homebrew is a new game made for an old system"
+	homebrew
 	;;
 a)
 	src asteroid
@@ -947,7 +1330,7 @@ i)
 	src invaders
 	;;
 j)
-	src jumpman
+	src joust
 	;;
 k)
 	src kick
@@ -982,11 +1365,11 @@ n)
 	fi
 	;;
 o)
-	src spiders
+	src omega-fury
 	;;
 p)
 	out "powering off"
-	click
+	click wait
 	for i in `seq ${#PS5[@]}`; do
 		declare -i j=i-1
 		dualsensectl -d ${PS5[$j]} lightbar 255 0 0
@@ -1003,7 +1386,7 @@ p)
 	sudo poweroff
 	;;
 q)
-	src gorf
+	src qix
 	;;
 r|U)
 	if [ "$choice" = "U" ]; then
@@ -1017,10 +1400,11 @@ r|U)
 		sudo apt list --upgradable && sudo apt -y upgrade
 		sudo rm -fv /boot/firmware/.bootloader_revision /boot/firmware/.firmware_revision &> /dev/null
 		sudo rpi-eeprom-update -a
-		out
-		out " ${RIGHT}${ON}${RIGHT}${OFF}  Press ${KEY}${RED} y ${OFF} to continue with firmware update"
-		out
-		sudo rpi-update
+		#RPi engineering has finally caught up releases with 6.6 tree
+		#out
+		#out " ${RIGHT}${ON}${RIGHT}${OFF}  Press ${KEY}${RED} y ${OFF} to continue with firmware update"
+		#out
+		#sudo rpi-update
 	fi
 	out "reboot"
 	click
@@ -1029,10 +1413,10 @@ r|U)
 	sudo reboot
 	;;
 s)
-	src seawolf2
+	src spiders
 	;;
 t)
-	src trog
+	src tapper
 	;;
 u)
 	src seawolf
@@ -1057,7 +1441,7 @@ z)
 	src mean18
 	;;
 A)
-	src angband
+	src astrob
 	;;
 B)
 	src blktiger
@@ -1069,13 +1453,13 @@ D)
 	src defender
 	;;
 E)
-	src esb
+	src xtrainns
 	;;
 F)
 	src gridiron
 	;;
 G)
-	src gaunt2
+	src gorf
 	;;
 H)
 	src hattrick
@@ -1090,7 +1474,7 @@ K)
 	src kchampvs
 	;;
 L)
-	out "play Laser Disc by DAPHNE"
+	out "play a Laserdisc by DAPHNE"
 	laserdiscs
 	;;
 M)
@@ -1109,20 +1493,20 @@ Q)
 	src qbert
 	;;
 R)
-	GAME=`ls -t $HOME/src/menu/*.sh | tail -1`
+	GAME=`ls -t $HOME/.local/main/*.sh | tail -1`
 	src "${GAME}"
 	;;
 S)
-	src spacewar
+	src spacduel
 	;;
 T)
-	src tempest
+	src timeplt
 	;;
 V)
 	src vsyard-2p
 	;;
 W)
-	src wizard
+	src wow
 	;;
 X)
 	src megaball
@@ -1169,7 +1553,7 @@ attract)
 		WHAT=`echo ${ARGS} | awk -F/ '{print $4}'`
 		[[ "${WHAT}" =~ "MAME" ]] && WHAT="the Arcade"
 		volume "3%-"
-		FILE=$( basename "`echo ${ARGS} | awk -F'"' '{print $2}'`" )
+		FILE=$( basename "`echo ${ARGS} | awk -F'\x22' '{print $2}'`" )
 	       	frame "\e[uplay ${WHAT}:${OFF} ${FILE%.*}"
 		echo ${ARGS} | xargs -t timeout -s SIGTERM 31 retroarch --config=$RT/retroarch.cfg --appendconfig="$PLAY|$RA/attract.cfg" --set-shader="$RA/shaders/shaders_slang/film/technicolor.slangp" &> /dev/null
 		unset 'CART[(-1)]'
@@ -1179,136 +1563,9 @@ attract)
 	[ -z "$NETWORK" ] && NETWORK=`curl --connect-timeout 3.14 ifconfig.me 2> /dev/null || curl --connect-timeout 3.14 ipecho.net/plain 2> /dev/null`
 	;;
 ESC)
+	frame "\e[ustarting ${ON}KDE Plasma Display${OFF}"
 	sudo systemctl start sddm
 	nofocus
-	;;
-Pi)
-	out "${KEY}${RED} Pi ${OFF} ${RIGHT}${ON} search ${OFF}cloud${ON} for a manual off my Bookshelf:"
-	bookshelf
-	frame 
-	;;
-VIC20)
-	pip "$YT/Preview/vic20.mp4" 896
-	floppy "VIC20 - Friendly Guide.pdf" && qstart -L vice_xvic
-	;;
-C16)
-	pip "$YT/Preview/c16.mp4" 896
-	floppy && qstart -L vice_xplus4
-	;;
-C128)
-	pip "$YT/Preview/c128.mp4" 896
-	floppy "C128 - System Guide.pdf" && qstart -L vice_x128 "$RA/roms/Commodore/C128.m3u"
-	;;
-C128D)
-	pip "$YT/Preview/c128d.mp4" 1084
-	floppy "C128D - System Guide.pdf" && qstart -L vice_x128 "$RA/roms/Commodore/C128-VDC.m3u"
-	;;
-A2000)
-	pip "$YT/Preview/a2000.mp4" 896
-	floppy 60 && qstart -L puae "$RA/roms/Commodore/A500 (MD).m3u"
-	;;
-A3000T)
-	pip "$YT/Preview/a3000.mp4" 896
-	floppy && qstart -L puae "$RA/roms/Commodore/A3030.m3u"
-	;;
-F7)
-	frame
-	reset
-	iwconfig wlan0 | head -6
-	ip -f inet addr list dev wlan0 | head -2
-	out "Inspect \e[1m/etc/wpa_supplicant/wpa_supplicant.conf\e[m for any SSID(s):"
-	grep -e ssid -e psk /etc/wpa_supplicant/wpa_supplicant.conf
-	anykey
-	gameover
-	;;
-F8)
-	frame
-	reset
-	neofetch --ascii_distro macos
-	out "List of any \e[1;36mUSB${OFF} devices connected:"
-	lsusb | grep -iv ' hub' # | grep -iv ' keyboard'
-	out
-	out "List of any \e[1;34mBluetooth${OFF} devices connected:"
-	bluetoothctl devices Connected
-	if [ ${#PS5[@]} -gt 0 ]; then
-		RGB=( "16 96 192" "192 96 16" "96 192 16" "96 192 64" "192 16 96" "96 16 192" )
-		out "[${DIM}P#${OFF}]${DIM}  PS5 Controller ID -  %  life${OFF}"
-		for j in `seq ${#PS5[@]}`; do
-			let i=j-1
-			out -n "[${ON}P$j${OFF}]  ${PS5[$i]} - ${DIM}"
-			dualsensectl -d ${PS5[$i]} lightbar ${RGB[$i]} 160
-			dualsensectl -d ${PS5[$i]} player-leds $j
-			dualsensectl -d ${PS5[$i]} battery
-		done
-	fi
-	out
-	anykey
-	gameover
-	;;
-F9)
-	reset
-	audio "pick.mp3" &
-	cd $HOME/src/menu
-	ls -1 [a-z]*.sh | sed 's/\.sh$//g' | awk '{ printf("     %-15s",$1) }'
-	cd - &> /dev/null
-	out
-	setterm --background cyan --foreground black --hbcolor bright white --store --clear=rest
-	frame "Pick: ${DIM}\e[s" 1
-	read -t 64 pick && killall -qw ffplay &> /dev/null
-	frame "\r\e[A\e[11C${DIM}\e[s" 1
-	pick="$HOME/src/menu/${pick%.*}"
-	src $pick
-	gameover
-	;;
-F10)
-	frame "\e[uplay next cartoon"
-	frame "" 2
-	frame "Use ${KEY} A ${OFF} ${KEY} Z ${OFF} ${KEY} M ${OFF} for Volume Up/Down/Mute"
-	frame "Press ${KEY} Q ${OFF} anytime to quit"
-	if anykey ; then
-		volume "18%+"
-		FILE="${SAT}LooneyTunes/`ls -t ${SAT}LooneyTunes | tail -1`"
-		frame "\e[uplay `basename "${FILE%.*}"`"
-		touch "${FILE}"
-		nvlc "${FILE}"
-		gameover
-	fi
-	;;
-F11)
-	reset
-	fbtest
-	sleep 2
-	btop
-	gameover
-	;;
-KEYLOCK)
-	frame "\e[uplay Saturday TV or Cinema matinee ${PAD}"
-	frame "" 2
-	show
-	frame
-	;;
-HELP)
-	frame "\e[uHELP"
-	frame 
-	frame "Press \e[A${KEY} Delete \e[B\e[8D${RED} Ins    ${OFF} off menu for Instructional Video."
-	rsync -a Bookshelf/HELP.pdf Documents/ &> /dev/null
-	view "$HOME/Documents/HELP.pdf"
-	frame
-	;;
-VIDEO)
-	frame "An overview on how to use these Playlists & Desktop."
-	frame "Mouse & Keyboard controls are in effect."
-	frame 
-	frame "Press \e[A${KEY} PrtScn \e[B\e[8D${RED} SysRq  ${OFF} off menu for quick reference guide."
-	if anykey ; then
-		volume "12%+"
-		ffplay -autoexit -loop 1 "$HOME/Bookshelf/HELP.mp4" &> /dev/null
-	fi
-	;;
-WOPR)
-        frame "Can you explain the removal of your user account on June 23, 19${ON}73${OFF}?"
-	reset
-	break
 	;;
 *)
 	out -n "${ON}?${OFF}?${DIM}?"
@@ -1317,7 +1574,7 @@ WOPR)
 	;;
 esac
 
-menu
+main
 
 done
 

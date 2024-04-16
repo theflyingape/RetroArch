@@ -158,8 +158,8 @@ if [ "$yn" = "y" ]; then
 	cd mame
 	git pull
 
-	time make -j4 -f Makefile.libretro
-	cp -v mame_libretro.so /retroarch/cores/
+	make clean
+	time make -j4 -f Makefile.libretro && cp -v mame_libretro.so /retroarch/cores/
 	cd -
 fi
 
@@ -213,7 +213,23 @@ if [ "$yn" = "y" ]; then
 fi
 
 
-ls -lh /retroarch/cores/ppsspp_rearmed_libretro.so
+ls -lh /retroarch/cores/picodrive_libretro.so
+echo -n "Rebuild PicoDrive core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d picodrive ] || git clone https://github.com/libretro/picodrive
+	cd picodrive
+	git pull
+
+	./configure
+	time make -j4 -f Makefile.libretro
+	cp -v picodrive_libretro.so /retroarch/cores/
+	cd -
+fi
+
+
+ls -lh /retroarch/cores/ppsspp_libretro.so
 echo -n "Rebuild PPSSPP core only out of libretro-super? "
 read yn
 
@@ -294,7 +310,7 @@ if [ "$yn" = "y" ]; then
 fi
 
 
-echo -n "Rebuild cores from Super project (> 20 hours)? "
+echo -n "Rebuild cores from Super project (Pi5: 6+ or Pi4: 20+ hours)? "
 read yn
 
 if [ "$yn" = "y" ]; then

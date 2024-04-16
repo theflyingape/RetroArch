@@ -1,0 +1,18 @@
+[Desktop Entry]
+Categories=Application;Game;
+Comment[en_US]=Megacart-PD
+Comment=Megacart-PD
+Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg' -L vice_x64sc /retroarch/roms/homebrews/C64/C64.m3u
+GenericName[en_US]=Built for the masses, not the classes
+GenericName=Built for the masses, not the classes
+Icon=/usr/share/pixmaps/c64icon-32x28.xpm
+MimeType=
+Name[en_US]=C64
+Name=C64
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-KDE-SubstituteUID=false
+X-KDE-Username=
