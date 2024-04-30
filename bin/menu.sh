@@ -113,7 +113,7 @@ input() {
 		[[ $got =~ .*SHIFT$ ]] && continue
 		if [[ $got =~ HAT0X ]]; then
 			[ $sel -eq 1 ] && got="RIGHT" || got="LEFT"
-		elif [[ $got =~ HAT0Y ]]; then
+		elif [[ $got =~ HAT0Y ]]; then 
 			[ $sel -eq 1 ] && got="DOWN" || got="UP"
 		elif [ "$got" = "WHEEL" ]; then
 			[ $sel -eq 1 ] && got="UP" || got="DOWN"
@@ -122,12 +122,18 @@ input() {
 			continue
 		fi
 		if [ $got = "ESC" -o $got = "F12" -o $got = "TL" -o $got = "WEST" ]; then
-			out "${OFF}"
+			out -n "${OFF}"
+			let status=${main}-1
 			break
 		fi
-		[ $got = "LEFTMETA" ] && got="MODE"
+		[ $got = "LEFTMETA" ] && got="Pi"
 		[[ ${#got} -eq 1 && $got =~ ^[A-Z]$ ]] && got=`echo ${got:(-1)} | tr [:upper:] [:lower:]`
-		[[ $got =~ .*SHIFT[+]KEY_? ]] && got=${got:(-1)}
+		if [[ $got =~ .*SHIFT[+]KEY_? ]]; then
+			key=${got:(-1)}
+			[ $key = "1" ] && key="!"
+			[ $key = "2" ] && key="@"
+			got=$key
+		fi
 		if [ $main ]; then
 			case $got in
 			DPAD_DOWN|SELECT|TR|DOWN)
@@ -155,6 +161,14 @@ input() {
 				click
 				echo "MASTER=\"$MASTER\"" > $HOME/.local/etc/MASTER
 				info="${DOT}${DOT}[${DIM}${MASTER}${OFF}]${DOT}${DOT}"
+				;;
+			"!")
+				let ${sub}=8
+				info=
+				;;
+			"@")
+				let ${sub}=9
+				info=
 				;;
 			*)
 				status=
@@ -312,20 +326,23 @@ anykey() {
 	[ -f "${PDF}" ] && frame "" 2
 	frame "\e[s\e[74C${KEY} ${LEFT} ${OFF} ${KEY} ${RIGHT} ${OFF} test volume ${DOWN}${UP} control now" 1
 	[ -f "${PDF}" ] && frame "Press ${KEY}${RED} Pi ${OFF} to open its Bookshelf manual." 2 || frame "" 2
+	frame
+	frame
+	out -n "\r\e[2A"
 	frame "Press any button/key to ${any}: \e[s\r\e[81C${KEY} ESC ${OFF} or Left ${KEY} Bumper ${OFF} to go back" 1
 	any=continue
 	input $sec 2
 	status=$?
 	killall -qw mplayer &> /dev/null &
 	#while ps -C mplayer &> /dev/null ; do kill -QUIT `ps -C mplayer -o pid=` &> /dev/null ; sleep 0.1 ; done
-	if [ $got = "MODE" ]; then
+	if [ $got = "Pi" ]; then
 		frame "\e[u${KEY}${RED} Pi ${OFF} ${RIGHT}${ON} \e[s" 1
 		if [ -f "$PDF" ]; then
 			frame "\e[u`basename "$PDF"`" 1
 			view "$PDF"
 		fi
 	fi
-	out -n "\r\e[2A\e[J"
+	out -n "\r\e[A\e[J"
 	frame
 	[ $status -eq 0 ] && click wait
 	return $status
@@ -523,16 +540,17 @@ laserdiscs() {
 
 main() {
 	crt
-	frame "${DOT}${DIM}0${OFF}  Big Menu  10,299    ${DOT}${DIM}5${OFF}  Board & Party         7     ${DOT}${DIM}a${OFF}  Asteroids       (~2P)    ${DOT}${DIM}A${OFF}  Astro Blaster   (~2P)"
-	frame "${DOT}${DIM}1${OFF}  Arcade     2,480    ${DOT}${DIM}6${OFF}  Pinball Sims          1     ${DOT}${DIM}b${OFF}  Bubble Bobble   (~2P)    ${DOT}${DIM}C${OFF}  Cyberball       (~2P)"
-	frame "${DOT}${DIM}2${OFF}  Computers  2,946    ${DOT}${DIM}7${OFF}  RTS & Turn-based      5     ${DOT}${DIM}c${OFF}  Carnival        (~2P)    ${DOT}${DIM}D${OFF}  Defender        (~2P)"
-	frame "${DOT}${DIM}3${OFF}  Consoles   4,284    ${DOT}${DIM}8${OFF}  Niche Controls       25     ${DOT}${DIM}d${OFF}  Mr. Do!         (~2P)    ${DOT}${DIM}G${OFF}  GORF            (~2P)"
-	frame "${DOT}${DIM}4${OFF}  Handhelds  2,752    ${DOT}${DIM}9${OFF}  Homebrews             5     ${DOT}${DIM}f${OFF}  Frogger         (~2P)    ${DOT}${DIM}H${OFF}  Hat Trick       (~2P)"
-	frame "${DOT}${DIM}n${OFF}  Netplay    3,664    ${DOT}${DIM}L${OFF}  Laserdiscs            6     ${DOT}${DIM}g${OFF}  Galaga          (~2P)    ${DOT}${DIM}K${OFF}  Karate Champ    (~2P)"
-	frame "                                                        ${DOT}${DIM}j${OFF}  Joust           (~2P)    ${DOT}${DIM}Q${OFF}  Q*bert          (~2P)"
-	frame "${DOT}${DIM}p${OFF}  Power off           ${DOT}${DIM}U${OFF}  Upgrade Linux & re-boot     ${DOT}${DIM}m${OFF}  Ms. Pac-Man     (~2P)    ${DOT}${DIM}S${OFF}  Space Duel      (~2P)"
-	frame "${DOT}${DIM}r${OFF}  Re-boot             ${DOT}${DIM}Z${OFF}  Toggle boot to ${ON}${STARTUP}${OFF}    ${DOT}${DIM}s${OFF}  Spiders         (~2P)    ${DOT}${DIM}T${OFF}  Time Pilot      (~2P)"
-	frame "                                                        ${DOT}${DIM}t${OFF}  Tapper          (~2P)    ${DOT}${DIM}W${OFF}  Wizard of Wor   (~2P)"
+	frame "${DOT}${DIM}0${OFF}  Big Menu  10,299   ${DOT}${DIM}5${OFF}  Board and Party      7   ${DOT}${DIM}a${OFF}  Asteroids        ${DOT}${DIM}n${OFF}  Donkey Kong     ${DOT}${DIM}A${OFF}  Astro Blaster"
+	frame "${DOT}${DIM}1${OFF}  Arcade     2,480   ${DOT}${DIM}6${OFF}  Pinball Simulators   2   ${DOT}${DIM}b${OFF}  Bubble Bobble    ${DOT}${DIM}o${OFF}  Jungle King     ${DOT}${DIM}C${OFF}  Cyberball    "
+	frame "${DOT}${DIM}2${OFF}  Computers  2,946   ${DOT}${DIM}7${OFF}  RTS and Turn-based   6   ${DOT}${DIM}c${OFF}  Carnival         ${DOT}${DIM}p${OFF}  Moon Patrol     ${DOT}${DIM}D${OFF}  Defender     "
+	frame "${DOT}${DIM}3${OFF}  Consoles   4,284   ${DOT}${DIM}8${OFF}  Niche Controls      25   ${DOT}${DIM}d${OFF}  Mr. Do!          ${DOT}${DIM}q${OFF}  Ripoff          ${DOT}${DIM}G${OFF}  GORF         "
+	frame "${DOT}${DIM}4${OFF}  Handhelds  2,752   ${DOT}${DIM}9${OFF}  Homebrews            5   ${DOT}${DIM}f${OFF}  Frogger          ${DOT}${DIM}r${OFF}  Robotron        ${DOT}${DIM}H${OFF}  Hat Trick    "
+	frame "${DOT}${DIM}N${OFF}  Netplay    3,664   ${DOT}${DIM}L${OFF}  Laserdiscs           6   ${DOT}${DIM}g${OFF}  Galaga           ${DOT}${DIM}s${OFF}  Spiders         ${DOT}${DIM}K${OFF}  Karate Champ "
+	frame "                                                    ${DOT}${DIM}j${OFF}  Joust            ${DOT}${DIM}t${OFF}  Time Pilot      ${DOT}${DIM}Q${OFF}  Q*bert        "
+	frame "${DOT}${DIM}!${OFF}  Power off          ${DOT}${DIM}U${OFF}  Upgrade Linux (reboot)   ${DOT}${DIM}k${OFF}  Kung-Fu Master   ${DOT}${DIM}x${OFF}  Xevious         ${DOT}${DIM}S${OFF}  Space Duel   "
+	frame "${DOT}${DIM}@${OFF}  Reboot             ${DOT}${DIM}Z${OFF}  Toggle boot: ${ON}${STARTUP}${OFF}   ${DOT}${DIM}l${OFF}  Lady Bug         ${DOT}${DIM}y${OFF}  10-Yard Fight   ${DOT}${DIM}T${OFF}  Tapper        "
+	frame "                                                    ${DOT}${DIM}m${OFF}  Ms. Pac-Man      ${DOT}${DIM}z${OFF}  Berzerk         ${DOT}${DIM}W${OFF}  Wizard of Wor "
+	FOLDER=main
 }
 
 party() {
@@ -549,7 +567,7 @@ party() {
 	MENU=( "" "Gauntlet" "Jumpman" "Trog" "Gauntlet II" "Rampage" "Tecmo Bowl" "Wizard" )
 
 	frame 
-	frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
+	frame "${OFF}\e[$(( $WIDTH - 17 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
 	prompt "Party ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
 
 	dualsense
@@ -576,21 +594,21 @@ party() {
 		src wizard
 		;;
 	esac
-	n=7
+	n=10
 }
 
 pinball() {
 	crt
-	frame "${DOT}${DIM}f${OFF}  Fantasies  (~8P)"
+	frame "${DOT}${DIM}f${OFF}  Fantasies  (~8P)    ${DOT}${DIM}V${OFF}  Video Pinball   (~2P)"
 	frame 
 	n=1
 
 	FOLDER=pinball
-	CHOICE=( "" "f" )
-	MENU=( "" "Pinball Fantasies" )
+	CHOICE=( "" "f" "V" )
+	MENU=( "" "Pinball Fantasies" "Video Pinball" )
 
 	frame 
-	frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
+	frame "${OFF}\e[$(( $WIDTH - 17 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
 	prompt "Pinball ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
 
 	dualsense
@@ -601,8 +619,11 @@ pinball() {
 	f)
 		src pballf
 		;;
+	V)
+		src vpinball
+		;;
 	esac
-	n=8
+	n=11
 }
 
 strategy() {
@@ -618,7 +639,7 @@ strategy() {
 	MENU=( "" "Angband" "Dank Domain" "Warcraft" "Empire" "Super Trek" "Warcraft II" )
 
 	frame 
-	frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
+	frame "${OFF}\e[$(( $WIDTH - 17 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
 	prompt "Strategy ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
 
 	dualsense
@@ -645,7 +666,7 @@ strategy() {
 		src warcraft2
 		;;
 	esac
-	n=9
+	n=12
 }
 
 niche() {
@@ -675,7 +696,7 @@ niche() {
 			"Crossbow" "Duck Hunt" )
 
 	frame 
-	frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
+	frame "${OFF}\e[$(( $WIDTH - 17 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
 	prompt "Niche ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
 
 	dualsense
@@ -759,7 +780,7 @@ niche() {
 		src duckhunt
 		;;
 	esac
-	n=10
+	n=13
 }
 
 homebrew() {
@@ -777,7 +798,7 @@ homebrew() {
 	MENU=( "" "Berzerk MMX" "Break-out!" "Omega Fury" "Quikman+" "Sprite Invaders" )
 
 	frame 
-	frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
+	frame "${OFF}\e[$(( $WIDTH - 17 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
 	prompt "Homebrew ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
 
 	dualsense
@@ -801,7 +822,7 @@ homebrew() {
 		src vic-sss
 		;;
 	esac
-	n=11
+	n=14
 }
 
 mt() {
@@ -819,27 +840,17 @@ prompt() {
 
 	frame "$label\e[s${DIM}${!val} ${OFF}${RIGHT}${ON} ${MENU[${!sub}]}" 1
 	click
-	[ -z "${NETWORK}" ] && out -n "\r\e[${NETSTAT}C${OFF}  ${LEFT}${ON}${LEFT}${KEY}${RED} network ${ON}${RIGHT}${OFF}${RIGHT}\e[u" || out -n "\r\e[${NETSTAT}C${OFF}${LEFT} ${NETWORK%/*} ${RIGHT}\e[u"
+	[ -z "${NETWORK}" ] && out -n "\r\e[${NETSTAT}C${OFF}  ${LEFT}${ON}${LEFT}${KEY}${RED} network ${ON}${RIGHT}${OFF}${RIGHT}\e[u" || out -n "\r\e[${NETSTAT}C${OFF}${DOT}${DIM}${LEFT}${OFF} ${NETWORK%/*} ${DIM}${RIGHT}\e[u"
 	[ -f $RT/packages ] && packages=`tail -1 $RT/packages | awk '{ print $1 }'`
-	[ "$packages" = "All" ] || out -n "\r\e[$(( $WIDTH - 16 ))C${LEFT} ${KEY}\x0eah\x0f upgrade \x0eha\x0f${OFF} ${DIM}${RIGHT}\e[u"
+	[ "$packages" = "All" ] || out -n "\r\e[$(( $WIDTH - 12 ))C${LEFT} ${KEY}\x0eah\x0f upgrade \x0eha\x0f${OFF} ${DIM}${RIGHT}\e[u"
 	input $sec 1
-	[ $status -eq 0 ] && export ${val}="${CHOICE[${!sub}]}" || export ${val}="attract"
+	[ $status -eq 0 ] || got="attract"
 	case $got in
 	GAMEPAD|START|ENTER)
+		export ${val}="${CHOICE[${!sub}]}"
 		frame "\e[u" 1
 		;;
-	DELETE)
-		frame "\e[uInstructional Video${OFF}"
-		frame "An overview on how to use these Playlists & Desktop."
-		frame "Mouse & Keyboard controls are in effect."
-		frame 
-		frame "Press \e[A${KEY} PrtScn \e[B\e[8D${RED} SysRq  ${OFF} off menu for quick reference guide."
-		if anykey ; then
-			volume "12%+"
-			ffplay -autoexit -loop 1 "$HOME/Bookshelf/HELP.mp4" &> /dev/null
-		fi
-		;;
-	ESC)
+	ESC|TL)
 		export ${val}="ESC"
 		;;
 	F1)
@@ -926,20 +937,6 @@ prompt() {
 		src "${pick}"
 		gameover
 		;;
-	F10)
-		frame "\e[uplay next cartoon"
-		frame "" 2
-		frame "Use ${KEY} A ${OFF} ${KEY} Z ${OFF} ${KEY} M ${OFF} for Volume Up/Down/Mute"
-		frame "Press ${KEY} Q ${OFF} anytime to quit"
-		if anykey ; then
-			volume "18%+"
-			FILE="${SAT}LooneyTunes/`ls -t ${SAT}LooneyTunes | tail -1`"
-			frame "\e[uplay `basename "${FILE%.*}"`"
-			touch "${FILE}"
-			nvlc "${FILE}"
-			gameover
-		fi
-		;;
 	F11)
 		reset
 		fbtest
@@ -954,33 +951,13 @@ prompt() {
 		reset
 		exit
 		;;
-	MODE)
-		out "${KEY}${RED} Pi ${OFF} ${RIGHT}${ON} search ${OFF}cloud${ON} for a manual off my Bookshelf:"
-		bookshelf
-		frame 
-		;;
-	*LOCK)
-		out "\q"
-		frame "\e[uplay Saturday TV or Cinema matinee ${PAD}"
-		frame "" 2
-		show
-		frame
-		;;
-	SYSRQ)
-		frame "\e[uHELP"
-		frame 
-		frame "Press \e[A${KEY} Delete \e[B\e[8D${RED} Ins    ${OFF} off menu for Instructional Video."
-		rsync -a Bookshelf/*.pdf Documents/ &> /dev/null
-		view "$HOME/Documents/HELP.pdf"
-		frame
-		;;
 	?)
 		export ${val}=${sym:(-1)}
 		[[ $sym =~ [+]KEY_? ]] || export ${val}=`echo ${sym:(-1)} | tr [:upper:] [:lower:]`
 		frame "\e[u${DIM}${!val} ${OFF}${RIGHT}${ON} \e[s" 1
 		;;
 	*)
-		[ -z "${val}" ] && export ${val}="?"
+		export ${val}="$got"
 		;;
 	esac
 }
@@ -1102,7 +1079,7 @@ hdmi() {
 	[ $HDMI -eq 1 ] && fbset -a -g 1920 1080 1920 1080 16
 	setfont Lat15-TerminusBold32x16
 	WIDTH=110
-	NETSTAT=$(( $WIDTH - 16 ))
+	NETSTAT=$(( $WIDTH - 12 ))
 	PAD='     '
 	LPAD='\x0eah\x0f   '
 	RPAD='   \x0eha\x0f'
@@ -1212,17 +1189,17 @@ volume "$MASTER"
 
 while [ true ]; do
 
-FOLDER=main
-CHOICE=( "" "R" 0 1 2 3 4 5 6 7 8 9 "L" "n" "p" "r" "ESC" "F10" "KEYLOCK" "Pi" "HELP" )
+CHOICE=( "" "R" 0 1 2 3 4 "N" "!" "@" 5 6 7 8 9 "L" "F10" "KEYLOCK" "Pi" "HELP" "ESC" )
 MENU=( "" "Rob's quick-pick" "BIG `driver $RA/big`" "Arcade emporium `driver $RA/myarcade`" \
 	"Computer craze `driver $RA/computers`" "Console mania `driver $RA/consoles`" \
-	"Handheld hero `driver $RA/handhelds`" "Board & Party games" "Pinball wizard" \
-	"Get Ready" "Plug it in" "Homebrew magic" "Interactive movies" \
-	"Netplay friends (~3P remote) `driver $RA/netplay`" "Power off" "Re-boot" "KDE Plasma desktop" \
-	"next cartoon" "Saturday TV or cinema matinee" "Bookshelf manuals" "Read me!" )
+	"Handheld hero `driver $RA/handhelds`" "Netplay friends (~3P remote) `driver $RA/netplay`" \
+	"Power off" "Re-boot" \
+	"Let's party!" "Pinball wizard"	"Strategum" "Plug it in" "Homebrew magic" "Interactive movies" \
+	"next cartoon" "Saturday TV or cinema matinee" "Bookshelf manuals" "Read me!" \
+	"KDE Plasma desktop")
 
 frame 
-frame "${OFF}\e[$(( $WIDTH - 21 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
+frame "${OFF}\e[$(( $WIDTH - 17 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
 prompt "Choose ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
 
 # wait, no head detected on startup?
@@ -1333,7 +1310,7 @@ j)
 	src joust
 	;;
 k)
-	src kick
+	src kungfum
 	;;
 l)
 	src ladybug
@@ -1342,6 +1319,89 @@ m)
 	src mspacman
 	;;
 n)
+	src dkong
+	;;
+o)
+	src junglek
+	;;
+p)
+	src mpatrol
+	;;
+q)
+	src ripoff
+	;;
+r)
+	src robotron
+	;;
+s)
+	src spiders
+	;;
+t)
+	src timeplt
+	;;
+u)
+	src gyruss
+	;;
+v)
+	FLIX="`ls -t $YT/[A-Z]*.mp4 | tail -1`"
+	touch "$FLIX"
+	frame "\e[uenjoy video `basename "$FLIX"`"
+	volume "12%+"
+	video "$FLIX"
+	;;
+w)
+	src galaxian
+	;;
+x)
+	src xevious
+	;;
+y)
+	src yard
+	;;
+z)
+	src berzerk
+	;;
+A)
+	src astrob
+	;;
+B)
+	src blktiger
+	;;
+C)
+	src cyberb2p
+	;;
+D)
+	src defender
+	;;
+E)
+	src megamania
+	;;
+F)
+	src phoenix
+	;;
+G)
+	src gorf
+	;;
+H)
+	src hattrick
+	;;
+I)
+	src gba
+	;;
+J)
+	src bombjack
+	;;
+K)
+	src kchampvs
+	;;
+L)
+	out "play a Laserdisc by DAPHNE"
+	laserdiscs
+	;;
+M)
+	src mario-kart
+	;;
+N)
 	out "NetPlay friends${OFF} - ${DIM}re-boot${OFF} after exit"
 	frame 
 	click wait
@@ -1364,125 +1424,6 @@ n)
 		sudo reboot
 	fi
 	;;
-o)
-	src omega-fury
-	;;
-p)
-	out "powering off"
-	click wait
-	for i in `seq ${#PS5[@]}`; do
-		declare -i j=i-1
-		dualsensectl -d ${PS5[$j]} lightbar 255 0 0
-		dualsensectl -d ${PS5[$j]} microphone-led on
-	done
-	volume "18%+"
-	audio "sounds/hone.mp3"
-	fbi --noverbose "$HOME/Pictures/Splash/splash.png" &> /dev/null &
-	audio "Shutdown/`ls Music/Shutdown | shuf | head -1`"
-	for i in `seq ${#PS5[@]}`; do
-		declare -i j=i-1
-		dualsensectl -d ${PS5[$j]} power-off
-	done
-	sudo poweroff
-	;;
-q)
-	src qix
-	;;
-r|U)
-	if [ "$choice" = "U" ]; then
-		out "upgrading ${OFF}. . . possibly."
-		retroarch --version
-		volume "6%+"
-		audio "Radio Edit Alpha Team.mp3" &
-		sudo apt update &> /dev/null || continue
-		reset
-		git pull
-		sudo apt list --upgradable && sudo apt -y upgrade
-		sudo rm -fv /boot/firmware/.bootloader_revision /boot/firmware/.firmware_revision &> /dev/null
-		sudo rpi-eeprom-update -a
-		#RPi engineering has finally caught up releases with 6.6 tree
-		#out
-		#out " ${RIGHT}${ON}${RIGHT}${OFF}  Press ${KEY}${RED} y ${OFF} to continue with firmware update"
-		#out
-		#sudo rpi-update
-	fi
-	out "reboot"
-	click
-	reset
-	audio "sounds/hone.mp3"
-	sudo reboot
-	;;
-s)
-	src spiders
-	;;
-t)
-	src tapper
-	;;
-u)
-	src seawolf
-	;;
-v)
-	FLIX="`ls -t $YT/[A-Z]*.mp4 | tail -1`"
-	touch "$FLIX"
-	frame "\e[uenjoy video `basename "$FLIX"`"
-	volume "12%+"
-	video "$FLIX"
-	;;
-w)
-	src warcraft
-	;;
-x)
-	src megamania
-	;;
-y)
-	src yars
-	;;
-z)
-	src mean18
-	;;
-A)
-	src astrob
-	;;
-B)
-	src blktiger
-	;;
-C)
-	src cyberb2p
-	;;
-D)
-	src defender
-	;;
-E)
-	src xtrainns
-	;;
-F)
-	src gridiron
-	;;
-G)
-	src gorf
-	;;
-H)
-	src hattrick
-	;;
-I)
-	src gba
-	;;
-J)
-	src junglek
-	;;
-K)
-	src kchampvs
-	;;
-L)
-	out "play a Laserdisc by DAPHNE"
-	laserdiscs
-	;;
-M)
-	src mario-kart
-	;;
-N)
-	src mario-kart64
-	;;
 O)
 	src hangon
 	;;
@@ -1500,7 +1441,7 @@ S)
 	src spacduel
 	;;
 T)
-	src timeplt
+	src tapper
 	;;
 V)
 	src vsyard-2p
@@ -1509,7 +1450,7 @@ W)
 	src wow
 	;;
 X)
-	src megaball
+	src xtrainns
 	;;
 Y)
 	src mswordu
@@ -1561,6 +1502,93 @@ attract)
 	fi
 	let L=$L+1
 	[ -z "$NETWORK" ] && NETWORK=`curl --connect-timeout 3.14 ifconfig.me 2> /dev/null || curl --connect-timeout 3.14 ipecho.net/plain 2> /dev/null`
+	;;
+!)
+	out "powering off"
+	click wait
+	for i in `seq ${#PS5[@]}`; do
+		declare -i j=i-1
+		dualsensectl -d ${PS5[$j]} lightbar 255 0 0
+		dualsensectl -d ${PS5[$j]} microphone-led on
+	done
+	volume "18%+"
+	audio "sounds/hone.mp3"
+	fbi --noverbose "$HOME/Pictures/Splash/splash.png" &> /dev/null &
+	audio "Shutdown/`ls Music/Shutdown | shuf | head -1`"
+	for i in `seq ${#PS5[@]}`; do
+		declare -i j=i-1
+		dualsensectl -d ${PS5[$j]} power-off
+	done
+	sudo poweroff
+	;;
+@|U)
+	if [ "$choice" = "U" ]; then
+		out "upgrading ${OFF}. . . possibly."
+		retroarch --version
+		volume "6%+"
+		audio "Radio Edit Alpha Team.mp3" &
+		sudo apt update &> /dev/null || continue
+		reset
+		git pull
+		sudo apt list --upgradable && sudo apt -y upgrade
+		sudo rm -fv /boot/firmware/.bootloader_revision &> /dev/null
+		sudo rpi-eeprom-update -a
+		#RPi engineering has finally caught up releases with 6.6 tree
+		#out
+		#out " ${RIGHT}${ON}${RIGHT}${OFF}  Press ${KEY}${RED} y ${OFF} to continue with firmware update"
+		#out
+		#sudo rpi-update
+	fi
+	out "reboot"
+	click
+	reset
+	audio "sounds/hone.mp3"
+	sudo reboot
+	;;
+F10)
+	frame "\e[uplay next cartoon"
+	frame "" 2
+	frame "Use ${KEY} A ${OFF} ${KEY} Z ${OFF} ${KEY} M ${OFF} for Volume Up/Down/Mute"
+	frame "Press ${KEY} Q ${OFF} anytime to quit"
+	if anykey ; then
+		volume "18%+"
+		FILE="${SAT}LooneyTunes/`ls -t ${SAT}LooneyTunes | tail -1`"
+		frame "\e[uplay `basename "${FILE%.*}"`"
+		touch "${FILE}"
+		nvlc "${FILE}"
+		gameover
+	fi
+	;;
+Pi)
+	out "${KEY}${RED} Pi ${OFF} ${RIGHT}${ON} search ${OFF}cloud${ON} for a manual off my Bookshelf:"
+	bookshelf
+	frame 
+	;;
+*LOCK)
+	out "\q"
+	frame "\e[uplay Saturday TV or Cinema matinee ${PAD}"
+	frame "" 2
+	show
+	frame
+	;;
+HELP|SYSRQ)
+	frame "\e[uHELP"
+	frame 
+	frame "Press \e[A${KEY} Delete \e[B\e[8D${RED} Ins    ${OFF} off menu for Instructional Video."
+	rsync -a Bookshelf/*.pdf Documents/ &> /dev/null
+	view "$HOME/Documents/HELP.pdf"
+	frame
+	;;
+DELETE)
+	frame "\e[uInstructional Video${OFF}"
+	frame "An overview on how to use these Playlists & Desktop."
+	frame "Mouse & Keyboard controls are in effect."
+	frame 
+	frame "Press \e[A${KEY} PrtScn \e[B\e[8D${RED} SysRq  ${OFF} off menu for quick reference guide."
+	if anykey ; then
+		volume "12%+"
+		ffplay -autoexit -loop 1 "$HOME/Bookshelf/HELP.mp4" &> /dev/null
+	fi
 	;;
 ESC)
 	frame "\e[ustarting ${ON}KDE Plasma Display${OFF}"
