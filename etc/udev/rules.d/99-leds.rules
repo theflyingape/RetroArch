@@ -1,0 +1,19 @@
+# keyboard led aliases for retroarch.cfg :: led_driver = "sysled"
+
+SUBSYSTEM=="leds", ACTION=="add", ATTR{trigger}=="*\[kbd-capslock\]*", PROGRAM="/bin/sh -c ' \
+	rm -f /dev/led1 ; \
+	ln -s /sys%p /dev/led1 ; \
+	chmod a+w /dev/led1/brightness /dev/led1/trigger ; \
+'"
+
+SUBSYSTEM=="leds", ACTION=="add", ATTR{trigger}=="*\[kbd-scrolllock\]*", PROGRAM="/bin/sh -c ' \
+	rm -f /dev/led2 ; \
+	ln -s /sys%p /dev/led2 ; \
+	chmod a+w /dev/led2/brightness /dev/led2/trigger ; \
+'"
+
+SUBSYSTEM=="leds", ACTION=="add", ATTR{trigger}=="*\[kbd-numlock\]*", PROGRAM="/bin/sh -c ' \
+	rm -f /dev/led3 ; \
+	ln -s /sys%p /dev/led3 ; \
+	chmod a+w /dev/led3/brightness /dev/led3/trigger ; \
+'"
