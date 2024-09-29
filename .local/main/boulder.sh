@@ -3,7 +3,7 @@ xy=896
 oneshot() {
 	comp C64 "Boulder Dash${OFF} (c) 19${ON}84 First Star"
 	frame "${PAD}   ${KEY} ${UP} ${OFF}" 2
-	frame "${PAD}${KEY} ${LEFT} ${OFF} + ${KEY} ${RIGHT} ${OFF}  ${KEY} PUSH ${OFF} (or PULL)" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${ON}${HBAR}${CROSS}${HBAR}${OFF}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} PUSH ${OFF} or PULL" 2
 	frame "${PAD}   ${KEY} ${DOWN} ${OFF}" 2
 	frame "" 2
 	frame "You will like this action puzzle game." 2

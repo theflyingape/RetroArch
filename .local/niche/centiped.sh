@@ -1,4 +1,5 @@
 # source from menu
+xy=720
 oneshot() {
 	pick "Centipede${OFF} (c) 19${ON}80 Atari"
 	frame "${PAD} left" 2

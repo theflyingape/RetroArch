@@ -1,4 +1,5 @@
 # source from menu
+xy=720
 oneshot() {
 	pick "Space Invaders '95 ${OFF}(c) 06/19${ON}95 Taito"
 	frame "${PAD}   ${KEY} ${UP} ${OFF}" 2

@@ -2,7 +2,7 @@
 Categories=Application;Game;
 Comment[en_US]=an unashamed clone of Pac-Man with Ms. Pac-Man maze run option
 Comment=an unashamed clone of Pac-Man with Ms. Pac-Man maze run option
-Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg|/retroarch/config/VICE xvic/rhurst.cfg' '--set-shader=/retroarch/config/VICE xvic/VIC-20.slangp' -L vice_xvic /retroarch/roms/homebrews/VIC20/8KB/quikman+8k.prg
+Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg|/retroarch/config/VICE xvic/rhurst.cfg' '--set-shader=/retroarch/config/VICE xvic/rhurst.slangp' -L vice_xvic /retroarch/roms/homebrews/VIC20/8KB/quikman+8k.prg
 GenericName[en_US]=
 GenericName=
 Icon=quikman-Default

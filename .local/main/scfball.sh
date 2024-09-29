@@ -7,5 +7,5 @@ oneshot() {
 	frame "${PAD}   ${KEY} ${DOWN} ${OFF}" 2
 	frame "" 2
 	frame "For TWO players only" 2
-	anykey "A2600 - Super Challenge Football.pdf" && qstart -L stella "$RA/roms/Atari 2600/Super Challenge Football (USA).zip"
+	anykey "A2600 - Super Challenge Football.pdf" && qstart -L stella2014 "$RA/roms/Atari 2600/Super Challenge Football (USA).zip"
 }

@@ -2,7 +2,7 @@
 xy=1024
 oneshot() {
 	compete "OutRun ${OFF}(c) 09/19${ON}86 Sega"
-	frame "    ${KEY} ${LEFT} ${OFF} - ${KEY} ${RIGHT} ${OFF}  ${KEY} GEAR ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${HBAR}${ON}•${OFF}${HBAR}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} SHIFT ${OFF}" 2
 	frame "R1${KEY} BRAKE ${OFF}       ${KEY} GAS ${OFF}R2" 2
 	if anykey ; then
 		if [ "$got" = "n" ]; then

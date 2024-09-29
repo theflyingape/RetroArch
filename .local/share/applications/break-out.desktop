@@ -2,7 +2,7 @@
 Categories=Application;Game;
 Comment[en_US]=classic paddle & ball game
 Comment=classic paddle & ball game
-Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg' '--set-shader=/retroarch/config/VICE xvic/VIC-20.slangp' -L vice_xvic '/retroarch/roms/homebrews/VIC20/8KB/break-out!.prg'
+Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg' '--set-shader=/retroarch/config/VICE xvic/rhurst.slangp' -L vice_xvic '/retroarch/roms/homebrews/VIC20/8KB/break-out!.prg'
 GenericName[en_US]=
 GenericName=
 Icon=break-out-Default

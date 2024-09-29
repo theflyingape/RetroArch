@@ -3,7 +3,7 @@ xy=720
 oneshot() {
 	compete "Burger Time${OFF} (c) 19${ON}82 Data East"
 	frame "${PAD}   ${KEY} ${UP} ${OFF}" 2
-	frame "${PAD}${KEY} ${LEFT} ${OFF} + ${KEY} ${RIGHT} ${OFF}  ${KEY} PEPPER ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${ON}${HBAR}${CROSS}${HBAR}${OFF}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} PEPPER ${OFF}" 2
 	frame "${PAD}   ${KEY} ${DOWN} ${OFF}" 2
 	frame "" 2
 	frame "It's possible to move chef Peter Pepper up & down on the ladders" 2

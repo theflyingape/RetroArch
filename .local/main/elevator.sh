@@ -3,7 +3,7 @@ xy=896
 oneshot() {
 	pick "Elevator Action${OFF} (c) 07/19${ON}83 Taito"
 	frame "${PAD}   ${KEY} ${UP} ${OFF}" 2
-	frame "${PAD}${KEY} ${LEFT} ${OFF} + ${KEY} ${RIGHT} ${OFF}  ${KEY} FIRE ${OFF}  ${KEY} JUMP ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${ON}${HBAR}${CROSS}${HBAR}${OFF}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} SHOOT ${OFF}  ${KEY} JUMP ${OFF}" 2
 	frame "${PAD}   ${KEY} ${DOWN} ${OFF}" 2
 	frame "" 2
 	frame "There is an internal time limit on how long you can take to" 2

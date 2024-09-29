@@ -2,7 +2,7 @@
 xy=1024
 oneshot() {
 	compete "Moon Patrol${OFF} (c) 05/19${ON}82 Irem"
-	frame "${PAD}${KEY} ${LEFT} ${OFF} - ${KEY} ${RIGHT} ${OFF}  ${KEY} FIRE ${OFF}  ${KEY} JUMP ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${HBAR}${ON}•${OFF}${HBAR}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} FIRE ${OFF}  ${KEY} JUMP ${OFF}" 2
 	frame "" 2
 	frame "The first game to feature parallax scrolling." 2
 	if anykey ; then

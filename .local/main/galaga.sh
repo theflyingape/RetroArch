@@ -2,7 +2,7 @@
 xy=720
 oneshot() {
 	compete "Galaga${OFF} (c) 09/19${ON}81 Namco"
-	frame "${PAD}${KEY} ${LEFT} ${OFF} - ${KEY} ${RIGHT} ${OFF}  ${KEY} FIRE ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${HBAR}${ON}•${OFF}${HBAR}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} FIRE ${OFF}" 2
 	frame "" 2
 	frame "It is possible to end the game with a 200% ratio. The 200% hit-miss" 2
 	frame "ratio trick can only be done with your first shot of the game." 2

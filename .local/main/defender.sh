@@ -3,8 +3,8 @@ xy=896
 oneshot() {
 	pick "Defender${OFF} (c) 12/19${ON}80 Williams"
 	frame "${PAD}shoulder  ${KEY} ${UP} ${OFF}  ${KEY} BOMB ${OFF}   ${KEY} WARP ${OFF}" 2
-	frame "${PAD}   ${KEY}${LEFT}${RIGHT}${OFF}      |" 2
-	frame "${PAD}reverse   ${KEY} ${DOWN} ${OFF}  ${KEY} FIRE ${OFF}  ${KEY} THRUST ${OFF}" 2
+	frame "${PAD}   ${KEY}${LEFT}${RIGHT}${OFF}      ${ON}${VBAR}${OFF}" 2
+	frame "${PAD}reverse   ${KEY} ${DOWN} ${OFF}  ${KEY}${RED} FIRE ${OFF}  ${KEY} THRUST ${OFF}" 2
 	frame "" 2
 	frame "Arcade industry insiders confidently predicted that both" 2
 	frame "${ON}${RED}Defender${OFF} and ${ON}\e[33mPac-Man${OFF} would be commercial flops and that" 2

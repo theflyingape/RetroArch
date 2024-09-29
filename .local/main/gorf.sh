@@ -3,7 +3,7 @@ xy=720
 oneshot() {
 	pick "GORF${OFF} (c) 02/19${ON}81 Midway"
 	frame "${PAD}   ${KEY} ${UP} ${OFF}" 2
-	frame "${PAD}${KEY} ${LEFT} ${OFF} + ${KEY} ${RIGHT} ${OFF}  ${KEY} FIRE ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${ON}${HBAR}${CROSS}${HBAR}${OFF}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} FIRE ${OFF}" 2
 	frame "${PAD}   ${KEY} ${DOWN} ${OFF}" 2
 	frame "" 2
 	frame "Galactic Orbital Robot Force was the first game ever to" 2

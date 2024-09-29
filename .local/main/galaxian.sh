@@ -2,7 +2,7 @@
 xy=720
 oneshot() {
 	compete "Galaxian${OFF} (c) 10/19${ON}79 Namco"
-	frame "${PAD}${KEY} ${LEFT} ${OFF} - ${KEY} ${RIGHT} ${OFF}  ${KEY} FIRE ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${HBAR}${ON}•${OFF}${HBAR}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} FIRE ${OFF}" 2
 	frame "" 2
 	frame "A color video game that took dimes (1 or 2) per play." 2
 	frame "The Galaxian Flagship became a trademark and made cameo" 2

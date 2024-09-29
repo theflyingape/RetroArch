@@ -14,5 +14,6 @@ oneshot() {
 		sleep 1
 		socat /dev/pts/$PTS exec:"telnet play.ddgame.us"
 		killall -TERM retroarch
+		gameover
 	fi
 }

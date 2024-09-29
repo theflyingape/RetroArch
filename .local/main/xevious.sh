@@ -1,4 +1,5 @@
 # source from menu
+xy=720
 oneshot() {
 	pick "Xevious${OFF} (c) 12/19${ON}82 Namco"
 	frame "${PAD}   ${KEY} ${UP} ${OFF}" 2

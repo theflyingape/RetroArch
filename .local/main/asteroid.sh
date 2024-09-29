@@ -2,7 +2,7 @@
 xy=896
 oneshot() {
 	compete "Asteroids${OFF} (c) 11/19${ON}79 Atari"
-	frame "${PAD}${KEY} ${LEFT} ${OFF} - ${KEY} ${RIGHT} ${OFF}  ${KEY} FIRE ${OFF}  ${KEY} THRUST ${OFF}  ${KEY} WARP ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${HBAR}${ON}•${OFF}${HBAR}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} FIRE ${OFF}  ${KEY} THRUST ${OFF}  ${KEY} WARP ${OFF}" 2
 	frame "" 2
 	frame "Originally called Cosmos, Asteroids original design brief" 2
 	frame "was a simple copy of Space Wars; with asteroids littering" 2
@@ -13,7 +13,7 @@ oneshot() {
 	frame "Copyright Office." 2
 	if anykey ; then
 		if [ "$got" = "n" ]; then
-			qstart -L mame2003_plus "$RA/roms/MAME 2003-Plus/asteroid.zip"
+			arcade asteroid
 		else
 			cheevos -L fbneo "$RA/roms/Tournament/asteroid.zip"
 		fi

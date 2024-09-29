@@ -1,7 +1,7 @@
 # source from menu
 xy=1024
 oneshot() {
-	pick "Robotron - 2084${OFF} (c) 03/19${ON}82 Williams"
+	pick "Robotron: 2084${OFF} (c) 03/19${ON}82 Williams"
 	frame "${PAD} left     right" 2
 	frame "${PAD}${KEY} STICK ${OFF}  ${KEY} STICK ${OFF}" 2
 	frame "${PAD} move     fire" 2

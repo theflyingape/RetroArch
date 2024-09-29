@@ -10,9 +10,9 @@ oneshot() {
 	frame "Kids puzzle game that gets harder per ${KEY} SELECT ${OFF} game level." 2
 	if anykey "A2600 - Strawberry Shortcake.pdf" ; then
 		if [ "$got" = "n" ]; then
-			oneshot -L stella "$RA/roms/Atari 2600/Strawberry Shortcake - Musical Match-Ups (USA).zip"
+			oneshot -L stella2014 "$RA/roms/Atari 2600/Strawberry Shortcake - Musical Match-Ups (USA).zip"
 		else
-			cheevos -L stella "$RA/roms/Atari 2600/Strawberry Shortcake - Musical Match-Ups (USA).zip"
+			cheevos -L stella2014 "$RA/roms/Atari 2600/Strawberry Shortcake - Musical Match-Ups (USA).zip"
 		fi
 	fi
 }

@@ -2,7 +2,7 @@
 Categories=Application;Game;
 Comment[en_US]=Mega-Cart
 Comment=Mega-Cart
-Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg' -L vice_xvic /retroarch/roms/Commodore/VIC-20.m3u
+Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg' -L vice_xvic '/retroarch/roms/Commodore/VIC-20 Denial.m3u'
 GenericName[en_US]=The wonder computer of the 1980s
 GenericName=The wonder computer of the 1980s
 Icon=/usr/share/pixmaps/vic20icon-32x28.xpm

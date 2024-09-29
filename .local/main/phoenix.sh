@@ -2,7 +2,7 @@
 xy=720
 oneshot() {
 	compete "Phoenix ${OFF}(c) 12/19${ON}80 Amstar"
-	frame "${PAD}${KEY} ${LEFT} ${OFF} - ${KEY} ${RIGHT} ${OFF}  ${KEY} FIRE ${OFF}  ${KEY} SHIELD ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${HBAR}${ON}•${OFF}${HBAR}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} FIRE ${OFF}  ${KEY} SHIELD ${OFF}" 2
 	frame "" 2
 	frame "No Leaderboards -- shoot, or die!" 2
 	if anykey ; then

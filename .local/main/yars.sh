@@ -12,9 +12,9 @@ oneshot() {
 	frame "Use Difficulty A for harder gameplay." 2
 	if anykey "A2600 - Yars' Revenge.pdf" ; then
 		if [ "$got" = "n" ]; then
-			qstart -L stella "$RA/roms/Atari 2600/Yars' Revenge (USA).zip"
+			qstart -L stella2014 "$RA/roms/Atari 2600/Yars' Revenge (USA).zip"
 		else
-			cheevos -L stella "$RA/roms/Atari 2600/Yars' Revenge (USA).zip"
+			cheevos -L stella2014 "$RA/roms/Atari 2600/Yars' Revenge (USA).zip"
 		fi
 	fi
 }

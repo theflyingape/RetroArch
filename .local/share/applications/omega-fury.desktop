@@ -2,7 +2,7 @@
 Categories=Application;Game;
 Comment[en_US]=space-shooter sequel to Omega Race
 Comment=space-shooter sequel to Omega Race
-Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg|/retroarch/config/VICE xvic/rhurst.cfg' '--set-shader=/retroarch/config/VICE xvic/VIC-20.slangp' -L vice_xvic /retroarch/roms/homebrews/VIC20/16KB/omega-fury.prg
+Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg|/retroarch/config/VICE xvic/rhurst.cfg' '--set-shader=/retroarch/config/VICE xvic/rhurst.slangp' -L vice_xvic /retroarch/roms/homebrews/VIC20/16KB/omega-fury.prg
 GenericName[en_US]=
 GenericName=
 Icon=omega-fury-Default

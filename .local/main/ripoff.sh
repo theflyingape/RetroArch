@@ -2,7 +2,7 @@
 xy=1024
 oneshot() {
 	pick "Rip Off${OFF} (c) 04/19${ON}80 Cinematronics"
-	frame "${PAD}${KEY} ${LEFT} ${OFF} - ${KEY} ${RIGHT} ${OFF}  ${KEY} THRUST ${OFF}  ${KEY} FIRE ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${HBAR}${ON}•${OFF}${HBAR}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} FIRE ${OFF}  ${KEY} THRUST ${OFF}" 2
 	frame "" 2
 	frame "The first two player cooperative video game." 2
 	frame "I first encountered this game at ${DIM}Saturn's Rings${OFF}" 2

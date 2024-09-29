@@ -1,7 +1,13 @@
 # source from menu
 xy=720
 oneshot() {
-	pick "Tempest${OFF} (c) 10/19${ON}81 Atari"
+	compete "Tempest${OFF} (c) 10/19${ON}81 Atari"
 	frame "Best used with a mouse/trackball." 2
-	anykey && arcade tempest
+	if anykey ; then
+		if [ "$got" = "n" ]; then
+			arcade tempest
+		else
+			cheevos -L fbneo "/$RA/roms/Tournament/tempest.zip"
+		fi
+	fi
 }

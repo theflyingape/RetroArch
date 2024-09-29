@@ -2,7 +2,7 @@
 Categories=Application;Game;
 Comment[en_US]=an unashamed clone of the classic arcade game
 Comment=an unashamed clone of the classic arcade game
-Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg|/retroarch/config/VICE xvic/rhurst.cfg' '--set-shader=/retroarch/config/VICE xvic/VIC-20.slangp' -L vice_xvic /retroarch/roms/homebrews/VIC20/16KB/berzerk-mmx-16k.prg
+Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg|/retroarch/config/VICE xvic/rhurst.cfg' '--set-shader=/retroarch/config/VICE xvic/rhurst.slangp' -L vice_xvic /retroarch/roms/homebrews/VIC20/16KB/berzerk-mmx-16k.prg
 GenericName[en_US]=
 GenericName=
 Icon=berzerk-mmx-Default

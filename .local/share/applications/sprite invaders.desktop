@@ -2,7 +2,7 @@
 Categories=Application;Game;
 Comment[en_US]=VIC Software Sprite Stack game demo of Space Invaders
 Comment=VIC Software Sprite Stack game demo of Space Invaders
-Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg|/retroarch/config/VICE xvic/rhurst.cfg' '--set-shader=/retroarch/config/VICE xvic/VIC-20.slangp' -L vice_xvic '/retroarch/roms/homebrews/VIC20/8KB/sprite invaders.prg'
+Exec=retroarch '--appendconfig=/retroarch/play.cfg|/retroarch/desktop.cfg|/retroarch/config/VICE xvic/rhurst.cfg' '--set-shader=/retroarch/config/VICE xvic/rhurst.slangp' -L vice_xvic '/retroarch/roms/homebrews/VIC20/8KB/sprite invaders.prg'
 GenericName[en_US]=
 GenericName=
 Icon=sprite_invaders

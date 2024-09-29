@@ -2,7 +2,7 @@
 xy=1024
 oneshot() {
 	compete "Bubble Bobble${OFF} (c) 08/19${ON}86 Taito"
-	frame "${PAD}${KEY} ${LEFT} ${OFF} - ${KEY} ${RIGHT} ${OFF}  ${KEY} BUBBLE ${OFF}  ${KEY} JUMP ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${HBAR}${ON}•${OFF}${HBAR}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} BUBBLE ${OFF}  ${KEY} JUMP ${OFF}" 2
 	frame "" 2
 	frame "Simple-yet-involving gameplay with its two-player co-operative" 2
 	frame "mode, coupled with the incredible amount of hidden secrets and" 2

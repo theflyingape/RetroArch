@@ -3,7 +3,7 @@ xy=720
 oneshot() {
 	compete "Ms. Pac-Man${OFF} (c) 19${ON}81 Midway"
 	frame "${PAD}   ${KEY} ${UP} ${OFF}" 2
-	frame "${PAD}${KEY} ${LEFT} ${OFF} + ${KEY} ${RIGHT} ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${ON}${HBAR}${CROSS}${HBAR}${OFF}${KEY} ${RIGHT} ${OFF}" 2
 	frame "${PAD}   ${KEY} ${DOWN} ${OFF}" 2
 	frame "" 2
 	frame "In its initial run 110,000 units were produced in the U.S." 2

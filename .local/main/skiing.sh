@@ -8,9 +8,9 @@ oneshot() {
 	frame "Games 6-10  Downhill - Difficulty A to jump" 2
 	if anykey "A2600 - Skiing.pdf" ; then
 		if [ "$got" = "n" ]; then
-			qstart -L stella "$RA/roms/Atari 2600/Skiing (USA).zip"
+			qstart -L stella2014 "$RA/roms/Atari 2600/Skiing (USA).zip"
 		else
-			cheevos -L stella "$RA/roms/Atari 2600/Skiing (USA).zip"
+			cheevos -L stella2014 "$RA/roms/Atari 2600/Skiing (USA).zip"
 		fi
 	fi
 }

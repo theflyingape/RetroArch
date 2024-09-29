@@ -3,7 +3,7 @@ xy=896
 oneshot() {
 	comp C64 "Lode Runner${OFF} (c) 19${ON}83 Broderbund"
 	frame "${PAD}   ${KEY} ${UP} ${OFF}" 2
-	frame "${PAD}${KEY} ${LEFT} ${OFF} + ${KEY} ${RIGHT} ${OFF}  ${KEY} BOMB ${OFF}" 2
+	frame "${PAD}${KEY} ${LEFT} ${OFF}${ON}${HBAR}${CROSS}${HBAR}${OFF}${KEY} ${RIGHT} ${OFF}  ${KEY}${RED} BOMB ${OFF}" 2
 	frame "${PAD}   ${KEY} ${DOWN} ${OFF}" 2
 	frame "" 2
 	frame "You will like this platform/puzzle game." 2
