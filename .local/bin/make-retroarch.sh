@@ -16,10 +16,10 @@ if [ "$V" = "new" ]; then
 	# toolchain libraries
 	sudo apt install libasound2-dev libass-dev libassimp-dev libavcodec-dev libavdevice-dev \
 		libavfilter-dev libavformat-dev libavresample-dev libavutil-dev libclc-dev libdrm* \
-		libelf-dev libflac-dev libfreetype6-dev libgbm-dev libgbm1 libgmp-dev libgnutls28-dev \
-		libhidapi* libmbedtls*-dev libmp3lame-dev libmpv* libopenal-dev libopencore-amrnb-dev \
-		libopencore-amrwb-dev libopus-dev librtmp-dev \
-		libsixel-dev libsnappy-dev libsoxr-dev libssh-dev libssl-dev libswresample-dev \
+		libelf-dev libevdev-dev libflac-dev libfreetype6-dev libgbm-dev libgbm1 libgmp-dev \
+		libgnutls28-dev libhidapi* libmbedtls*-dev libmp3lame-dev libmpv* libopenal-dev \
+		libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librtmp-dev libsixel-dev \
+		libsnappy-dev libsoxr-dev libsqlite3-dev libssh-dev libssl-dev libswresample-dev \
 		libswscale-dev libsystemd-dev libudev-dev libunwind-dev libusb-1.0-0-dev libv4l-dev \
 		libva-dev libvdpau-dev libvkd3d-dev libvo-amrwbenc-dev libvorbis-dev libwebp-dev \
 		libx264-dev libx265-dev libxcb-shape0-dev libxcb-shm0-dev libxcb-xfixes0-dev \
@@ -71,8 +71,8 @@ read yn
 if [ "$yn" = "y" ]; then
 	[ -d RetroArch ] || git clone https://github.com/libretro/RetroArch
 	cd RetroArch
-	git pull
-	cp -v ~/src/led_sys_linux.c led/drivers/
+	if git pull ; then
+	cp -v ~/Documents/led_sys_linux.c led/drivers/
 
 	make clean
 	CFLAGS='-O2 -march=armv8-a -mcpu=cortex-a72 -mtune=cortex-a72' \
@@ -82,23 +82,75 @@ if [ "$yn" = "y" ]; then
 		--disable-caca --disable-cheats --disable-langextra \
 		--disable-libusb --disable-parport --disable-roar --disable-winrawinput \
 		--disable-dispmanx --disable-opengl1 --disable-sdl \
-		--disable-sixel --disable-vg --disable-videocore --disable-xvideo \
 		--disable-jack --disable-mpv --disable-oss --disable-tinyalsa \
-		--disable-x11 --disable-xshm \
+		--disable-vg --disable-x11 --disable-xshm --disable-xvideo \
+		--disable-ffmpeg --disable-v4l2 --disable-videoprocessor \
 		--enable-cheevos --enable-command --enable-lua --enable-networking \
 		--enable-materialui --enable-ozone --enable-rgui --enable-xmb \
 		--enable-egl --enable-kms --enable-qt --enable-wayland \
 		--enable-opengl --enable-opengl_core \
 		--enable-opengles --enable-opengles3 --enable-opengles3_1 --enable-opengles3_2 \
-		--enable-sdl2 --enable-vulkan --enable-vulkan_display \
+		--enable-sdl2 --enable-sixel --enable-vulkan --enable-vulkan_display \
 		--enable-alsa --enable-bluetooth --enable-crtswitchres --enable-pulse \
-		--enable-dbus --enable-hid --enable-rpiled --enable-udev \
+		--enable-dbus --enable-hid --enable-libshake --enable-rpiled --enable-udev \
 		--enable-networkgamepad --enable-ssl --enable-systemd --enable-wifi \
-		--enable-ffmpeg --enable-thread_storage --enable-threads --enable-zlib \
+		--enable-thread_storage --enable-threads --enable-zlib \
 	|| exit
 
 	time make -j4 && make install
+	fi
 	cd -
+fi
+
+
+ls -lh /retroarch/cores/bsnes-jg_libretro.so
+echo -n "Rebuild SNES (bsnes-jg) core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d bsnes-jg ] || git clone https://github.com/libretro/bsnes-jg
+	cd bsnes-jg
+	git pull
+
+	cd libretro
+	make clean
+	time make -j4
+	cp -v bsnes-jg_libretro.so /retroarch/cores/
+	cd - && cd ..
+fi
+
+
+ls -lh /retroarch/cores/gpsp_libretro.so
+echo -n "Rebuild Game Boy Advance (gpSP) core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d gpsp ] || git clone https://github.com/libretro/gpsp
+	cd gpsp
+	git pull
+
+	make clean
+	time make -j4
+	cp -v gpsp_libretro.so /retroarch/cores/
+	cd -
+fi
+
+
+ls -lh /retroarch/cores/dolphin_libretro.so
+echo -n "Rebuild Dolphin core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d dolphin ] || git clone https://github.com/libretro/dolphin
+	cd dolphin
+	git pull
+
+	[ -d build ] || mkdir build
+	cd build
+	cmake ..
+	make clean
+	time make -j4 && cp -v dolphin_libretro.so /retroarch/cores/
+	cd - && cd ..
 fi
 
 
@@ -135,6 +187,42 @@ if [ "$yn" = "y" ]; then
 fi
 
 
+ls -lh /retroarch/cores/flycast_libretro.so
+echo -n "Rebuild Flycast (Dreamcast) core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d flycast ] || git clone --recursive https://github.com/flyinghead/flycast.git
+
+	cd flycast
+	git pull
+
+	[ -d build ] && rm -rf build
+	mkdir build && cd build
+	cmake -DLIBRETRO=ON -DUSE_OPENGL=OFF ..
+	time make -j4
+
+	cp -v flycast_libretro.so /retroarch/cores/
+	cd ..
+	cd ..
+fi
+
+
+ls -lh /retroarch/cores/genesis_plus_gx_libretro.so
+echo -n "Rebuild Genesis Plus GX core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d Genesis-Plus-GX ] || git clone https://github.com/libretro/Genesis-Plus-GX
+	cd Genesis-Plus-GX
+	git pull
+
+	time make -j4 -f Makefile.libretro
+	cp -v genesis_plus_gx_libretro.so /retroarch/cores/
+	cd -
+fi
+
+
 ls -lh /retroarch/cores/mame2003_plus_libretro.so
 echo -n "Rebuild MAME 2003-plus core? "
 read yn
@@ -165,7 +253,7 @@ fi
 
 
 ls -lh /retroarch/cores/mesen_libretro.so
-echo -n "Rebuild Mesen core? "
+echo -n "Rebuild Mesen (NES) core? "
 read yn
 
 if [ "$yn" = "y" ]; then
@@ -197,8 +285,56 @@ if [ "$yn" = "y" ]; then
 fi
 
 
+ls -lh /retroarch/cores/mednafen_pce_libretro.so
+echo -n "Rebuild NEC PC Engine TG16-SuperGrafX (beetle fork) core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d beetle-pce-libretro ] || git clone https://github.com/libretro/beetle-pce-libretro
+	cd beetle-pce-libretro
+	git pull
+
+	make clean
+	time make -j4 -f Makefile
+	cp -v mednafen_pce_libretro.so /retroarch/cores/
+	cd -
+fi
+
+
+ls -lh /retroarch/cores/neocd_libretro.so
+echo -n "Rebuild Neo Geo CD (SNK) core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d neocd_libretro ] || git clone https://github.com/libretro/neocd_libretro
+	cd neocd_libretro
+	git pull
+
+	make clean
+	time make -j4 -f Makefile
+	cp -v neocd_libretro.so /retroarch/cores/
+	cd -
+fi
+
+
+ls -lh /retroarch/cores/opera_libretro.so
+echo -n "Rebuild Opera (3DO) core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d opera-libretro ] || git clone https://github.com/libretro/opera-libretro
+	cd opera-libretro
+	git pull
+
+	make clean
+	time make -j4
+	cp -v opera_libretro.so /retroarch/cores/
+	cd -
+fi
+
+
 ls -lh /retroarch/cores/pcsx_rearmed_libretro.so
-echo -n "Rebuild PCSX Rearmed core? "
+echo -n "Rebuild PCSX Rearmed (PlayStation) core? "
 read yn
 
 if [ "$yn" = "y" ]; then
@@ -248,7 +384,7 @@ fi
 
 
 ls -lh /retroarch/cores/puae_libretro.so
-echo -n "Rebuild PUAE core? "
+echo -n "Rebuild PUAE (Amiga) core? "
 read yn
 
 if [ "$yn" = "y" ]; then
@@ -278,7 +414,7 @@ fi
 
 
 ls -lh /retroarch/cores/stella2014_libretro.so
-echo -n "Rebuild Stella 2014 core? "
+echo -n "Rebuild Stella 2014 (Atari 2600) core? "
 read yn
 
 if [ "$yn" = "y" ]; then
@@ -293,7 +429,7 @@ fi
 
 
 ls -lh /retroarch/cores/vice_*_libretro.so
-echo -n "Rebuild VICE core? "
+echo -n "Rebuild VICE (Commodore 8-bit) core? "
 read yn
 
 if [ "$yn" = "y" ]; then
@@ -306,6 +442,22 @@ if [ "$yn" = "y" ]; then
 		make -j4 EMUTYPE=${type}
 		cp -v vice_${type}_libretro.so /retroarch/cores/
 	done
+	cd -
+fi
+
+
+ls -lh /retroarch/cores/px68k_libretro.so
+echo -n "Rebuild X68000 (Sharp) core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d px68k-libretro ] || git clone https://github.com/libretro/px68k-libretro
+	cd px68k-libretro
+	git pull
+
+	make clean
+	time make -j4 -f Makefile
+	cp -v px68k_libretro.so /retroarch/cores/
 	cd -
 fi
 

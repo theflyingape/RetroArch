@@ -6,6 +6,7 @@ sudo lastlog --clear --user $USER
 clear
 shopt -s expand_aliases
 alias out='echo -e'
+MODEL=`grep Model /proc/cpuinfo | awk -F': ' '{ print $2 }' | awk '{ print $2$3 }'`
 
 # set RETROFE_PATH
 export ROOTDIR=$HOME
@@ -17,7 +18,7 @@ RT=/run/user/$UID
 
 # rebuild login banner
 offset=6
-BANNER="`out '\e[0;2mFree entertainment brought to you by \e[0;33mThe Flying Ape\e[m'`"
+BANNER="`out '\e[0;2mFree entertainment brought to you by \e[0;33mThe Flying Ape\e[2m™\e[m'`"
 OS=`grep PRETTY /etc/os-release | awk -F= '{print $2}' | tr -d '"'`
 linux_logo -L raspi -o$offset -s -F "#E\n${OS} #V\n#N #M #X #T Processor#S, #R RAM" -t "${BANNER}" > $RT/issue
 sudo mv $RT/issue /etc/issue
@@ -28,7 +29,7 @@ if ! pidof -q fbi ; then
 	SPLASH="`ls -t $HOME/Pictures/Splash/* | tail -1`"
 	touch "${SPLASH}"
 	sudo fbi --noverbose -a -vt 8 "${SPLASH}" &> /dev/null &
-	sleep 1
+	sleep 1.5
 	CLICK="Startup/$(( RANDOM % 5 )).wav"
 fi
 
@@ -38,8 +39,8 @@ trap "sudo chvt 8; sleep 2; exit" 1 3 15
 
 [ -f $RA/assets/sounds/BGM.wav ] && rm $RA/assets/sounds/BGM.wav
 rm -f $RT/packages 2> /dev/null
-SAT="$HOME/Videos/Saturday/"
 YT="$HOME/Videos"
+SAT="$YT/Saturday/"
 
 BG=( yellow black blue black red magenta )
 FG=( black green white white black white )
@@ -54,6 +55,9 @@ DOWN='\x0e.\x0f'
 LEFT='\x0e,\x0f'
 RIGHT='\x0e+\x0f'
 UP='\x0e-\x0f'
+CROSS='\x0en\x0f'
+HBAR='\x0eq\x0f'
+VBAR='\x0ex\x0f'
 FOCUS=`grep 'input_game_focus_toggle = ' $RT/retroarch.cfg | awk -F= '{ print $2 }' | tr -d ' "_'`
 FOCUS="${KEY} ${FOCUS} ${OFF}"
 
@@ -66,8 +70,7 @@ for lpl in 'ColecoVision' 'Super Nintendo' 'FBNeo' 'Intellivision' 'MAME' 'Ninte
 	'Atari 7800' 'Atari 2600' 'C64' 'C16' 'VIC20'; do
 	while read content ; do
 		lib="${core[$n]}"
-		[[ "${content}" =~ 2010 ]] && lib=mame2010
-		[[ "${content}" =~ 2016 ]] && lib=mamearcade2016
+		[[ "${content}" =~ "/MAME/" ]] && lib=mame
 		echo "-L ${lib} ${content}" >> "$EXTRACT"
 	done < <( grep '"path":' "$RA/content_favorites.lpl" | grep "/$lpl" | awk -F'"path": ' '{print $2}' | sed 's/.$//' )
 	let n=$n+1
@@ -82,6 +85,7 @@ dualsense() {
 			declare -i j=i-1
 			dualsensectl -d ${PS5[$j]} lightbar ${RGB[$j]} 80
 			dualsensectl -d ${PS5[$j]} microphone-led off
+			dualsensectl -d ${PS5[$j]} trigger both off
 		done
 	fi
 }
@@ -152,7 +156,7 @@ input() {
 				CLICK="Click/0$(( RANDOM % 10 ))2.mp3"
 				click
 				echo "MASTER=\"$MASTER\"" > $HOME/.local/etc/MASTER
-				info="${DOT}${DOT}[${DIM}${MASTER}${OFF}]${DOT}${DOT}"
+				info="««${DOT}${DIM}${MASTER}${OFF}${DOT}»»"
 				;;
 			DPAD_RIGHT|RIGHT|VOLUMEUP)
 				volume "6%+"
@@ -160,14 +164,14 @@ input() {
 				CLICK="Click/0$(( RANDOM % 10 ))2.mp3"
 				click
 				echo "MASTER=\"$MASTER\"" > $HOME/.local/etc/MASTER
-				info="${DOT}${DOT}[${DIM}${MASTER}${OFF}]${DOT}${DOT}"
+				info="««${DOT}${DIM}${MASTER}${OFF}${DOT}»»"
 				;;
 			"!")
-				let ${sub}=8
+				[ "$FOLDER" = "main" ] && let ${sub}=8
 				info=
 				;;
 			"@")
-				let ${sub}=9
+				[ "$FOLDER" = "main" ] && let ${sub}=9
 				info=
 				;;
 			*)
@@ -251,13 +255,10 @@ bookshelf() {
 }
 
 show() {
-	#out -n "\e[m\r"
-	#setterm --background white --foreground black --hbcolor bright white --store --clear=rest
-	#mt ; stty echo
 	reset
 	SHOW=( `ls --file-type $SAT | grep '.*/'` )
 	for show in ${SHOW[@]}; do
-		count=`ls ${SAT}${show}*.mp4 | wc -l`
+		count=`find ${SAT}${show} -name '*.mp4' | wc -l`
 		frame "${PAD}${DIM}${DOT}${ON} ${show%/*}\e[$(( 24 - ${#show} - ${#PAD} ))C${OFF}${RIGHT} $count"
 	done
 	frame "\n\n\e[3A"
@@ -294,7 +295,10 @@ frame() {
 }
 
 gameover() {
+	clear
 	reset
+	sudo chvt 8
+	sleep 0.5
 	kill -HUP $PPID `pidof bash`
 }
 
@@ -329,8 +333,8 @@ anykey() {
 	frame
 	frame
 	out -n "\r\e[2A"
-	frame "Press any button/key to ${any}: \e[s\r\e[81C${KEY} ESC ${OFF} or Left ${KEY} Bumper ${OFF} to go back" 1
-	any=continue
+	frame "Press any button/key ${any}: \e[s\r\e[81C${KEY} ESC ${OFF} or Left ${KEY} Bumper ${OFF} to go back" 1
+	any="to continue"
 	input $sec 2
 	status=$?
 	killall -qw mplayer &> /dev/null &
@@ -381,7 +385,7 @@ compete() {
 	frame "\e[73C${KEY} Delete ${OFF} or ${KEY} Select ${OFF}+${KEY} Start ${OFF} to quit"
 	frame "\e[70C${KEY} Backspace ${OFF} ${DIM}${RIGHT}${ON}${RIGHT}${OFF} to review ${DIM}Achievements"
 	out "\e[4A"
-	any="${DIM}challenge${OFF} or ${KEY}n${OFF} to play"
+	any="for Cheevos ${DIM}challenge${OFF} or ${KEY}n${OFF}o to just play"
 }
 
 driver() {
@@ -527,6 +531,7 @@ laserdiscs() {
 
 	out 
 	if [ -n "${disc}" ]; then 
+		pip "$YT/Preview/${disc}.mp4" 800
 		setterm --background cyan --foreground black --hbcolor bright white --store --clear=rest
 		frame 
 		frame "${INFO[$i]}"
@@ -536,16 +541,17 @@ laserdiscs() {
 		frame "${KEY} ESC ${OFF} to QUIT the game"
 		anykey && $HOME/Daphne/daphne.sh "${RA}/roms/Daphne/${disc}.daphne" &> /dev/null
 	fi
+	n=15
 }
 
 main() {
 	crt
-	frame "${DOT}${DIM}0${OFF}  Big Menu  10,299   ${DOT}${DIM}5${OFF}  Board and Party      7   ${DOT}${DIM}a${OFF}  Asteroids        ${DOT}${DIM}n${OFF}  Donkey Kong     ${DOT}${DIM}A${OFF}  Astro Blaster"
-	frame "${DOT}${DIM}1${OFF}  Arcade     2,480   ${DOT}${DIM}6${OFF}  Pinball Simulators   2   ${DOT}${DIM}b${OFF}  Bubble Bobble    ${DOT}${DIM}o${OFF}  Jungle King     ${DOT}${DIM}C${OFF}  Cyberball    "
-	frame "${DOT}${DIM}2${OFF}  Computers  2,946   ${DOT}${DIM}7${OFF}  RTS and Turn-based   6   ${DOT}${DIM}c${OFF}  Carnival         ${DOT}${DIM}p${OFF}  Moon Patrol     ${DOT}${DIM}D${OFF}  Defender     "
-	frame "${DOT}${DIM}3${OFF}  Consoles   4,284   ${DOT}${DIM}8${OFF}  Niche Controls      25   ${DOT}${DIM}d${OFF}  Mr. Do!          ${DOT}${DIM}q${OFF}  Ripoff          ${DOT}${DIM}G${OFF}  GORF         "
-	frame "${DOT}${DIM}4${OFF}  Handhelds  2,752   ${DOT}${DIM}9${OFF}  Homebrews            5   ${DOT}${DIM}f${OFF}  Frogger          ${DOT}${DIM}r${OFF}  Robotron        ${DOT}${DIM}H${OFF}  Hat Trick    "
-	frame "${DOT}${DIM}N${OFF}  Netplay    3,664   ${DOT}${DIM}L${OFF}  Laserdiscs           6   ${DOT}${DIM}g${OFF}  Galaga           ${DOT}${DIM}s${OFF}  Spiders         ${DOT}${DIM}K${OFF}  Karate Champ "
+	frame "»${DIM}0${OFF}  Big Menu  10,304   •${DIM}5${OFF}  Party Games         14   ${DOT}${DIM}a${OFF}  Asteroids        ${DOT}${DIM}n${OFF}  Donkey Kong     ${DOT}${DIM}A${OFF}  Astro Blaster"
+	frame "»${DIM}1${OFF}  Arcade     2,479   •${DIM}6${OFF}  Pinball Simulators   6   ${DOT}${DIM}b${OFF}  Bubble Bobble    ${DOT}${DIM}o${OFF}  Jungle King     ${DOT}${DIM}C${OFF}  Cyberball    "
+	frame "»${DIM}2${OFF}  Computers  2,947   •${DIM}7${OFF}  RTS and Turn-based   9   ${DOT}${DIM}c${OFF}  Carnival         ${DOT}${DIM}p${OFF}  Moon Patrol     ${DOT}${DIM}D${OFF}  Defender     "
+	frame "»${DIM}3${OFF}  Consoles   4,284   •${DIM}8${OFF}  Niche Controls      26   ${DOT}${DIM}d${OFF}  Mr. Do!          ${DOT}${DIM}q${OFF}  Ripoff          ${DOT}${DIM}G${OFF}  GORF         "
+	frame "»${DIM}4${OFF}  Handhelds  2,752   •${DIM}9${OFF}  Homebrews            5   ${DOT}${DIM}f${OFF}  Frogger          ${DOT}${DIM}r${OFF}  Robotron 2084   ${DOT}${DIM}H${OFF}  Hat Trick    "
+	frame "»${DIM}N${OFF}  Netplay    3,664   •${DIM}L${OFF}  Laserdiscs           6   ${DOT}${DIM}g${OFF}  Galaga           ${DOT}${DIM}s${OFF}  Spiders         ${DOT}${DIM}K${OFF}  Karate Champ "
 	frame "                                                    ${DOT}${DIM}j${OFF}  Joust            ${DOT}${DIM}t${OFF}  Time Pilot      ${DOT}${DIM}Q${OFF}  Q*bert        "
 	frame "${DOT}${DIM}!${OFF}  Power off          ${DOT}${DIM}U${OFF}  Upgrade Linux (reboot)   ${DOT}${DIM}k${OFF}  Kung-Fu Master   ${DOT}${DIM}x${OFF}  Xevious         ${DOT}${DIM}S${OFF}  Space Duel   "
 	frame "${DOT}${DIM}@${OFF}  Reboot             ${DOT}${DIM}Z${OFF}  Toggle boot: ${ON}${STARTUP}${OFF}   ${DOT}${DIM}l${OFF}  Lady Bug         ${DOT}${DIM}y${OFF}  10-Yard Fight   ${DOT}${DIM}T${OFF}  Tapper        "
@@ -555,16 +561,21 @@ main() {
 
 party() {
 	crt
-	frame "${DOT}${DIM}g${OFF}  Gauntlet   (~4P)    ${DOT}${DIM}G${OFF}  Gauntlet II   (~4P)"
-	frame "${DOT}${DIM}j${OFF}  Jumpman    (~4P)    ${DOT}${DIM}R${OFF}  Rampage       (~3P)"
-	frame "${DOT}${DIM}t${OFF}  Trog       (~4P)    ${DOT}${DIM}T${OFF}  Tecmo Bowl    (~4P)"
-	frame "                        ${DOT}${DIM}W${OFF}  Wizard        (~6P)"
+	frame "${DOT}${DIM}g${OFF}  Gauntlet       (~4P)   ${DOT}${DIM}G${OFF}  Gauntlet II             (~4P)"
+	frame "${DOT}${DIM}h${OFF}  Hoyle Casino   (~4P)   ${DOT}${DIM}H${OFF}  Gauntlet Legends        (~4P)"
+	frame "${DOT}${DIM}j${OFF}  Jumpman        (~4P)   ${DOT}${DIM}L${OFF}  Game of Life            (~6P)"
+	frame "${DOT}${DIM}k${OFF}  Mario Kart 64  (~4P)   ${DOT}${DIM}N${OFF}  Ninja Baseball Batman   (~4P)"
+	frame "${DOT}${DIM}m${OFF}  Monopoly       (~8P)   ${DOT}${DIM}R${OFF}  Rampage                 (~3P)"
+	frame "${DOT}${DIM}t${OFF}  Trog           (~4P)   ${DOT}${DIM}S${OFF}  Super Smash Bros        (~4P)"
+	frame "${DOT}${DIM}w${OFF}  Wizard         (~6P)   ${DOT}${DIM}T${OFF}  Tecmo Bowl              (~4P)"
 	frame
 	n=1
 
 	FOLDER=party
-	CHOICE=( "" "g" "j" "t" "G" "R" "T" "W" )
-	MENU=( "" "Gauntlet" "Jumpman" "Trog" "Gauntlet II" "Rampage" "Tecmo Bowl" "Wizard" )
+	CHOICE=( "" "g" "h" "j" "k" "m" "t" "w" "G" "H" "L" "N" "R" "S" "T" )
+	MENU=( "" "Gauntlet" "Hoyle Casino" "Jumpman" "Mario Kart 64" "Monopoly" "Trog" "Wizard" \
+		"Gauntlet II" "Gauntlet Legends" "Game of Life" "Ninja Baseball Batman" "Rampage" \
+		"Super Smash Bros" "Tecmo Bowl" )
 
 	frame 
 	frame "${OFF}\e[$(( $WIDTH - 17 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
@@ -578,20 +589,44 @@ party() {
 	g)
 		src gauntlet
 		;;
+	h)
+		src casino
+		;;
 	j)
 		src jumpman
+		;;
+	k)
+		src mario-kart64
+		;;
+	m)
+		src monopoly
 		;;
 	t)
 		src trog
 		;;
+	w)
+		src wizard
+		;;
 	G)
 		src gaunt2
 		;;
+	H)
+		src glegends
+		;;
+	L)
+		src golife
+		;;
+	N)
+		src nbbatman
+		;;
+	R)
+		src rampage
+		;;
+	S)
+		src gamecube
+		;;
 	T)
 		src tbowl
-		;;
-	W)
-		src wizard
 		;;
 	esac
 	n=10
@@ -599,13 +634,18 @@ party() {
 
 pinball() {
 	crt
-	frame "${DOT}${DIM}f${OFF}  Fantasies  (~8P)    ${DOT}${DIM}V${OFF}  Video Pinball   (~2P)"
+	frame "${DOT}${DIM}a${OFF}  Pinball Action   (~2P)"
+	frame "${DOT}${DIM}d${OFF}  Devil's Crush    (~2P)"
+	frame "${DOT}${DIM}e${OFF}  Extreme Pinball  (~4P)"
+	frame "${DOT}${DIM}f${OFF}  Fantasies        (~8P)"
+	frame "${DOT}${DIM}t${OFF}  True Pinball     (~2P)"
+	frame "${DOT}${DIM}v${OFF}  Video Pinball    (~2P)"
 	frame 
 	n=1
 
 	FOLDER=pinball
-	CHOICE=( "" "f" "V" )
-	MENU=( "" "Pinball Fantasies" "Video Pinball" )
+	CHOICE=( "" "a" "d" "e" "f" "t" "v" )
+	MENU=( "" "Pinball Action" "Devil's Crush" "Extreme Pinball" "Pinball Fantasies" "True Pinball" "Video Pinball" )
 
 	frame 
 	frame "${OFF}\e[$(( $WIDTH - 17 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
@@ -616,10 +656,22 @@ pinball() {
 	[ "$choice" = "attract" ] && choice=${CHOICE[$((RANDOM%${#MENU[@]}+1))]}
 
 	case $choice in
+	a)
+		src pbaction
+		;;
+	d)
+		src devilscr
+		;;
+	e)
+		src extreme
+		;;
 	f)
 		src pballf
 		;;
-	V)
+	t)
+		src truepball
+		;;
+	v)
 		src vpinball
 		;;
 	esac
@@ -628,15 +680,17 @@ pinball() {
 
 strategy() {
 	crt
+	frame "${DOT}${DIM}0${OFF}  0 A.D."
 	frame "${DOT}${DIM}a${OFF}  Angband             ${DOT}${DIM}E${OFF}  Empire"
-	frame "${DOT}${DIM}d${OFF}  Dank Domain         ${DOT}${DIM}S${OFF}  Super Trek"
+	frame "${DOT}${DIM}d${OFF}  Dank Domain         ${DOT}${DIM}R${OFF}  Risk (~6P) or Ultimate (~8P)"
+	frame "${DOT}${DIM}s${OFF}  Stratego    (~2P)   ${DOT}${DIM}S${OFF}  Super Trek"
 	frame "${DOT}${DIM}w${OFF}  Warcraft            ${DOT}${DIM}W${OFF}  Warcraft II"
 	frame 
 	n=1
 
 	FOLDER=strategy
-	CHOICE=( "" "a" "d" "w" "E" "S" "W" )
-	MENU=( "" "Angband" "Dank Domain" "Warcraft" "Empire" "Super Trek" "Warcraft II" )
+	CHOICE=( "" "0" "a" "d" "s" "w" "E" "R" "S" "W" )
+	MENU=( "" "0 A.D." "Angband" "Dank Domain" "Stratego" "Warcraft" "Empire" "Risk / Ultimate" "Super Trek" "Warcraft II" )
 
 	frame 
 	frame "${OFF}\e[$(( $WIDTH - 17 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
@@ -647,17 +701,26 @@ strategy() {
 	[ "$choice" = "attract" ] && choice=${CHOICE[$((RANDOM%${#MENU[@]}+1))]}
 
 	case $choice in
+	0)
+		src 0ad
+		;;
 	a)
 		src angband
 		;;
 	d)
 		src vt240
 		;;
+	s)
+		src stratego
+		;;
 	w)
 		src warcraft
 		;;
 	E)
 		src empire
+		;;
+	R)
+		src risk
 		;;
 	S)
 		src supertrek
@@ -671,29 +734,29 @@ strategy() {
 
 niche() {
 	crt
-	frame "${ON}    Advanced                Dial/Spinner              Mouse/Trackball                    Lightgun"
-	frame "${DOT}${DIM}1${OFF}  Club Kart 2K3       ${DOT}${DIM}a${OFF}  Kick         (~2P)    ${DOT}${DIM}A${OFF}  Centipede             (~2P)    ${DOT}${DIM}X${OFF}  Crossbow         (1P)"
-	frame "${DOT}${DIM}2${OFF}  Lunar Lander        ${DOT}${DIM}b${OFF}  Megaball      (1P)    ${DOT}${DIM}B${OFF}  City Defense          (~2P)    ${DOT}${DIM}Y${OFF}  Duck Hunt       (~2P)"
-	frame "${DOT}${DIM}3${OFF}  Night Driver        ${DOT}${DIM}c${OFF}  Omega Race   (~2P)    ${DOT}${DIM}C${OFF}  Coors Light Bowling   (~2P)"
-	frame "${DOT}${DIM}4${OFF}  Pole Position       ${DOT}${DIM}d${OFF}  Seawolf       (1P)    ${DOT}${DIM}D${OFF}  Empire Strikes Back   (~2P)"
-	frame "${DOT}${DIM}5${OFF}  Spy Hunter          ${DOT}${DIM}e${OFF}  Seawolf II   (~2P)    ${DOT}${DIM}E${OFF}  Gridiron!             (~2P)"
-	frame "${DOT}${DIM}6${OFF}  Star Trek           ${DOT}${DIM}f${OFF}  Tempest      (~2P)    ${DOT}${DIM}F${OFF}  Mini Golf             (~2P)"
-	frame "${DOT}${DIM}7${OFF}  Toobin'                                       ${DOT}${DIM}G${OFF}  Missile Command       (~2P)"
-	frame "${DOT}${DIM}8${OFF}  Tron                                          ${DOT}${DIM}H${OFF}  Star Wars             (~2P)"
-	frame "                                                  ${DOT}${DIM}I${OFF}  Tail Gunner            (1P)"
+	frame "${ON}    Advanced              Dial/Spinner               Mouse/Trackball                     Lightgun"
+	frame "${DOT}${DIM}1${OFF}  Lunar Lander      ${DOT}${DIM}a${OFF}  Kick         (~2P)     ${DOT}${DIM}A${OFF}  Centipede             (~2P)     ${DOT}${DIM}X${OFF}  Crossbow         (1P)"
+	frame "${DOT}${DIM}2${OFF}  NBA 2K2           ${DOT}${DIM}b${OFF}  Megaball      (1P)     ${DOT}${DIM}B${OFF}  City Defense          (~2P)     ${DOT}${DIM}Y${OFF}  Duck Hunt       (~2P)"
+	frame "${DOT}${DIM}3${OFF}  NFL 2K2           ${DOT}${DIM}c${OFF}  Omega Race   (~2P)     ${DOT}${DIM}C${OFF}  Coors Light Bowling   (~2P)     ${DOT}${DIM}Z${OFF}  Enable Lightgun"
+	frame "${DOT}${DIM}4${OFF}  Night Driver      ${DOT}${DIM}d${OFF}  Seawolf       (1P)     ${DOT}${DIM}D${OFF}  Empire Strikes Back   (~2P)"
+	frame "${DOT}${DIM}5${OFF}  Pole Position     ${DOT}${DIM}e${OFF}  Seawolf II   (~2P)     ${DOT}${DIM}E${OFF}  Gridiron!             (~2P)"
+	frame "${DOT}${DIM}6${OFF}  Spy Hunter        ${DOT}${DIM}f${OFF}  Tempest      (~2P)     ${DOT}${DIM}F${OFF}  Mini Golf             (~2P)"
+	frame "${DOT}${DIM}7${OFF}  Star Trek                                    ${DOT}${DIM}G${OFF}  Missile Command       (~2P)"
+	frame "${DOT}${DIM}8${OFF}  Toobin'                                      ${DOT}${DIM}H${OFF}  Star Wars             (~2P)"
+	frame "${DOT}${DIM}9${OFF}  Tron                                         ${DOT}${DIM}I${OFF}  Tail Gunner            (1P)"
 	frame 
 	n=1
 
 	FOLDER=niche
-	CHOICE=( "" "1" "2" "3" "4" "5" "6" "7" "8" \
+	CHOICE=( "" "1" "2" "3" "4" "5" "6" "7" "8" "9" \
 			"a" "b" "c" "d" "e" "f" \
 			"A" "B" "C" "D" "E" "F" "G" "H" "I" \
-			"X" "Y" )
-	MENU=( "" "Club Kart 2K3" "Lunar Lander" "Night Driver" "Pole Position" "Spy Hunter" "Star Trek" "Toobin'" \
+			"X" "Y" "Z" )
+	MENU=( "" "Lunar Lander" "NBA 2K2" "NFL 2K2" "Night Driver" "Pole Position" "Spy Hunter" "Star Trek" "Toobin'" \
 			"Tron" "Kick" "Megaball" "Omega Race" "Seawolf" "Seawolf II" "Tempest" \
 			"Centipede" "City Defense" "Coors Light Bowling" "Empire Strikes Back" "Gridiron!" "Mini Golf" \
 			"Missile Command" "Star Wars" "Tail Gunner" \
-			"Crossbow" "Duck Hunt" )
+			"Crossbow" "Duck Hunt" "Sinden Lightgun" )
 
 	frame 
 	frame "${OFF}\e[$(( $WIDTH - 17 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
@@ -705,27 +768,30 @@ niche() {
 
 	case $choice in
 	1)
-		src clubk2k3
-		;;
-	2)
 		src llander
 		;;
+	2)
+		src nba2k2
+		;;
 	3)
-		src nitedrvr
+		src nfl2k2
 		;;
 	4)
-		src polepos
+		src nitedrvr
 		;;
 	5)
-		src spyhunt
+		src polepos
 		;;
 	6)
-		src startrek
+		src spyhunt
 		;;
 	7)
-		src toobin
+		src startrek
 		;;
 	8)
+		src toobin
+		;;
+	9)
 		src tron
 		;;
 	a)
@@ -779,7 +845,25 @@ niche() {
 	Y)
 		src duckhunt
 		;;
+	Z)
+		frame "Calibrate a lightgun? \e[s" 1
+		input 6
+		while [ "$got" = "y" ]; do
+			cd $HOME/src/Lightgun/Application > /dev/null
+			timeout -s SIGALRM 100 mono LightgunMono.exe sdl 30
+			cd - > /dev/null
+			frame "Retry lightgun calibration? \e[s" 1
+			input 6
+		done
+		cd $HOME/src/Lightgun/Application > /dev/null
+		mono-service LightgunMono.exe
+		cd - > /dev/null
+	#	play --appendconfig="$PLAY|$RA/lightgun.cfg"
+		niche
+		;;
 	esac
+	pkill mono &> /dev/null
+	rm -f /tmp/LightgunMono*
 	n=13
 }
 
@@ -840,11 +924,13 @@ prompt() {
 
 	frame "$label\e[s${DIM}${!val} ${OFF}${RIGHT}${ON} ${MENU[${!sub}]}" 1
 	click
-	[ -z "${NETWORK}" ] && out -n "\r\e[${NETSTAT}C${OFF}  ${LEFT}${ON}${LEFT}${KEY}${RED} network ${ON}${RIGHT}${OFF}${RIGHT}\e[u" || out -n "\r\e[${NETSTAT}C${OFF}${DOT}${DIM}${LEFT}${OFF} ${NETWORK%/*} ${DIM}${RIGHT}\e[u"
+	[ -z "${NETWORK}" ] && out -n "\r\e[${NETSTAT}C${OFF} «${ON}«${KEY}${RED} network ${ON}»${OFF}»\e[u" || out -n "\r\e[${NETSTAT}C${DIM}«${OFF} ${NETWORK%/*} ${DIM}»\e[u"
 	[ -f $RT/packages ] && packages=`tail -1 $RT/packages | awk '{ print $1 }'`
 	[ "$packages" = "All" ] || out -n "\r\e[$(( $WIDTH - 12 ))C${LEFT} ${KEY}\x0eah\x0f upgrade \x0eha\x0f${OFF} ${DIM}${RIGHT}\e[u"
+
 	input $sec 1
 	[ $status -eq 0 ] || got="attract"
+
 	case $got in
 	GAMEPAD|START|ENTER)
 		export ${val}="${CHOICE[${!sub}]}"
@@ -857,31 +943,40 @@ prompt() {
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} VIC-20 (19${ON}81${OFF}-${ON}85${OFF})"
 		pip "$YT/Preview/vic20.mp4" 896
 		floppy "VIC20 - Friendly Guide.pdf" && qstart -L vice_xvic
+		gameover
 		;;
 	F2)
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} 16 (19${ON}84${OFF}-${ON}85${OFF})"
 		pip "$YT/Preview/c16.mp4" 896
 		floppy && qstart -L vice_xplus4
+		gameover
 		;;
 	F3)
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} 128 (19${ON}85${OFF}-${ON}89${OFF})"
 		pip "$YT/Preview/c128.mp4" 896
 		floppy "C128 - System Guide.pdf" && qstart -L vice_x128 "$RA/roms/Commodore/C128.m3u"
+		gameover
 		;;
 	F4)
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} 128D (19${ON}86${OFF}-${ON}89${OFF})"
 		pip "$YT/Preview/c128d.mp4" 1084
-		floppy "C128D - System Guide.pdf" && qstart -L vice_x128 "$RA/roms/Commodore/C128-VDC.m3u"
+		if floppy "C128D - System Guide.pdf" ; then
+			reset
+			qstart -L vice_x128 "$RA/roms/Commodore/C128-VDC.m3u"
+		fi
+		gameover
 		;;
 	F5)
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} Amiga 2000 (19${ON}87${OFF}-${ON}92${OFF})"
 		pip "$YT/Preview/a2000.mp4" 896
 		floppy 60 && qstart -L puae "$RA/roms/Commodore/A500 (MD).m3u"
+		gameover
 		;;
 	F6)
 		frame "\e[u${KEY} \e[34mC${RED}= ${OFF} Amiga 3000T (19${ON}90${OFF}-${ON}92${OFF})"
 		pip "$YT/Preview/a3000.mp4" 896
 		floppy && qstart -L puae "$RA/roms/Commodore/A3030.m3u"
+		gameover
 		;;
 	F7)
 		frame "\e[uWireless settings"
@@ -931,7 +1026,7 @@ prompt() {
 		out
 		setterm --background cyan --foreground black --hbcolor bright white --store --clear=rest
 		frame "You pick: ${DIM}\e[s" 1
-		read -t 64 pick && killall -qw ffplay &> /dev/null
+		read -t 63 pick && killall -qw ffplay &> /dev/null
 		frame "\r\e[A\e[11C${DIM}\e[s" 1
 		pick="${pick%.*}"
 		src "${pick}"
@@ -983,13 +1078,21 @@ play() {
 			dualsensectl -d ${PS5[$j]} lightbar ${RGB[$j]} 255
 			dualsensectl -d ${PS5[$j]} microphone-led off
 			dualsensectl -d ${PS5[$j]} player-leds $i
+			dualsensectl -d ${PS5[$j]} trigger both off
+			# load any trigger mode(s)
+			if [ "${#TRIGGER[@]}" -gt 0 ]; then
+				for t in `seq ${#TRIGGER[@]}`; do
+					declare -i m=t-1
+					dualsensectl -d ${PS5[$j]} trigger ${TRIGGER[$m]}
+				done
+			fi
 		done
 	fi
 	BGM="`ls -t $HOME/Music/Background/*.ogg | tail -1`"
 	touch "$BGM"
 	ln -sf "$BGM" $RA/assets/sounds/bgm.ogg 
 	result=0
-	retroarch --config=$RT/retroarch.cfg --log-file=$RT/runtime.log -v "$@" &> /dev/null || result=1
+	gamemoderun retroarch --config=$RT/retroarch.cfg --log-file=$RT/runtime.log -v "$@" &> /dev/null || result=1
 	frame "Running play time: ${DIM}`grep 'Content ran' $RT/runtime.log | head -1 | awk -F': ' '{print $3}'`"
 	dualsense
 	volume "$MASTER"
@@ -1014,34 +1117,30 @@ arcade() {
 
 cheevos() {
 	frame "Achievements require Internet and a login account."
+	if [ -n "$username" ]; then
+		frame "Change this account ${ON}$username${OFF} for ${ON}\e[33mRetroAchievements.org${OFF} badges? \e[s" 1
+		input 6
+		[ "$got" = "y" ] && username= || frame "\e[uNo"
+	fi
 	if [ -z "$username" ]; then
-		if [ -n "$username" ]; then
-			frame "Change this account ${ON}$username${OFF} for ${ON}\e[33mRetroAchievements.org${OFF} badges? \e[s" 1
-			input 6
-			[ "$got" = "y" ] && username= || frame "\e[uNo"
-		fi
-		if [ -z "$username" ]; then
-			crt
-			frame "Visit ${ON}\e[33mRetroAchievements.org${OFF} to create a free account, then"
-			frame "answer ${ON}y${OFF}es here to fill-in this account name & password."
-			frame "Fill-in now? ${ON}\e[s" 1
-			input 6
-			if [ "$got" = "y" ]; then
-				frame "\e[uYes${OFF}"
-				mt ; stty echo
-				frame "Username: ${ON}\e[s" 1
-				read -t 24 username
-				if [ -n "$username" ]; then
-					sed -i 's/_username = ".*"/_username = "'$username'"/' $RA/cheevos.cfg
-				fi
+		crt
+		frame "Visit ${ON}\e[33mRetroAchievements.org${OFF} to create a free account, then"
+		frame "answer ${ON}y${OFF}es here to fill-in this account name & password."
+		frame "Fill-in now? ${ON}\e[s" 1
+		input 6
+		if [ "$got" = "y" ]; then
+			frame "\e[uYes${OFF}"
+			mt ; stty echo
+			frame "Username: ${ON}\e[s" 1
+			read -t 24 username
+			if [ -n "$username" ]; then
+ 				sed -i 's/_username = ".*"/_username = "'$username'"/' $RA/cheevos.cfg
 				frame "${OFF}Password: ${ON}\e[s" 1
 				read -t 24 password
-				if [ -n "$username" ]; then
-					sed -i 's/_password = ".*"/_password = "'$password'"/' $RA/cheevos.cfg
-				fi
-			else
-				frame "\e[uNo"
+				[ -n "$password" ] && sed -i 's/_password = ".*"/_password = "'$password'"/' $RA/cheevos.cfg
 			fi
+		else
+			frame "\e[uNo"
 		fi
 	fi
 	roms="`echo $@ | awk -F/ '{print $4}'`"
@@ -1079,7 +1178,7 @@ hdmi() {
 	[ $HDMI -eq 1 ] && fbset -a -g 1920 1080 1920 1080 16
 	setfont Lat15-TerminusBold32x16
 	WIDTH=110
-	NETSTAT=$(( $WIDTH - 12 ))
+	NETSTAT=$(( $WIDTH - 11 ))
 	PAD='     '
 	LPAD='\x0eah\x0f   '
 	RPAD='   \x0eha\x0f'
@@ -1168,15 +1267,30 @@ systemctl is-enabled sddm > /dev/null \
  || STARTUP="Desktop  "
 main
 
-#pidof -q sddm && sudo chvt 2 || sudo chvt 1
-sudo chvt 1
+# compatibility hack fixes between Raspberry models
+case $MODEL in
+Pi4)
+	shader=$( grep shader_enable "$RA/config/Beetle PCE/Beetle PCE.cfg" | awk -F= '{ print $2 }' | tr -d [:punct:][:space:] )
+	[ "$shader" = "false" ] || sed -i 's/shader_enable = ".*"/shader_enable = "false"/' "$RA/config/Beetle PCE/Beetle PCE.cfg"
+	ln -sf "Nintendo 64.pi4" "$RA/config/Mupen64Plus-Next/Nintendo 64.opt"
+	drc=$( grep _drc $RA/config/PCSX-ReARMed/PCSX-ReARMed.opt | awk -F= '{ print $2 }' | tr -d [:punct:][:space:] )
+	[ "$drc" = "disabled" ] || sed -i 's/_drc = ".*"/_drc = "disabled"/' $RA/config/PCSX-ReARMed/PCSX-ReARMed.opt
+	;;
+Pi5)
+	shader=$( grep shader_enable "$RA/config/Beetle PCE/Beetle PCE.cfg" | awk -F= '{ print $2 }' | tr -d [:punct:][:space:] )
+	[ "$shader" = "true" ] || sed -i 's/shader_enable = ".*"/shader_enable = "true"/' "$RA/config/Beetle PCE/Beetle PCE.cfg"
+	ln -sf "Nintendo 64.pi5" "$RA/config/Mupen64Plus-Next/Nintendo 64.opt"
+	drc=$( grep _drc "$RA/config/PCSX-ReARMed/PCSX-ReARMed.opt" | awk -F= '{ print $2 }' | tr -d [:punct:][:space:] )
+	[ "$drc" = "disabled" ] || sed -i 's/_drc = ".*"/_drc = "disabled"/' "$RA/config/PCSX-ReARMed/PCSX-ReARMed.opt"
+	;;
+esac
 
-any=continue
+any="to continue"
 got=
 choice=
 content=
 roms=
-username="`grep _username $RA/cheevos.cfg | awk -F= '{print $2}' | tr -d [\" \]`"
+username="`grep _username $RA/cheevos.cfg | awk -F= '{print $2}' | tr -d [:punct:][:space:]`"
 let n=1
 let L=0
 packages="All"
@@ -1194,10 +1308,11 @@ MENU=( "" "Rob's quick-pick" "BIG `driver $RA/big`" "Arcade emporium `driver $RA
 	"Computer craze `driver $RA/computers`" "Console mania `driver $RA/consoles`" \
 	"Handheld hero `driver $RA/handhelds`" "Netplay friends (~3P remote) `driver $RA/netplay`" \
 	"Power off" "Re-boot" \
-	"Let's party!" "Pinball wizard"	"Strategum" "Plug it in" "Homebrew magic" "Interactive movies" \
-	"next cartoon" "Saturday TV or cinema matinee" "Bookshelf manuals" "Read me!" \
+	"Let's party!" "Pinball wizard"	"Strategum" "Plug it in" "Homebrew magic" "Interactive animations" \
+	"next cartoon" "Saturday TV or cinema matinee shows" "Bookshelf manuals" "Read me!" \
 	"KDE Plasma desktop")
 
+sudo chvt 1
 frame 
 frame "${OFF}\e[$(( $WIDTH - 17 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
 prompt "Choose ${ON}${DOWN}${UP}${OFF}: ${DIM}" n choice
@@ -1257,22 +1372,6 @@ case $choice in
 	;;
 8)
 	out "Time to shoot?"
-	click wait
-	frame "Calibrate a lightgun? \e[s" 1
-	input 6
-	while [ "$got" = "y" ]; do
-		cd $HOME/src/Lightgun/Application > /dev/null
-		timeout -s SIGALRM 100 mono LightgunMono.exe sdl 30
-		cd - > /dev/null
-		frame "Retry lightgun calibration? \e[s" 1
-		input 6
-	done
-#	cd $HOME/src/Lightgun/Application > /dev/null
-#	mono-service LightgunMono.exe
-#	cd - > /dev/null
-#	play --appendconfig="$PLAY|$RA/lightgun.cfg"
-#	pkill mono
-#	rm -f /tmp/LightgunMono*
 	niche
 	;;
 9)
@@ -1343,7 +1442,7 @@ u)
 	src gyruss
 	;;
 v)
-	FLIX="`ls -t $YT/[A-Z]*.mp4 | tail -1`"
+	FLIX="`ls -t $SAT/Retro/*.mp4 | tail -1`"
 	touch "$FLIX"
 	frame "\e[uenjoy video `basename "$FLIX"`"
 	volume "12%+"
@@ -1418,7 +1517,6 @@ N)
 	frame "\e[19C${ON}list${OFF}    which is waiting for remote player(s) to connect"
 	if anykey ; then
 		clear
-		[ -n "$username" ] && nickname="$username" || nickname="TheFlyingApe"
 		play --appendconfig="$PLAY|$RA/netplay.cfg" --nick="$nickname"
 		audio "sounds/hone.mp3"
 		sudo reboot
@@ -1436,6 +1534,7 @@ Q)
 R)
 	GAME=`ls -t $HOME/.local/main/*.sh | tail -1`
 	src "${GAME}"
+	n=1
 	;;
 S)
 	src spacduel
@@ -1496,7 +1595,12 @@ attract)
 		volume "3%-"
 		FILE=$( basename "`echo ${ARGS} | awk -F'\x22' '{print $2}'`" )
 	       	frame "\e[uplay ${WHAT}:${OFF} ${FILE%.*}"
-		echo ${ARGS} | xargs -t timeout -s SIGTERM 31 retroarch --config=$RT/retroarch.cfg --appendconfig="$PLAY|$RA/attract.cfg" --set-shader="$RA/shaders/shaders_slang/film/technicolor.slangp" &> /dev/null
+		( sleep 4 && echo -n "SHOW_MSG now playing $WHAT: ${FILE%.*}" | nc -u -w1 127.0.0.1 55355 )&
+		echo ${ARGS} | xargs -t timeout -k 3 -s SIGTERM 36 \
+			retroarch --config=$RT/retroarch.cfg --appendconfig="$PLAY|$RA/attract.cfg" \
+			--max-frames=$(( 30 * 60 )) \
+			--set-shader="$RA/shaders/shaders_slang/film/technicolor.slangp" &> /dev/null
+		[ $? -eq 125 ] && reboot
 		unset 'CART[(-1)]'
 		volume "${MASTER}"
 	fi
@@ -1527,16 +1631,21 @@ attract)
 		retroarch --version
 		volume "6%+"
 		audio "Radio Edit Alpha Team.mp3" &
+		# freshen off my GDrive
+		mkdir $RT/Retro
+		rclone mount Retro: $RT/Retro --daemon
+		SRC=$RT/Retro/aarch64
+		rclone copy --progress --update --links $SRC/pi $HOME
+		rclone copy --progress --update --links $SRC/retroarch $RA
+		cat $SRC/addons.deb | xargs sudo apt -y install
+		# Linux
 		sudo apt update &> /dev/null || continue
 		reset
-		git pull
 		sudo apt list --upgradable && sudo apt -y upgrade
+		# Raspberry Pi
 		sudo rm -fv /boot/firmware/.bootloader_revision &> /dev/null
 		sudo rpi-eeprom-update -a
 		#RPi engineering has finally caught up releases with 6.6 tree
-		#out
-		#out " ${RIGHT}${ON}${RIGHT}${OFF}  Press ${KEY}${RED} y ${OFF} to continue with firmware update"
-		#out
 		#sudo rpi-update
 	fi
 	out "reboot"
@@ -1566,7 +1675,7 @@ Pi)
 	;;
 *LOCK)
 	out "\q"
-	frame "\e[uplay Saturday TV or Cinema matinee ${PAD}"
+	frame "\e[uplay Saturday TV or Cinema matinee shows ${PAD}"
 	frame "" 2
 	show
 	frame
@@ -1575,7 +1684,7 @@ HELP|SYSRQ)
 	frame "\e[uHELP"
 	frame 
 	frame "Press \e[A${KEY} Delete \e[B\e[8D${RED} Ins    ${OFF} off menu for Instructional Video."
-	rsync -a Bookshelf/*.pdf Documents/ &> /dev/null
+	#rsync -a Bookshelf/*.pdf Documents/ &> /dev/null
 	view "$HOME/Documents/HELP.pdf"
 	frame
 	;;
