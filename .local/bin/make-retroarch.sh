@@ -15,7 +15,7 @@ if [ "$V" = "new" ]; then
 		pkg-config python3-dev python3-mako python3-pip texinfo valgrind vim wget yasm
 	# toolchain libraries
 	sudo apt install libasound2-dev libass-dev libassimp-dev libavcodec-dev libavdevice-dev \
-		libavfilter-dev libavformat-dev libavresample-dev libavutil-dev libclc-dev libdrm* \
+		libavfilter-dev libavformat-dev libavutil-dev libcec6 libdrm* \
 		libelf-dev libevdev-dev libflac-dev libfreetype6-dev libgbm-dev libgbm1 libgmp-dev \
 		libgnutls28-dev libhidapi* libmbedtls*-dev libmp3lame-dev libmpv* libopenal-dev \
 		libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librtmp-dev libsixel-dev \
@@ -28,30 +28,27 @@ if [ "$V" = "new" ]; then
 	sudo apt install libsdl-image1.2-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev \
 		libsdl2-net-dev libsdl2-ttf-dev spirv-tools
 	# X11
-	sudo apt install libffi-dev libpciaccess-dev libpthread-stubs0-dev libx11-dev libx11-xcb-dev \
-		libxcb*-dev libxcursor-dev libxdamage-dev libxext-dev libxfixes-dev libxkbcommon-dev \
-		libxinerama-dev libxrandr-dev libxshmfence-dev libxxf86vm-dev x11proto-dri2-dev \
-		x11proto-present-dev x11proto-randr-dev x11proto-xext-dev xutils-dev
+	#sudo apt install libffi-dev libpciaccess-dev libpthread-stubs0-dev libx11-dev libx11-xcb-dev \
+	#	libxcb*-dev libxcursor-dev libxdamage-dev libxext-dev libxfixes-dev libxkbcommon-dev \
+	#	libxinerama-dev libxrandr-dev libxshmfence-dev libxxf86vm-dev x11proto-dri2-dev \
+	#	x11proto-present-dev x11proto-randr-dev x11proto-xext-dev xutils-dev
 	# OpenGL
-	sudo apt install glslang-dev glslang-tools libegl-dev libegl-mesa0 libegl1 libegl1-mesa \
-		libegl1-mesa-dev libgles2 libgles2-mesa libgles2-mesa-dev
+	#sudo apt install glslang-dev glslang-tools libegl-dev libegl-mesa0 libegl1 libegl1-mesa \
+	#	libegl1-mesa-dev libgles2 libgles2-mesa libgles2-mesa-dev
 	# Vulkan
-	sudo apt install libvulkan-dev libvulkan1 mesa-common-dev mesa-vulkan-drivers vulkan-tools \
-		vulkan-validationlayers-dev
+	sudo apt install libvulkan-dev libvulkan1 mesa-common-dev mesa-vulkan-drivers \
+		vulkan-tools vulkan-validationlayers-dev
 	# Wayland
-	sudo apt install libwayland-dev libwayland-egl-backend-dev qtbase5-dev wayland-protocols \
-		wayland-utils
-	# needed for Daphne 32-bit build
-	sudo apt install libglew2.2:armhf libsdl1.2debian:armhf libvorbisfile3:armhf
+	sudo apt install libwayland-dev libwayland-egl-backend-dev wayland-protocols wayland-utils
+	# needed for Daphne 32-bit build -- replaced by hypseus
+	#sudo apt install libglew2.2:armhf libsdl1.2debian:armhf libvorbisfile3:armhf
 	# needed toys
-	sudo apt install 7kaa* angband barrage basic256 bsdgames btanks dstat empire extremetuxracer \
-		fbi fonts-noto-color-emoji fs-uae gl-117* gnome-screenshot gnubg gpm iagno linuxlogo \
-		mame moria mpc mpd mplayer-gui mpv neofetch nestopia neverball neverputt pysol* socat \
-		steam-devices stella timidity vice vlc widelands wordwarvi*
+	sudo apt install 0ad 7kaa* angband* barrage basic256 bsdgames btanks dstat extremetuxracer \
+		fbi fluid-soundfont-gs fonts-noto-color-emoji fonts-sahadeva fs-uae gl-117* gnubg gpm \
+		iagno linuxlogo mame* moria mpc mpd mplayer-gui mpv neofetch nestopia neverball \
+		neverputt pysol* socat stella timidity vice vlc widelands
 	# more toys
-	sudo apt install btop cc65 cc65-doc clinfo flatpak gamemode \
-		glmark2-drm glmark-es2-drm glmark2-wayland glmark2-es2-wayland \
-		plasma-gamemode plasma-discover-backend-flatpak rclone
+	sudo apt install btop cc65 cc65-doc clinfo flatpak gamemode libxml2-utils rclone
 
 	sudo apt update && sudo apt upgrade
 	sudo rpi-eeprom-update -a
@@ -75,6 +72,7 @@ if [ "$yn" = "y" ]; then
 	cp -v ~/Documents/led_sys_linux.c led/drivers/
 
 	make clean
+	#	--enable-opengles3 --enable-opengles3_1 --enable-opengles3_2 \
 	CFLAGS='-O2 -march=armv8-a -mcpu=cortex-a72 -mtune=cortex-a72' \
 	CXXFLAGS="${CFLAGS}" \
 	./configure --prefix="${HOME}/.local" \
@@ -87,24 +85,52 @@ if [ "$yn" = "y" ]; then
 		--disable-ffmpeg --disable-v4l2 --disable-videoprocessor \
 		--enable-cheevos --enable-command --enable-lua --enable-networking \
 		--enable-materialui --enable-ozone --enable-rgui --enable-xmb \
-		--enable-egl --enable-kms --enable-qt --enable-wayland \
-		--enable-opengl --enable-opengl_core \
-		--enable-opengles --enable-opengles3 --enable-opengles3_1 --enable-opengles3_2 \
-		--enable-sdl2 --enable-sixel --enable-vulkan --enable-vulkan_display \
-		--enable-alsa --enable-bluetooth --enable-crtswitchres --enable-pulse \
+		--enable-egl --enable-kms --enable-qt --enable-sixel --enable-wayland \
+		--enable-opengles --enable-opengles3 --enable-opengles3_1 --enable-opengles3_2 --enable-opengl_core \
+		--enable-sdl2 --enable-vulkan --enable-vulkan_display \
+		--enable-alsa --enable-bluetooth --enable-crtswitchres --enable-pipewire --enable-pulse \
 		--enable-dbus --enable-hid --enable-libshake --enable-rpiled --enable-udev \
 		--enable-networkgamepad --enable-ssl --enable-systemd --enable-wifi \
 		--enable-thread_storage --enable-threads --enable-zlib \
 	|| exit
 
-	time make -j4 && make install
+	if time make -j4 ; then
+		make install
+		mv -v ~/.local/bin/retroarch* /retroarch/bin/
+	fi
 	fi
 	cd -
 fi
 
 
+ls -lh /retroarch/bin/emulationstation
+echo -n "Rebuild EmulationStation? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	if [ -d batocera-emulationstation ]; then
+		cd batocera-emulationstation
+		git pull
+	else
+		git clone --recursive https://github.com/batocera-linux/batocera-emulationstation.git
+		cd batocera-emulationstation
+		git submodule init
+		git submodule update
+	fi
+
+	cmake -DUSE_MESA_GLES=On -DGL=On . &> cmake.log
+	if time make -j4 ; then
+		ls -l emulationstation /retroarch/bin/
+		cp -v emulationstation /retroarch/bin/
+		rsync -acv resources /retroarch/
+	fi
+
+	cd -
+fi
+
+
 ls -lh /retroarch/cores/bsnes-jg_libretro.so
-echo -n "Rebuild SNES (bsnes-jg) core? "
+echo -n "Rebuild SNES (bsnes-jg) core for Pi 5? "
 read yn
 
 if [ "$yn" = "y" ]; then
@@ -279,6 +305,7 @@ if [ "$yn" = "y" ]; then
 	git pull
 
 	make clean
+	#time HAVE_PARALLEL_RDP=1 HAVE_PARALLEL_RSP=1 HAVE_THR_AL=1 HAVE_LLE=1 make -j4
 	time make -j4 FORCE_GLES3=1
 	cp -v mupen64plus_next_libretro.so /retroarch/cores/
 	cd -
@@ -349,22 +376,6 @@ if [ "$yn" = "y" ]; then
 fi
 
 
-ls -lh /retroarch/cores/picodrive_libretro.so
-echo -n "Rebuild PicoDrive core? "
-read yn
-
-if [ "$yn" = "y" ]; then
-	[ -d picodrive ] || git clone https://github.com/libretro/picodrive
-	cd picodrive
-	git pull
-
-	./configure
-	time make -j4 -f Makefile.libretro
-	cp -v picodrive_libretro.so /retroarch/cores/
-	cd -
-fi
-
-
 ls -lh /retroarch/cores/ppsspp_libretro.so
 echo -n "Rebuild PPSSPP core only out of libretro-super? "
 read yn
@@ -410,6 +421,23 @@ if [ "$yn" = "y" ]; then
 	time make -j4 -f Makefile.libretro
 	cp -v same_cdi_libretro.so /retroarch/cores/
 	cd -
+fi
+
+
+ls -lh /retroarch/cores/snes9x_libretro.so
+echo -n "Rebuild SNES (snes9x) core for Pi 4/400? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d bsnes-jg ] || git clone https://github.com/libretro/bsnes-jg
+	cd bsnes-jg
+	git pull
+
+	cd libretro
+	make clean
+	time make -j4
+	cp -v bsnes-jg_libretro.so /retroarch/cores/
+	cd - && cd ..
 fi
 
 

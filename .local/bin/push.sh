@@ -1,33 +1,27 @@
 #!/bin/sh
 
-# stick
-if [ "$1" = "usb" ]; then
+rm -fv /retroarch/.emulationstation/*.log
+rm -fv /retroarch/.emulationstation/es_log*
 
-MP=/media/pi/rootfs
-df $MP || exit
-
-rsync -av --delete --exclude=.cache --exclude=.dbus --exclude=.npm --exclude=.vscode \
-	--exclude=build \
-	--exclude=Bookshelf --exclude=Music --exclude=Videos \
-	. $MP/home/pi/
-rsync -av --delete --exclude=logs/* --exclude=content_history.lpl \
-	/retroarch/ $MP/retroarch/
-
-exit
-
-fi
+alias rsync='rsync -ai --delete --exclude=build --exclude=Bookshelf --info=BACKUP,COPY,DEL,NAME1'
 
 # server
-src="BIG/Bookworm"
-rsync -av --delete --exclude=.cache --exclude=.dbus --exclude=.npm --exclude=.vscode \
-	--exclude=build \
-	--exclude=Bookshelf --exclude=Music --exclude=Videos \
-	~/ $1:$src/pi/
+src="rhurst@beelink:BIG/rpi"
+rsync --exclude=.cache --exclude=.dbus --exclude=.npm --exclude=.vscode \
+	--exclude=Music --exclude=Videos \
+	~/ $src/pi/
 
-rsync -av --delete --exclude=logs/* --exclude=content_history.lpl \
+rsync --exclude=logs/* --exclude=content_history.lpl \
 	--exclude=roms \
-	/retroarch/ $1:$src/retroarch/
+	/retroarch/ $src/retroarch/
 
-if [ "$2" = "all" ]; then
-	rsync -crlv --delete ~/[A-Z]* $1:$src/pi/
+for es in gamelist.xml media mixart snap wheel ; do
+	for rom in /retroarch/roms/**/$es ; do
+		dest=$(dirname "$rom")
+		rsync "$rom" "$src$dest/"
+ 	done
+done
+
+if [ "$1" = "all" ]; then
+	rsync -cirl ~/[A-Z]* $src/pi/
 fi

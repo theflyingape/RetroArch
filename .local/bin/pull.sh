@@ -1,33 +1,15 @@
 #!/bin/sh
 
-# stick
-if [ "$1" = "usb" ]; then
-
-MP=/media/pi/rootfs
-df $MP || exit
-
-rsync -av --delete --exclude=.cache --exclude=.dbus --exclude=.npm --exclude=.vscode \
-	--exclude=build \
-	--exclude=Bookshelf --exclude=Music --exclude=Videos \
-	$MP/home/pi/ .
-rsync -av --delete --exclude=logs/* --exclude=content_history.lpl \
-	$MP/retroarch/ /retroarch/
-
-exit
-
-fi
+alias rsync='rsync -a --delete --exclude=build --exclude=Bookshelf --info=BACKUP,COPY,DEL,NAME1'
 
 # server
-src="BIG/Bookworm"
-rsync -av --delete --exclude=.cache --exclude=.dbus --exclude=.npm --exclude=.vscode \
-	--exclude=build \
-	--exclude=Bookshelf --exclude=Music --exclude=Videos \
-	$1:$src/pi/ ~/
-
-rsync -av --delete --exclude=logs/* --exclude=content_history.lpl \
-	--exclude=roms \
-	$1:$src/retroarch/ /retroarch/
-
-if [ "$2" = "all" ]; then
-	rsync -crlv --delete ~/[A-Z]* $1:$src/pi/[A-Z]* ~/
-fi
+src="rhurst@beelink:BIG/rpi"
+# home
+rsync "$src/pi/.local/bin" ~/.local/
+rsync "$src/pi/bin" ~/
+# extensive check
+[ "$1" = "all" ] && rsync -crl "$src/pi/[A-Z]*" ~/
+# RetroArch
+rsync --exclude=logs/* --exclude=content_history.lpl \
+	--exclude=*PlayStation\ 2 \
+	"$src/retroarch/" /retroarch/
