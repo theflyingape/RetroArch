@@ -12,7 +12,7 @@ In addition to my custom themes alongside the command-line Playlists frontend to
 
 ```bash
 $ lsblk -S  # find your target device NAME (NVME drive, SD card, USB stick)
-$ xzcat RA-playlists-bookworm.img.xz | sudo dd of=/dev/[NAME] bs=4k status=progress
+$ xzcat RA-playlists-rpi.img.xz | sudo dd of=/dev/[NAME] bs=4k status=progress
 $ sync
 ```
 
