@@ -10,20 +10,24 @@ V="$1"
 
 if [ "$V" = "new" ]; then
 	# toolchain add-ons
-	sudo apt install autoconf automake build-essential bison check cmake code dnsutils doxygen \
-		flex git graphviz imagemagick libtool mesa-utils meson micro nasm ninja-build \
+	sudo apt install autoconf automake bind9-dnsutils bison build-essential check cmake code
+		doxygen flex git graphviz imagemagick libtool mesa-utils meson micro nasm ninja-build \
 		pkg-config python3-dev python3-mako python3-pip texinfo valgrind vim wget yasm
 	# toolchain libraries
-	sudo apt install libasound2-dev libass-dev libassimp-dev libavcodec-dev libavdevice-dev \
-		libavfilter-dev libavformat-dev libavutil-dev libcec6 libdrm* \
-		libelf-dev libevdev-dev libflac-dev libfreetype6-dev libgbm-dev libgbm1 libgmp-dev \
-		libgnutls28-dev libhidapi* libmbedtls*-dev libmp3lame-dev libmpv* libopenal-dev \
-		libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librtmp-dev libsixel-dev \
-		libsnappy-dev libsoxr-dev libsqlite3-dev libssh-dev libssl-dev libswresample-dev \
-		libswscale-dev libsystemd-dev libudev-dev libunwind-dev libusb-1.0-0-dev libv4l-dev \
-		libva-dev libvdpau-dev libvkd3d-dev libvo-amrwbenc-dev libvorbis-dev libwebp-dev \
-		libx264-dev libx265-dev libxcb-shape0-dev libxcb-shm0-dev libxcb-xfixes0-dev \
-		libxcb1-dev libxml2-dev libzstd-dev lzma-dev qtbase5-dev vc-dev yasm zlib1g-dev
+	#sudo apt install libasound2-dev libass-dev libassimp-dev libavcodec-dev libavdevice-dev \
+	#	libavfilter-dev libavformat-dev libavutil-dev libcec6 libdrm* \
+	#	libelf-dev libevdev-dev libflac-dev libfreetype6-dev libgbm-dev libgbm1 libgmp-dev \
+	#	libgnutls28-dev libhidapi* libmbedtls*-dev libmp3lame-dev libmpv* libopenal-dev \
+	#	libopencore-amrnb-dev libopencore-amrwb-dev libopus-dev librtmp-dev libsixel-dev \
+	#	libsnappy-dev libsoxr-dev libsqlite3-dev libssh-dev libssl-dev libswresample-dev \
+	#	libswscale-dev libsystemd-dev libudev-dev libunwind-dev libusb-1.0-0-dev libv4l-dev \
+	#	libva-dev libvdpau-dev libvkd3d-dev libvo-amrwbenc-dev libvorbis-dev libwebp-dev \
+	#	libx264-dev libx265-dev libxcb-shape0-dev libxcb-shm0-dev libxcb-xfixes0-dev \
+	#	libxcb1-dev libxml2-dev libzstd-dev lzma-dev qtbase5-dev vc-dev yasm zlib1g-dev
+	sudo apt install libasound2-dev libass-dev libavcodec-dev \
+		libavfilter-dev libavformat-dev libavutil-dev libdrm* libflac-dev \
+		libhidapi-dev libpipewire-0.3-dev libsixel-dev libsystemd-dev \
+		libx264-dev libx265-dev
 	# SDL
 	sudo apt install libsdl-image1.2-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev \
 		libsdl2-net-dev libsdl2-ttf-dev spirv-tools
@@ -33,6 +37,7 @@ if [ "$V" = "new" ]; then
 	#	libxinerama-dev libxrandr-dev libxshmfence-dev libxxf86vm-dev x11proto-dri2-dev \
 	#	x11proto-present-dev x11proto-randr-dev x11proto-xext-dev xutils-dev
 	# OpenGL
+	sudo apt install libegl-dev
 	#sudo apt install glslang-dev glslang-tools libegl-dev libegl-mesa0 libegl1 libegl1-mesa \
 	#	libegl1-mesa-dev libgles2 libgles2-mesa libgles2-mesa-dev
 	# Vulkan
@@ -43,12 +48,13 @@ if [ "$V" = "new" ]; then
 	# needed for Daphne 32-bit build -- replaced by hypseus
 	#sudo apt install libglew2.2:armhf libsdl1.2debian:armhf libvorbisfile3:armhf
 	# needed toys
-	sudo apt install 0ad 7kaa* angband* barrage basic256 bsdgames btanks dstat extremetuxracer \
-		fbi fluid-soundfont-gs fonts-noto-color-emoji fonts-sahadeva fs-uae gl-117* gnubg gpm \
-		iagno linuxlogo mame* moria mpc mpd mplayer-gui mpv neofetch nestopia neverball \
-		neverputt pysol* socat stella timidity vice vlc widelands
+	sudo apt install 0ad 7kaa* angband* barrage basic256 bsdgames btanks extremetuxracer \
+		fluid-soundfont-gs fonts-noto-color-emoji fs-uae gl-117* gnubg gpm iagno linuxlogo \
+		mame* moria mplayer-gui mpv nestopia neverball neverputt pysol* stella timidity \
+		vice vlc widelands
 	# more toys
-	sudo apt install btop cc65 cc65-doc clinfo flatpak gamemode libxml2-utils rclone
+	sudo apt install btop cc65 cc65-doc clinfo dstat fastfetch fbi flatpak gamemode jq \
+		lastlog2 libxml2-utils mc rclone socat tmux xq
 
 	sudo apt update && sudo apt upgrade
 	sudo rpi-eeprom-update -a
@@ -72,7 +78,6 @@ if [ "$yn" = "y" ]; then
 	cp -v ~/Documents/led_sys_linux.c led/drivers/
 
 	make clean
-	#	--enable-opengles3 --enable-opengles3_1 --enable-opengles3_2 \
 	CFLAGS='-O2 -march=armv8-a -mcpu=cortex-a72 -mtune=cortex-a72' \
 	CXXFLAGS="${CFLAGS}" \
 	./configure --prefix="${HOME}/.local" \
@@ -81,14 +86,15 @@ if [ "$yn" = "y" ]; then
 		--disable-libusb --disable-parport --disable-roar --disable-winrawinput \
 		--disable-dispmanx --disable-opengl1 --disable-sdl \
 		--disable-jack --disable-mpv --disable-oss --disable-tinyalsa \
-		--disable-vg --disable-x11 --disable-xshm --disable-xvideo \
-		--disable-ffmpeg --disable-v4l2 --disable-videoprocessor \
+		--disable-qt --disable-vg --disable-x11 --disable-xshm --disable-xvideo \
+		--disable-v4l2 --disable-videoprocessor \
 		--enable-cheevos --enable-command --enable-lua --enable-networking \
 		--enable-materialui --enable-ozone --enable-rgui --enable-xmb \
-		--enable-egl --enable-kms --enable-qt --enable-sixel --enable-wayland \
-		--enable-opengles --enable-opengles3 --enable-opengles3_1 --enable-opengles3_2 --enable-opengl_core \
-		--enable-sdl2 --enable-vulkan --enable-vulkan_display \
-		--enable-alsa --enable-bluetooth --enable-crtswitchres --enable-pipewire --enable-pulse \
+		--enable-egl --enable-kms --enable-sixel --enable-wayland \
+		--enable-opengles --enable-opengles3 --enable-opengles3_1 --enable-opengles3_2 \
+		--enable-opengl_core --enable-sdl2 --enable-vulkan --enable-vulkan_display \
+		--enable-alsa --enable-bluetooth --enable-ffmpeg \
+		--enable-crtswitchres --enable-pipewire --enable-pulse \
 		--enable-dbus --enable-hid --enable-libshake --enable-rpiled --enable-udev \
 		--enable-networkgamepad --enable-ssl --enable-systemd --enable-wifi \
 		--enable-thread_storage --enable-threads --enable-zlib \
@@ -110,6 +116,7 @@ read yn
 if [ "$yn" = "y" ]; then
 	if [ -d batocera-emulationstation ]; then
 		cd batocera-emulationstation
+		rm -rf locale/lang/*
 		git pull
 	else
 		git clone --recursive https://github.com/batocera-linux/batocera-emulationstation.git
@@ -118,7 +125,7 @@ if [ "$yn" = "y" ]; then
 		git submodule update
 	fi
 
-	cmake -DUSE_MESA_GLES=On -DGL=On . &> cmake.log
+	cmake -DUSE_MESA_GLES=On -DGL=On -DENABLE_PULSE=On -DDISABLE_KODI=On . &> cmake.log
 	if time make -j4 ; then
 		ls -l emulationstation /retroarch/bin/
 		cp -v emulationstation /retroarch/bin/
@@ -264,7 +271,7 @@ if [ "$yn" = "y" ]; then
 fi
 
 ls -lh /retroarch/cores/mame_libretro.so
-echo -n "Rebuild MAME core? "
+echo -n "Rebuild MAME core (~6 hours)? "
 read yn
 
 if [ "$yn" = "y" ]; then
@@ -290,8 +297,7 @@ if [ "$yn" = "y" ]; then
 	cd Libretro
 	time make -j4
 	cp -v mesen_libretro.so /retroarch/cores/
-	cd ..
-	cd ..
+	cd - && cd ..
 fi
 
 
@@ -389,8 +395,7 @@ if [ "$yn" = "y" ]; then
 	cd libretro-ppsspp
 	time ./b.sh --rpi64 --libretro
 	cp -v build/lib/ppsspp_libretro.so /retroarch/cores/
-	cd ..
-	cd ..
+	cd - &&	cd ..
 fi
 
 
