@@ -1,4 +1,4 @@
-# keyboard led aliases for retroarch.cfg :: led_driver = "sysled"
+# 8BitDo retro keyboard led aliases
 
 SUBSYSTEM=="leds", ACTION=="add", ATTR{trigger}=="*\[kbd-capslock\]*", PROGRAM="/bin/sh -c ' \
 	rm -f /dev/led1 ; \

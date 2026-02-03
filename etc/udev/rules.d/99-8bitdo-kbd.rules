@@ -1,0 +1,10 @@
+# 8BitDo Retro mechanical keyboard
+
+# allow
+SUBSYSTEM=="usb", ATTRS{idVendor}=="2dc8", ATTRS{idProduct}=="5200", MODE="0660", TAG+="uaccess"
+
+# unbind unused "mouse" input
+SUBSYSTEM=="usb", ACTION=="bind", ATTR{bInterfaceNumber}=="00", ATTRS{idVendor}=="2dc8", ATTRS{idProduct}=="5200", RUN+="/bin/sh -c ' \
+	echo $kernel > /sys/bus/usb/drivers/usbhid/unbind ; \
+	logger -t RETRO unbind $kernel ; \
+'"
