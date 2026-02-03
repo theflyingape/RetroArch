@@ -6,13 +6,13 @@ Digital content is accessible out of my ☁️ Drive [📚 Bookshelf](https://dr
 
 ## Boot image
 
-Since November 2021, select digital content pulled off of my Drive folder to make this into a plug & play **RetroArch** configuration that loads from a Debian 12 [Bookworm boot image](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) for a user & developer friendly 🍓 Raspberry Pi 4/400 or Pi 5 desktop (or console).
+Since November 2021, select digital content pulled off of my Drive folder to make this into a plug & play **RetroArch** configuration that loads from a Debian 13 [Trixie boot image](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) for a user & developer friendly 🍓 Raspberry Pi 4/400 or Pi 5/500/500+ desktop (or console).
 
 In addition to my custom themes alongside the command-line Playlists frontend to launch an exhaustive list of content out of RetroArch, a more targeted, comprehensive list of top games using **Emulation Station** is efficiently integrated for its multiple gaming console themes and modern kiosk look & feel experiences.
 
 ```bash
 $ lsblk -S  # find your target device NAME (NVME drive, SD card, USB stick)
-$ xzcat RA-playlists-rpi.img.xz | sudo dd of=/dev/[NAME] bs=4k status=progress
+$ xzcat RA-playlists-rpi-trixie.img.xz | sudo dd of=/dev/[NAME] bs=4k status=progress
 $ sync
 ```
 
