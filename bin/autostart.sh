@@ -50,16 +50,15 @@ fi
 RA=/retroarch
 [ -n "$XDG_RUNTIME_DIR" ] && RT="$XDG_RUNTIME_DIR" || RT=/run/user/$UID
 makelink "${RA}" "${HOME}/.config/"
-makelink "${RA}/content_favorites.lpl" "${RT}/"
-#makelink themesettings/es-theme-carbon-master.sys "${RA}/.emulationstation/es_settings.cfg"
+makelink "${RA}/playlists/builtin/content_favorites.lpl" "${RT}/"
 # ... and make a runtime copy of the base configuration
 [ -f $RT/retroarch.cfg ] || cp $RA/template.cfg $RT/retroarch.cfg
-sudo cp -p $RA/content_video_history.lpl $RA/playlists/builtin/
 makelink "${RT}/retroarch.cfg" "${RA}/"
 [ -d "${RT}/chromium" ] || mkdir "${RT}/chromium"
 makelink "${RT}/chromium" "${HOME}/.cache/"
 [ -d "${RT}/thumbnails" ] || mkdir "${RT}/thumbnails"
 makelink "${RT}/thumbnails" "${HOME}/.cache/"
+[ -n "$DISPLAY" ] && makelink "${RA}/desktop.cfg" "${RA}/ES.cfg"
 
 # if using an official Pi keyboard, replace missing hotkeys with these alternatives
 if lsusb | grep 'Raspberry Pi' | grep -qc 'Keyboard' ; then

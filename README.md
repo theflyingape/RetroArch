@@ -1,6 +1,6 @@
 # ⛔ 🪙 → 🖱️ ⌨️ 🎮 → RetroArch → 🕹️ 🛸 👾 📺
 
-> _My harvesting and personal contributions of digital content in support of retrogaming / [retrocomputing](https://robert.hurst-ri.us/rob/retrocomputing) from **1976**_
+> _My harvesting and personal contributions of digital content in support of retrogaming / [retrocomputing](https://robert.hurst-us.net/rob/retrocomputing) from **1976**_
 
 Digital content is accessible out of my ☁️ Drive [📚 Bookshelf](https://drive.google.com/drive/folders/1IzpFmpW07yRvnkVU7aJVFchlY1OpmDS2?usp=drive_link) and [💿💾 Retro](https://drive.google.com/drive/folders/1DspvB89066kRyLET83xgrOT3VGT6IpBz?usp=drive_link) folders.
 
@@ -102,6 +102,9 @@ These are relatively safe values to bump the CPU + GPU clock up in `/boot/firmwa
 
 ```ini
 [pi4]
+# enable 3D acceleration and GPU memory allocation
+dtoverlay=vc4-kms-v3d,cma-384
+max_framebuffers=1
 # enables highest gpu settings at the expense of dual displays
 hdmi_enable_4kp60=1
 # overclock +10%
@@ -112,9 +115,10 @@ gpu_freq=550
 
 ```ini
 [pi5]
-dtparam=nvme
+# enable 3D acceleration and GPU memory allocation
+dtoverlay=vc4-kms-v3d,cma-512
 dtparam=pciex1_gen=3
-kernel=kernel8.img
+max_framebuffers=2
 # overclock +15%
 over_voltage=3
 arm_freq=2760

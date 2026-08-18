@@ -1,0 +1,8 @@
+The new Linux driver is significantly changed, here are the main features:
+
+2 lightguns run in a single instance, including calibration.
+Joystick mode is now supported (but not required on the Pi).
+Hold Dpad Up for 5 seconds to toggle recoil On/Automatic/Off.
+Calibration screen won't instantly exit if you are pointing in the bottom right when it loads.
+Lots more resilience functionality.
+It's a good base for further improvements.

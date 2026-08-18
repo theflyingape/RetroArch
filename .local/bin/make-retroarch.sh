@@ -68,71 +68,95 @@ fi
 
 cd build
 
-echo -n "Rebuild RetroArch? "
-read yn
+[ -d RetroArch ] || git clone https://github.com/libretro/RetroArch
+cd RetroArch
 
-if [ "$yn" = "y" ]; then
-	[ -d RetroArch ] || git clone https://github.com/libretro/RetroArch
-	cd RetroArch
-	if git pull ; then
+if git pull ; then
 	cp -v ~/Documents/led_sys_linux.c led/drivers/
 
+	echo -n "Rebuild RetroArch? "
+	read yn
+
+	if [ "$yn" = "y" ]; then
 	make clean
+#		--enable-dynamic_egl \
 	CFLAGS='-O2 -march=armv8-a -mcpu=cortex-a72 -mtune=cortex-a72' \
 	CXXFLAGS="${CFLAGS}" \
 	./configure --prefix="${HOME}/.local" \
 		--disable-floathard --disable-neon --disable-rewind \
 		--disable-caca --disable-cheats --disable-langextra \
-		--disable-libusb --disable-parport --disable-roar --disable-winrawinput \
 		--disable-dispmanx --disable-opengl1 --disable-sdl \
+		--disable-libusb --disable-parport --disable-roar --disable-winrawinput \
+		--disable-d3d9 --disable-dinput --disable-dsound --disable-rsound \
 		--disable-jack --disable-mpv --disable-oss --disable-tinyalsa \
-		--disable-qt --disable-vg --disable-x11 --disable-xshm --disable-xvideo \
+		--disable-vg --disable-x11 --disable-xshm --disable-xvideo \
 		--disable-v4l2 --disable-videoprocessor \
 		--enable-cheevos --enable-command --enable-lua --enable-networking \
 		--enable-materialui --enable-ozone --enable-rgui --enable-xmb \
-		--enable-egl --enable-kms --enable-sixel --enable-wayland \
-		--enable-opengles --enable-opengles3 --enable-opengles3_1 --enable-opengles3_2 \
-		--enable-opengl_core --enable-sdl2 --enable-vulkan --enable-vulkan_display \
-		--enable-alsa --enable-bluetooth --enable-ffmpeg \
+		--enable-kms --enable-opengles --enable-qt --enable-sixel --enable-wayland \
+		--enable-opengl --enable-opengles3 --enable-opengles3_1 --enable-opengles3_2 \
+		--enable-opengl_core --enable-sdl3 --enable-vulkan --enable-vulkan_display \
+		--enable-alsa --enable-bluetooth --enable-ffmpeg --enable-networkgamepad \
 		--enable-crtswitchres --enable-pipewire --enable-pulse \
 		--enable-dbus --enable-hid --enable-libshake --enable-rpiled --enable-udev \
-		--enable-networkgamepad --enable-ssl --enable-systemd --enable-wifi \
-		--enable-thread_storage --enable-threads --enable-zlib \
+		--enable-ssl --enable-systemd --enable-wifi \
+		--enable-threads --enable-thread_storage --enable-zlib \
 	|| exit
 
 	if time make -j4 ; then
+		KEEP=$( /retroarch/bin/retroarch --version | grep ^Version | awk -F'(' '{ print $2 }' | awk '{ print $2 }' | tr -d ')' )
+		mv -v /retroarch/bin/retroarch "/retroarch/bin/older/retroarch-${KEEP}"
 		make install
 		mv -v ~/.local/bin/retroarch* /retroarch/bin/
+		find /retroarch/bin -mtime +6 -name "retroarch-*" -exec rm -fv {} \;
+		gio trash ~/.local/share/applications/com.libretro.RetroArch.desktop \
+		|| rm -fv ~/.local/share/applications/com.libretro.RetroArch.desktop
 	fi
 	fi
+fi
+cd -
+
+
+if [ ! -d batocera-emulationstation ]; then
+	git clone --recursive https://github.com/batocera-linux/batocera-emulationstation.git
+	cd batocera-emulationstation
+	git submodule init
+	git submodule update
 	cd -
 fi
 
+cd batocera-emulationstation
+rm -rf locale/lang/*
+if git pull ; then
+	ls -lh /retroarch/bin/emulationstation
+	echo -n "Rebuild EmulationStation? "
+	read yn
 
-ls -lh /retroarch/bin/emulationstation
-echo -n "Rebuild EmulationStation? "
+	if [ "$yn" = "y" ]; then
+		#cmake -DUSE_MESA_GLES=On -DGL=On -DENABLE_PULSE=On -DDISABLE_KODI=On . &> cmake.log
+		cmake -DUSE_MESA_GLES=On -DGLES3=On -DENABLE_PULSE=On -DDISABLE_KODI=On . &> cmake.log
+		if time make -j4 ; then
+			ls -l emulationstation /retroarch/bin/
+			cp -v emulationstation /retroarch/bin/
+			rsync -acv resources /retroarch/
+		fi
+	fi
+fi
+cd -
+
+
+ls -lh /retroarch/cores/atari800_libretro.so
+echo -n "Rebuild Atari 800 core? "
 read yn
 
 if [ "$yn" = "y" ]; then
-	if [ -d batocera-emulationstation ]; then
-		cd batocera-emulationstation
-		rm -rf locale/lang/*
-		git pull
-	else
-		git clone --recursive https://github.com/batocera-linux/batocera-emulationstation.git
-		cd batocera-emulationstation
-		git submodule init
-		git submodule update
-	fi
+	[ -d libretro-atari800 ] || git clone https://github.com/libretro/libretro-atari800
+	cd libretro-atari800
+	git pull
 
-	cmake -DUSE_MESA_GLES=On -DGL=On -DENABLE_PULSE=On -DDISABLE_KODI=On . &> cmake.log
-	if time make -j4 ; then
-		ls -l emulationstation /retroarch/bin/
-		cp -v emulationstation /retroarch/bin/
-		rsync -acv resources /retroarch/
-	fi
-
-	cd -
+	make clean
+	time make -j4
+	cp -v atari800_libretro.so /retroarch/cores/
 fi
 
 
@@ -177,10 +201,12 @@ if [ "$yn" = "y" ]; then
 	[ -d dolphin ] || git clone https://github.com/libretro/dolphin
 	cd dolphin
 	git pull
+	git submodule update --init --recursive
 
-	[ -d build ] || mkdir build
+	[ -d build ] && rm -rf build
+	mkdir build
 	cd build
-	cmake ..
+	cmake -DLIBRETRO=ON -DENABLE_TESTS=OFF ..
 	make clean
 	time make -j4 && cp -v dolphin_libretro.so /retroarch/cores/
 	cd - && cd ..
@@ -423,6 +449,7 @@ if [ "$yn" = "y" ]; then
 	cd same_cdi
 	git pull
 
+	# may need to add #include <cstdint> in src/osd/modules/lib/osdlib.h
 	time make -j4 -f Makefile.libretro
 	cp -v same_cdi_libretro.so /retroarch/cores/
 	cd -
@@ -443,6 +470,25 @@ if [ "$yn" = "y" ]; then
 	time make -j4
 	cp -v bsnes-jg_libretro.so /retroarch/cores/
 	cd - && cd ..
+fi
+
+
+ls -lh /retroarch/cores/stella_libretro.so
+echo -n "Rebuild Stella (Atari 2600) core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d stella ] || git clone https://github.com/stella-emu/stella
+	cd stella
+	git pull
+
+	./configure --enable-release
+	time make -j4
+	cd src/os/libretro
+	time make -j4
+	cp -v stella_libretro.so /retroarch/cores/
+	cd -
+	cd ..
 fi
 
 

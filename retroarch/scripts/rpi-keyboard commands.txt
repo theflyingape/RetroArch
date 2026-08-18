@@ -1,0 +1,54 @@
+# update system packages
+sudo apt update && sudo apt upgrade
+
+# install config software
+sudo apt install rpi-keyboard-config
+
+# install and flash firmware
+sudo apt install rpi-keyboard-fw-update
+sudo rpi-keyboard-fw-update
+
+-----------------------------------
+
+# select a preset via terminal
+rpi-keyboard-config preset index 3
+
+# list all available effects
+rpi-keyboard-config list-effects
+
+# apply an effect (based on number in effect list)
+rpi-keyboard-config effect 25
+
+# set with options
+rpi-keyboard-config effect 30 --speed 255 --sat 255 --hue 255
+
+# assign an effect to a keyboard preset
+rpi-keyboard-config preset set 2 25
+
+# check what effects are saved to which preset slot
+rpi-keyboard-config preset get
+
+# set brightness
+rpi-keyboard-config brightness 255
+
+# clear all colours
+rpi-keyboard-config leds clear
+
+# set the entire keyboard a solid colour (hsv or rgb)
+rpi-keyboard-config leds set --colour "0,255,255"
+rpi-keyboard-config leds set --colour "rgb(255,0,0)"
+
+# set individual led colours by grid position
+rpi-keyboard-config led set "2,3" --colour "rgb(255,0,0)"
+
+# see keyboardi information and key layout
+rpi-keyboard-config info --ascii
+
+# save led to effect id = 1
+rpi-keyboard-config leds save
+
+# reset everything
+rpi-keyboard-config reset-presets
+
+# flappy birds
+rpi-keyboard-config game

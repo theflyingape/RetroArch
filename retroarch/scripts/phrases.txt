@@ -1,0 +1,89 @@
+Stephen Olney Elementary (North Providence 1970-71)
+Laurel Hills Elementary (Atlanta 1971-72)
+West View Elementary (Cranston 1972-77)
+Anna McCabe Elementary (Smithfield 1975-76)
+Western Hills Junior High (Cranston 1977-79)
+Classical High (Providence 1979-83)
+Cranston West (1980-81)
+New England Tech (Warwick 1983-84)
+New England Tech (Warwick 2001-02)
+Green Elf is about to die~\e[32mGreen Elf\e[m is about to \e[2mdie\e[m
+Red Warrior shot the food~\e[31mRed Warrior\e[m shot the food
+Blue Valkyrie is now IT~\e[34mBlue Valkyrie\e[m is now \e[1mIT\e[m
+Yellow Wizard has extra shot power~\e[1;33mYellow Wizard\e[m has extra shot power
+Shots don't hurt other players, yet~Shots don't hurt \e[1mother\e[m players, yet
+Better hurry~\e[2mBetter hurry\e[m
+Find the Exit~Find the \e[2mExit\e[m
+That was a heroic effort~That was a \e[1mheroic effort\e[m
+Intruder alert~\e[1;33mIntruder alert\e[m
+Kill the humanoid~\e[1mKill\e[m the humanoid
+The humanoid must not escape~The humanoid must \e[1mnot\e[m escape
+Destroy the intruder~\e[1mDestroy\e[m the intruder
+Flawless victory~\e[1;35mFlawless\e[22m victory\e[m
+LOAD "*",8,1~\e[1;32mLOAD "*",8,1\e[m
+PRINT FRE(0)~\e[1;32mPRINT FRE(0)\e[m
+READY.~\e[1;32mREADY.\e[m
+?SYNTAX ERROR~\e[1;32m?SYNTAX ERROR\e[m
+GAME OVER~\e[31mGAME OVER\e[m
+P2 READY~\e[1mP2\e[m READY
+READY!~\e[1;33mREADY!\e[m
+END OF LINE~\e[2mEND OF LINE\e[m
+Greetings, Programs
+I fight for the Users
+Prepare for annihilation, Space Cadet~Prepare for annihilation, \e[1mSpace Cadet\e[m
+Bite the dust, Space Captain~Bite the dust, \e[1;34mSpace Captain\e[m
+Survival is impossible, Space Cadet~Survival is impossible, \e[1mSpace Cadet\e[m
+Coin detected in pocket~\e[1;33mCoin detected in pocket\e[m
+Beware, I'm near
+Run, coward
+I hunger
+Sinistar is near
+So, a creature for my amusement
+Prepare for battle
+Is there no warrior mightier than I?
+Have you played Atari today?~Have you played \e[31mA\e[33mt\e[32ma\e[36mr\e[34mi\e[m today?
+I adore my 64
+Let's go
+Think different
+Only Amiga makes it possible
+"Why buy just a video game?"
+The Wonder Computer of the 1980s~The \e[31mW\e[33mo\e[32mn\e[36md\e[34me\e[35mr\e[m Computer of the 1980s
+Bringing the Arcades home
+Thanks for the memory
+Play has no Limits~\e[1mPlay\e[m has no Limits
+Greatness Awaits
+Long Live Play
+Live in Your World, Play in Ours
+It only does Everything
+This is 4 the Players
+You realize of course, this means war
+Welcome to my domain
+The Flying Ape killed you!~\e[1;37mThe Flying Ape\e[m killed you!
+A dark cloud hovers over you ...~A \e[2mdark cloud\e[m hovers over you ...
+You defeated Crazy Legs in a joust~You defeated \e[1;37mCrazy Legs\e[m in a joust
+You killed Regan the Grunt!~You killed \e[1;37mRegan the Grunt\e[m!
+The Conqueror knocked you out!~\e[1;37mThe Conqueror\e[m knocked you out!
+Sir Greco picked your pocket!~\e[1;37mSir Greco\e[m picked your pocket!
+Crying will not help you!!~\e[1mCRYING\e[m WILL NOT HELP YOU!!
+I am the BEST, die like the REST!!~I AM THE \e[1mBEST\e[m, DIE LIKE THE \e[1mREST\e[m!!
+Goodbye, please call again
+There I was, there I was, there I was ... in the Congo
+I take it ALL!
+You can't escape me!
+Come get me if you can!
+First down~\e[1mFirst\e[m down
+TOUCHDOWN!~\e[1mTOUCHDOWN\e[m!
+FUMBLE!~\e[1mFUMBLE\e[m!
+Intercepted!~\e[1mIntercepted\e[m!
+It's GOOD!~It's \e[1mGOOD\e[m!
+Red Five standing by~\e[31mRed Five\e[m standing by
+Use the Force~\e[1;34mUse the Force\e[m
+Welcome aboard, Captain
+Genesis does what Nintendon't
+Welcome to the Next Level
+The Game is Never Over
+Now you're playing with power!~Now you're playing with \e[1;33mpower\e[m!
+Get N or get out!~Get \e[32mN\e[m or get out!
+Born to Play
+Wii would like to play
+There's No Play like It

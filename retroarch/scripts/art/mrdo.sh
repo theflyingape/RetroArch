@@ -1,0 +1,16 @@
+# Mr. Do!
+out "\e[83C          \e[31mahahahah"
+out "\e[83C        \e[31mah\e[1;37mah\e[0;31mahah\e[1;37mah\e[0;31mah"
+out "\e[83C      ahahahahahahah"
+out "\e[83C    ahahah\e[1;37mah\e[0;31mah\e[1;37mahahah"
+out "\e[83C  \e[0;31mahah\e[1;37mah\e[0;31mahah\e[34mah\e[1;37mah  ahah"
+out "\e[83C\e[0;34mah      ahah\e[1;37mahah  ahah"
+out "\e[83C        \e[0;34mahahah\e[1;37mahahah"
+out "\e[83C          \e[0;34mah\e[1;37mahah\e[0;31mah      \e[1;37mahahah"
+out "\e[83C        \e[0;31mahahahahahah  \e[1;37mahahahahah"
+out "\e[83C      \e[0;31mahah\e[1;37mah\e[0;31mahahah\e[1;37mah\e[0;31mahahah\e[1;37mahahah"
+out "\e[83C\e[0;34mahah\e[31mahahahahah\e[1;37mah\e[0;31mahahahahah\e[1;37mahahah"
+out "\e[83C\e[0;34mahah\e[31mah\e[1;37mah\e[0;31mahahahahah      \e[1;37mahahah"
+out "\e[83C\e[0;34mah          \e[31mah\e[1;37mah\e[0;31mahahah"
+out "\e[83C\e[0;34mah            \e[31mahah\e[34mahahahah"
+

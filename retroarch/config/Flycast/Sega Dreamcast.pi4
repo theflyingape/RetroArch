@@ -1,0 +1,6 @@
+input_auto_game_focus = "0"
+input_overlay = ""
+input_overlay_enable = "false"
+video_driver = "vulkan"
+video_fullscreen_x = "640"
+video_fullscreen_y = "480"

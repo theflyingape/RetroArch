@@ -2,6 +2,7 @@
 #
 # save an incremental update offline to the workstation
 # 
+rm -fv /retroarch/bin/older/*
 rm -fv /retroarch/.emulationstation/.mypy_cache
 rm -fv /retroarch/.emulationstation/*.log
 rm -fv /retroarch/.emulationstation/es_log*
