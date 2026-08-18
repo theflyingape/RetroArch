@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<config>
+	<bool name="ClockMode12" value="true" />
+	<bool name="FavoritesFirst" value="true" />
+	<bool name="HiddenSystemsShowGames" value="false" />
+	<bool name="ParseGamelistOnly" value="true" />
+	<bool name="PreloadMedias" value="true" />
+	<bool name="PreloadUI" value="true" />
+	<bool name="ShowManualIcon" value="true" />
+	<bool name="ShowSaveStates" value="true" />
+	<bool name="StopMusicOnScreenSaver" value="false" />
+	<bool name="VideoAudio" value="false" />
+	<bool name="global.netplay" value="true" />
+	<bool name="global.retroachievements" value="true" />
+	<bool name="global.retroachievements.challenge_indicators" value="true" />
+	<bool name="global.retroachievements.encore" value="true" />
+	<bool name="global.retroachievements.hardcore" value="true" />
+	<bool name="global.retroachievements.leaderboards" value="true" />
+	<bool name="global.retroachievements.richpresence" value="true" />
+	<int name="MaxVRAM" value="480" />
+	<int name="MusicVolume" value="75" />
+	<int name="ScreenSaverSwapImageTimeout" value="30000" />
+	<int name="ScreenSaverTime" value="240000" />
+	<int name="audio.display_titles_time" value="5" />
+	<int name="recent.sort" value="7" />
+	<string name="CollectionSystemsAuto" value="4players,_action,_adventure,_beatemup,_casino,_educational,_fight,_pinball,_platform,_racedriving,_roleplayings,_shootemup,_shooter,_sports,_strategy,all,favorites,neverplayed,retroachievements" />
+	<string name="GamelistViewStyle" value="video" />
+	<string name="Scraper" value="ArcadeDB" />
+	<string name="ScrapperImageSrc" value="sstitle" />
+	<string name="ScreenSaverBehavior" value="random video" />
+	<string name="ScreenSaverDecorations" value="random" />
+	<string name="ScreenSaverGameInfo" value="start &amp; end" />
+	<string name="ShowFlags" value="auto" />
+	<string name="ShowTags" value="auto" />
+	<string name="SortSystems" value="releaseDate" />
+	<string name="StartupSystem" value="all" />
+	<string name="ThemeRegionName" value="us" />
+	<string name="ThemeSet" value="Hypermax-Plus-PixN" />
+	<string name="audio.volume" value="60" />
+	<string name="global.netplay.nickname" value="theflyingape" />
+	<string name="global.netplay.port" value="55435" />
+	<string name="global.retroachievements.password" value="password" />
+	<string name="global.retroachievements.token" value="" />
+	<string name="global.retroachievements.username" value="new" />
+	<string name="global.savestates" value="2" />
+	<string name="global.smooth" value="1" />
+	<string name="global.video_driver" value="vulkan" />
+	<string name="subset.Menu" value="Menu 03" />
+	<string name="subset.animatedInfobar" value="no" />
+	<string name="subset.blurfx" value="no" />
+	<string name="subset.marqueetiles" value="no" />
+	<string name="subset.storyboards" value="no" />
+	<string name="subset.videoboxes" value="yes" />
+	<string name="subset.videotiles" value="no" />
+	<string name="updates.type" value="stable" />
+</config>
