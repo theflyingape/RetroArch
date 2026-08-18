@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<gameList>
+	<game>
+		<path>./sdq.daphne</path>
+		<name>Super Don Quix-Ote</name>
+		<desc>The idea for this animated laserdisc game comes from the movies and novels about Don Quixote, the legendary Spanish knight. In this game, the character looks very young and does not have a mustache. Also, he has a sword for a weapon and his faithful sidekick Sancho Panza follows him around although he does nothing to assist the hero. 
+An assortment of mythical creatures including demons, dragons, skeletons and so on are encountered throughout the game. The game ends when Don Quixote kills the evil witch and rescues Isabella.</desc>
+		<genre>Adventure</genre>
+		<image>./media/images/sdq.png</image>
+		<video>./media/videos/sdq.mp4</video>
+		<marquee>./media/marquee/sdq.png</marquee>
+		<rating>0.8</rating>
+		<releasedate>19840101T000000</releasedate>
+		<playcount />
+		<lastplayed />
+		<gametime />
+		<lang>en</lang>
+	</game>
+	<game>
+		<path>./lair2.daphne</path>
+		<name>Dragon's Lair II : Time Warp</name>
+		<desc>Princess Daphne has been spirited away to a wrinkle in time by the Evil Wizard Mordroc who plans to force her into marriage. Only you, Dirk the Daring, can save her. Transported by a bumbling old time machine, you begin the rescue mission. But you must hurry, for once the Casket of Doom has opened, Mordroc will place the Death Ring upon Daphne's finger in marriage and she will be lost forever in the Time Warp!</desc>
+		<genre>Action-Action / Adventure-Platform / Run Jump-Platform</genre>
+		<image>./media/images/lair2.png</image>
+		<video>./media/videos/lair2.mp4</video>
+		<marquee>./media/marquee/lair2.png</marquee>
+		<rating>0.9</rating>
+		<releasedate>19910616T000000</releasedate>
+		<developer>Sullivan Bluth Interactive</developer>
+		<publisher>Leland Corporation</publisher>
+		<playcount />
+		<lastplayed />
+		<gametime />
+		<lang>en</lang>
+	</game>
+	<game>
+		<path>./astron.daphne</path>
+		<name>Astron Belt</name>
+		<desc>Astron Belt is an early laserdisc video game and third-person space combat rail shooter, released in 1983 by Sega in Japan and licensed to Bally Midway for release in the United States.</desc>
+		<genre>Action</genre>
+		<image>./media/images/astron.png</image>
+		<video>./media/videos/astron.mp4</video>
+		<marquee>./media/marquee/astron.png</marquee>
+		<rating />
+		<releasedate>19830515T000000</releasedate>
+		<developer>Sega</developer>
+		<publisher>Bally Midway</publisher>
+		<playcount />
+		<lastplayed />
+		<gametime />
+		<lang>en</lang>
+	</game>
+	<game>
+		<path>./cliff.daphne</path>
+		<name>Cliff Hanger</name>
+		<desc>Cliff is on a mission to save Clarissa from being forced to marry the evil Count Draco. Cliff Hanger is an interactive cartoon movie. The game consists of animated scenes, during which the player has to press direction buttons or the sword button in the right moment to trigger the next segment of the movie. The anime video used in the game are scenes from the Lupin III anime movies, mainly scenes from The Castle of Cagliostro and the Mystery of Mamo animated movies. Cliff in the game is Arsène Lupin III in the original anime.</desc>
+		<genre>Platform / Run Jump-Platform</genre>
+		<image>./media/images/cliff.png</image>
+		<video>./media/videos/cliff.mp4</video>
+		<marquee>./media/marquee/cliff.png</marquee>
+		<rating>0.9</rating>
+		<releasedate>19830101T000000</releasedate>
+		<developer>Stern Electronics, Inc.</developer>
+		<publisher>Stern Electronics</publisher>
+		<players>1-2</players>
+		<playcount />
+		<lastplayed />
+		<gametime />
+		<lang>en</lang>
+	</game>
+	<game>
+		<path>./sae.daphne</path>
+		<name>Space Ace</name>
+		<desc>Space Ace is a laserdisc video game produced by Don Bluth Studios, Cinematronics and Advanced Microcomputer Systems (later renamed RDI Video Systems). It was unveiled in October 1983, just four months after the Dragon's Lair game, then released in Spring 1984, and like its predecessor featured film-quality animation played back from a laserdisc. 
+ 
+The gameplay is also similar, requiring the player to move the joystick or press the fire button at key moments in the animated sequences to govern the hero's actions. However, the game's action was more varied with the player occasionally given the temporary option to either have the character he is controlling transform back into his adult form, or remain as a boy with different styles of challenges.</desc>
+		<genre>Platform / Run Jump-Platform-Action</genre>
+		<image>./media/images/sae.png</image>
+		<video>./media/videos/sae.mp4</video>
+		<marquee>./media/marquee/sae.png</marquee>
+		<rating>0.9</rating>
+		<releasedate>19840424T000000</releasedate>
+		<developer>Advanced Microcomputer Systems</developer>
+		<publisher>Cinematronics</publisher>
+		<playcount />
+		<lastplayed />
+		<gametime />
+		<lang>en</lang>
+	</game>
+	<game>
+		<path>./dle21.daphne</path>
+		<name>Dragon's Lair</name>
+		<desc>Originally released in the arcades as a laserdisc game, Dragon's Lair is an interactive cartoon movie. Players control Dirk the Daring as he struggles his way through a dungeon to fight Singe, the Dragon, and rescue the beautiful Princess Daphne. The game consists of animated scenes, during which the player has to press direction buttons or the sword button in the right moment to trigger the next segment of the movie.</desc>
+		<genre>Action / Adventure-Platform / Run Jump-Platform</genre>
+		<image>./media/images/dle21.png</image>
+		<video>./media/videos/dle21.mp4</video>
+		<marquee>./media/marquee/dle21.png</marquee>
+		<rating>0.8</rating>
+		<releasedate>19830601T000000</releasedate>
+		<developer>Sullivan Bluth Interactive</developer>
+		<publisher>Cinematronics</publisher>
+		<players>1-2</players>
+		<playcount>1</playcount>
+		<lastplayed>20260818T093551</lastplayed>
+		<gametime>74</gametime>
+		<lang>en</lang>
+	</game>
+</gameList>
