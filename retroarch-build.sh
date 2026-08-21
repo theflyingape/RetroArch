@@ -1,9 +1,5 @@
 #!/bin/sh
 #
-if [ ! -d "RetroArch/.git" ]; then
-    git clone https://github.com/libretro/RetroArch
-fi
-
 echo "Updating existing repository ... "
 cd RetroArch
 git pull

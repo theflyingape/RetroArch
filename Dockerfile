@@ -5,7 +5,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # enable arm64 multiarch and install host development tools + cross-compiler
 RUN dpkg --add-architecture arm64 \
-	&& apt-get update && apt-get install -y --no-install-recommends \
+	&& apt-get update \
+	&& apt-get install -y --no-install-recommends \
 	    build-essential \
     	crossbuild-essential-arm64 \
     	git \
@@ -42,32 +43,36 @@ RUN apt-get install -y \
 	libx265-dev:arm64 \
 	qt6-base-dev:arm64
 
-# add SDL3 support
+# add optional SDL3 support
 RUN apt-get install -y \
 	libsdl3-dev:arm64 \
 	libsdl3-image-dev:arm64 \
 	libsdl3-ttf-dev:arm64
 
-# add OpenGL support
+# add required OpenGL support
 RUN apt-get install -y \
 	libegl-dev:arm64
 
-# add Vulkan support
+# add required Vulkan support
 RUN apt-get install -y \
 	libvulkan-dev:arm64 \
 	mesa-common-dev:arm64 \
 	mesa-vulkan-drivers:arm64
 
-# add Wayland support
+# add required Wayland support
 RUN apt-get install -y \
 	libwayland-dev:arm64 \
 	libwayland-egl-backend-dev:arm64
 
 RUN rm -rf /var/lib/apt/lists/*
 
-# build RetroArch
+# clone and build RetroArch
 WORKDIR /build
+RUN [ -d "RetroArch/.git" ] || git clone https://github.com/libretro/RetroArch
 COPY retroarch-build.sh .
-RUN chmod +x retroarch-build.sh && ./retroarch-build.sh
+
+# force a pull of the latest RetroArch source code when PULL is not zero
+ARG PULL=0
+RUN apt-get update && chmod +x retroarch-build.sh && ./retroarch-build.sh
 WORKDIR /build/RetroArch
 RUN make install DESTDIR=/retroarch

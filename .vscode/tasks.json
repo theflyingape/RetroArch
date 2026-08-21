@@ -9,7 +9,20 @@
       "dockerBuild": {
         "tag": "theflyingape/retroarch:latest",
         "dockerfile": "${workspaceFolder}/Dockerfile",
-        "context": "${workspaceFolder}"
+        "context": "${workspaceFolder}",
+        "args": [
+          "--build-arg", "PULL=${input:getTimestamp}"
+        ]
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "getTimestamp",
+      "type": "command",
+      "command": "extension.commandvariable.dateTime",
+      "args": {
+        "format": "X"
       }
     }
   ]
