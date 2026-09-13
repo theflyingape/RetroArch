@@ -414,14 +414,14 @@ anykey() {
 	frame
 	frame
 	out -n "\r\e[2A"
-	frame "Press any button/key ${any}: ${SC}\r\e[83C${KEY}ESC${OFF} or Left ${KEY}Shoulder${OFF} to go back" 1
+	frame "Press any button/key ${any}: ${SC}\r\e[82C${KEY}ESC${OFF} or Left ${KEY}Shoulder${OFF} to go back" 1
 	any="to continue"
 	info=
 	input $sec 2
 	status=$?
 	killall -qw mplayer &> /dev/null &
 	#while ps -C mplayer &> /dev/null ; do kill -QUIT `ps -C mplayer -o pid=` &> /dev/null ; sleep 0.1 ; done
-	if [ $got = "Pi" ]; then
+	if [ "$got" = "Pi" ]; then
 		out
 		if [ -f "$PDF" ]; then
 			frame "${PAD}${KEY}${RED} Pi ${OFF} ${RIGHT}${ON} `basename "$PDF"`" 2
@@ -626,11 +626,11 @@ main() {
 	frame "\e[A\e[50C ${ON}\x0elqqqqqqqqqqqqqqqqqqqqqqu${KEY}\x0eah\x0f \e[1mMy \e[0;47m${RED}A${YELLOW}r${GREEN}c${CYAN}a${BLUE}d${MAGENTA}e ${KEY}\x0eha${ON}tqqqqqqqqqqqqqqqqqqqqqq "
 	frame "                                                   ${ON}${VBAR}${OFF}  ${DOT}${DIM}a${OFF}  Asteroids        ${DOT}${DIM}n${OFF}  Donkey Kong     ${DOT}${DIM}A${OFF}  Astro Blaster"
 	frame " »${DIM}0${OFF}  COIN-OP       137   •${DIM}5${OFF}  Party Games       16  ${ON}${VBAR}${OFF}  ${DOT}${DIM}b${OFF}  Bubble Bobble    ${DOT}${DIM}o${OFF}  Jungle King     ${DOT}${DIM}B${OFF}  Black Tiger"
-	frame " »${DIM}1${OFF}  CART          390   •${DIM}6${OFF}  Pinball Sims       6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}c${OFF}  Carnival         ${DOT}${DIM}p${OFF}  Moon Patrol     ${DOT}${DIM}C${OFF}  Cyberball"
-	frame " »${DIM}2${OFF}  FLOPPY        114   •${DIM}7${OFF}  RTS / Turn-based   9  ${ON}${VBAR}${OFF}  ${DOT}${DIM}d${OFF}  Mr. Do!          ${DOT}${DIM}q${OFF}  Ripoff          ${DOT}${DIM}D${OFF}  Defender"
+	frame " »${DIM}1${OFF}  CART          379   •${DIM}6${OFF}  Pinball Sims       6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}c${OFF}  Carnival         ${DOT}${DIM}p${OFF}  Moon Patrol     ${DOT}${DIM}C${OFF}  Cyberball"
+	frame " »${DIM}2${OFF}  FLOPPY         71   •${DIM}7${OFF}  RTS / Turn-based   9  ${ON}${VBAR}${OFF}  ${DOT}${DIM}d${OFF}  Mr. Do!          ${DOT}${DIM}q${OFF}  Ripoff          ${DOT}${DIM}D${OFF}  Defender"
 	frame " »${DIM}3${OFF}  CD-ROM        103   •${DIM}8${OFF}  Analog Controls   30  ${ON}${VBAR}${OFF}  ${DOT}${DIM}e${OFF}  Elevator Action  ${DOT}${DIM}r${OFF}  Robotron: 2084  ${DOT}${DIM}F${OFF}  Phoenix"
 	frame " »${DIM}4${OFF}  HANDHELD       95   •${DIM}9${OFF}  Homebrews          5  ${ON}${VBAR}${OFF}  ${DOT}${DIM}f${OFF}  Frogger          ${DOT}${DIM}s${OFF}  Spiders         ${DOT}${DIM}G${OFF}  G.O.R.F."
-	frame " »${DIM}N${OFF}  Nostalgia     698   •${DIM}L${OFF}  Laserdiscs         6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}g${OFF}  Galaga           ${DOT}${DIM}t${OFF}  Time Pilot      ${DOT}${DIM}H${OFF}  Hat Trick"
+	frame " »${DIM}N${OFF}  Nostalgia     772   •${DIM}L${OFF}  Laserdiscs         6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}g${OFF}  Galaga           ${DOT}${DIM}t${OFF}  Time Pilot      ${DOT}${DIM}H${OFF}  Hat Trick"
 	frame "${KEY}${BLUE}TAB${OFF}  Archives   12,965   \e[47m${RED}F9${OFF}  Rob's Picks       96  ${ON}${VBAR}${OFF}  ${DOT}${DIM}h${OFF}  Satan's Hollow   ${DOT}${DIM}u${OFF}  Gyruss          ${DOT}${DIM}J${OFF}  Bomb Jack"
 	frame "\e[51C${ON}${VBAR}${OFF}  ${DOT}${DIM}i${OFF}  Space Invaders   ${DOT}${DIM}v${OFF}  Vanguard        ${DOT}${DIM}K${OFF}  Karate Champ"
 	frame "\x08${ON}\x0eqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu\x0f${OFF}  ${DOT}${DIM}j${OFF}  Joust            ${DOT}${DIM}w${OFF}  Galaxian        ${DOT}${DIM}Q${OFF}  Q*bert"
@@ -720,6 +720,8 @@ party() {
 		;;
 	esac
 
+	frame ""
+	frame ""
 	frame "" 1
 	n=11
 }
@@ -769,6 +771,8 @@ pinball() {
 		;;
 	esac
 
+	frame ""
+	frame ""
 	frame "" 1
 	n=12
 }
@@ -826,6 +830,8 @@ strategy() {
 		;;
 	esac
 
+	frame ""
+	frame ""
 	frame "" 1
 	n=13
 }
@@ -985,6 +991,8 @@ analog() {
 	pkill mono &> /dev/null
 	rm -f /tmp/LightgunMono*
 
+	frame ""
+	frame ""
 	frame "" 1
 	n=14
 }
@@ -1030,6 +1038,8 @@ homebrew() {
 		;;
 	esac
 
+	frame ""
+	frame ""
 	frame "" 1
 	n=15
 }
@@ -1077,10 +1087,11 @@ prompt() {
 		pip "$YT/Preview/vic20.mp4" 896
 		frame "While taking HS Computer Math, I got hooked on BASIC."
 		frame "Mom helped me buy VIC-20 for \$300 and the rest is history."
+		frame "Press ${ON}PageUp${OFF} as ${KEY} RESTORE ${OFF} key to return to floppy directory."
 		if floppy "VIC20 - Friendly Guide.pdf" ; then
 			reset
 			pi500 comp
-			qstart -L vice_xvic
+			qstart -L vice_xvic "$RA/roms/Commodore/VIC-20 origins.m3u"
 			gameover
 		fi
 		out -n "\e[2A"
@@ -1155,7 +1166,8 @@ prompt() {
 		pip "$YT/Preview/a3000.mp4" 896
 		frame "Lois helped me secure this awesome upgrade to"
 		frame "full 32-bit personal computing."
-		frame "My first SupraModem arrived in the new home."
+		frame "My first SupraModem 14400 arrived in the new home"
+		frame "which hosted my bbs, 'The Rhode Warrior'.  Heh."
 		if floppy ; then
 			reset
 			pi500 comp
@@ -1493,7 +1505,7 @@ declare -i mouse=$(( `udevadm info /dev/input/event* | grep -c -e ID_INPUT_MOUSE
 # ignore my media volume 'wheel' as a mouse device
 #bluetoothctl devices Connected | grep -qc '8BitDo Retro Keyboard' && let mouse=$mouse-1
 #lsusb | grep -qc '8BitDo Retro Keyboard' && let mouse=$mouse-1
-out "\e[2A\e[28C${DIM}${js} joystick and ${mouse} mouse/touch detected${OFF}"
+out "\e[2A\e[28C${MAGENTA}${MODEL}${DIM}: ${js} joystick and ${mouse} mouse/touch detected${OFF}"
 out
 
 # stars & stripes forever
@@ -1501,7 +1513,7 @@ out -n "\e[$(( ${#PAD} + 2 ))C"
 [ $HDMI -eq 1 ] && out -n "${DIM}HDMI ${HDMI}: ${MODE}" || out -n "${DIM}HDMI${OFF} ${RED}${HDMI}${OFF}: ${ON}${MODE}${OFF}"
 STAR=`out -n "${ON}${WHITE}*"`
 STRIPE=`out -n "${OFF}${RED}="`
-out "\x0f\e[4C$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR${BLUE}[${CYAN} RETRO \e[22mgaming 19\e[1m76\e[22m-20\e[1m16 ${BLUE}]$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR\e[m"
+out "\x0f\e[4C$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR${BLUE}[${CYAN} RETRO \e[22mgaming 19\e[1m76\e[22m - 20\e[1m16 ${BLUE}]$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR$STRIPE$STAR\e[m"
 
 # fetch next ANSI art
 out -n '\n${SC}\e[H\x0e'
@@ -1513,9 +1525,9 @@ if [ -n "${PHRASE}" ]; then
 	txt1=`echo ${PHRASE} | awk -F~ '{ print $1 }'`
 	txt2=`echo ${PHRASE} | awk -F~ '{ print $2 }'`
 	[ -z "${txt2}" ] && txt2="${txt1}"
-	frame "\e[$(( 49 - (${#txt1} / 2) ))C${txt2}"
+	frame "\e[$(( 50 - (${#txt1} / 2) ))C${txt2}"
 else
-	frame "\e[37C${RED}M${DIM}y${OFF} ${RED}A${DIM}wesome${OFF} ${RED}G${DIM}ames${OFF} ${RED}A${DIM}rchive"
+	frame "\e[38C${RED}M${DIM}y${OFF} ${RED}A${DIM}wesome${OFF} ${RED}G${DIM}ames${OFF} ${RED}A${DIM}rchive"
 fi
 frame
 
@@ -1871,14 +1883,18 @@ attract)
 		pi500 attract
 		FILE=$( basename "$( echo "${ARGS}" | awk -F'\x22' '{ print $2 }' )" )
 	       	frame "${RC}play ${WHAT}:${OFF} ${FILE%.*}"
-		( sleep 4 && echo -n "SHOW_MSG now playing $WHAT: ${FILE%.*}" | nc -u -w1 127.0.0.1 55355 )&
+		( sleep 6 && echo -n "SHOW_MSG now playing $WHAT: ${FILE%.*}" | nc -u -w1 127.0.0.1 55355 )&
+		[[ "$MODEL" =~ "Pi4" ]] \
+			&& SHADER=("user/old-composite.slangp" "shaders_slang/film/technicolor.slangp") \
+			|| SHADER=("user/old-vcr.slangp" "shaders_slang/film/technicolor.slangp")
 		echo "${ARGS}" | xargs -t timeout -k 3 -s SIGTERM 37 \
 			retroarch --config=$RT/retroarch.cfg --appendconfig="$PLAY|$RA/attract.cfg" \
-			--max-frames=$(( 30 * 60 )) \
-			--set-shader="$RA/shaders/shaders_slang/film/technicolor.slangp" &> /dev/null
+			--max-frames=$(( 30 * 60 )) --set-shader="$RA/shaders/${SHADER[$(( RANDOM % 2 ))]}" \
+			&> /dev/null
 		if [ $? -eq 125 ]; then
-			reset
-		 	exit
+			echo "retroarch ${ARGS} returned from attract kill signal timeout" >&2
+			#reset
+		 	#exit
 		fi
 		unset 'CART[(-1)]'
 	fi
@@ -1910,11 +1926,16 @@ attract)
 		volume "6%+"
 		audio "Radio Edit Alpha Team.mp3" &
 		# freshen stuff off my GDrive
+		tokens=$(grep 'token = ' $HOME/.config/rclone/rclone.conf | awk -F' = ' '{print $2}' | head -1)
+		sed -i 's|token = .*|token = '$tokens'|' $HOME/.config/rclone/rclone.conf
 		mkdir "$RT/Retro"
-		rclone mount Retro: "$RT/Retro" --daemon
+		rclone mount Retro: "$RT/Retro" --read-only --daemon
 		SRC="$RT/Retro/updates"
 		rclone copy --progress --update "$SRC/pi" ":local,links:$HOME"
+		chmod +x $HOME/bin/* $HOME/.local/bin/*
 		rclone copy --progress --update "$SRC/retroarch" ":local,links:$RA"
+		find /retroarch -name '*.sh' -exec chmod +x {} \;
+		chmod +x /retroarch/bin/*
 		cat "$SRC/addons.deb" | xargs sudo apt -y install
 		# Linux
 		sudo apt update &> /dev/null || continue
@@ -1924,7 +1945,7 @@ attract)
 		sudo rm -fv /boot/firmware/.bootloader_revision &> /dev/null
 		sudo rpi-eeprom-update -a
 	fi
-	out "reboot"
+	out "waiting to reboot -- or press Ctrl-Alt-Delete"
 	reset
 	click wait
 	audio "sounds/hone.mp3"
@@ -1993,6 +2014,8 @@ LCTRL)
 						sed -i 's/ts.password" value=".*"/ts.password" value="'$password'"/' $cfg
 						sed -i 's/ts.token" value=".*"/ts.token" value="'$token'"/' $cfg
 						sed -i 's/ts.username" value=".*"/ts.username" value="'$username'"/' $cfg
+						sed -i 's/ScreenScraperUser" value=".*"/ScreenScraperUser" value="'$username'"/' $cfg
+						sed -i 's/ScreenScraperPass" value=".*"/ScreenScraperPass" value="'$password'"/' $cfg
 					done
 				fi
 			fi

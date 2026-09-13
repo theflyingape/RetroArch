@@ -77,6 +77,14 @@ if git pull ; then
 	echo -n "Rebuild RetroArch? "
 	read yn
 
+	if [ "$yn" = "d" ]; then
+		make clean
+		./configure --prefix="${HOME}/.local" \
+			--enable-kms --enable-vulkan \
+			--disable-qt --disable-wayland --disable-x11
+		make DEBUG=1 GL_DEBUG=1 VULKAN_DEBUG=1 -j$(nproc)
+	fi
+
 	if [ "$yn" = "y" ]; then
 	make clean
 #		--enable-dynamic_egl \
@@ -85,7 +93,7 @@ if git pull ; then
 	./configure --prefix="${HOME}/.local" \
 		--disable-floathard --disable-neon --disable-rewind \
 		--disable-caca --disable-cheats --disable-langextra \
-		--disable-dispmanx --disable-opengl1 --disable-sdl \
+		--disable-dispmanx --disable-opengl1 --disable-sdl --disable-sdl2 \
 		--disable-libusb --disable-parport --disable-roar --disable-winrawinput \
 		--disable-d3d9 --disable-dinput --disable-dsound --disable-rsound \
 		--disable-jack --disable-mpv --disable-oss --disable-tinyalsa \
@@ -93,8 +101,8 @@ if git pull ; then
 		--disable-v4l2 --disable-videoprocessor \
 		--enable-cheevos --enable-command --enable-lua --enable-networking \
 		--enable-materialui --enable-ozone --enable-rgui --enable-xmb \
-		--enable-kms --enable-opengles --enable-qt --enable-sixel --enable-wayland \
-		--enable-opengl --enable-opengles3 --enable-opengles3_1 --enable-opengles3_2 \
+		--enable-kms --enable-opengl --enable-qt --enable-sixel --enable-wayland \
+		--enable-opengles --enable-opengles3 --enable-opengles3_1 --enable-opengles3_2 \
 		--enable-opengl_core --enable-sdl3 --enable-vulkan --enable-vulkan_display \
 		--enable-alsa --enable-bluetooth --enable-ffmpeg --enable-networkgamepad \
 		--enable-crtswitchres --enable-pipewire --enable-pulse \
@@ -126,7 +134,9 @@ if [ ! -d batocera-emulationstation ]; then
 fi
 
 cd batocera-emulationstation
-rm -rf locale/lang/*
+#rm -fv locale/emulationstation2.pot
+rm -rf locale/lang/* 
+
 if git pull ; then
 	ls -lh /retroarch/bin/emulationstation
 	echo -n "Rebuild EmulationStation? "
@@ -177,8 +187,23 @@ if [ "$yn" = "y" ]; then
 fi
 
 
+ls -lh /retroarch/cores/gambatte_libretro.so
+echo -n "Rebuild Game Boy + Color core? "
+read yn
+
+if [ "$yn" = "y" ]; then
+	[ -d gambatte-libretro ] || git clone https://github.com/libretro/gambatte-libretro
+	cd gambatte-libretro
+	git pull
+
+	time make -j4 -f Makefile.libretro
+	cp -v gambatte_libretro.so /retroarch/cores/
+	cd -
+fi
+
+
 ls -lh /retroarch/cores/gpsp_libretro.so
-echo -n "Rebuild Game Boy Advance (gpSP) core? "
+echo -n "Rebuild Game Boy Advance core? "
 read yn
 
 if [ "$yn" = "y" ]; then
@@ -461,14 +486,14 @@ echo -n "Rebuild SNES (snes9x) core for Pi 4/400? "
 read yn
 
 if [ "$yn" = "y" ]; then
-	[ -d bsnes-jg ] || git clone https://github.com/libretro/bsnes-jg
-	cd bsnes-jg
+	[ -d snes9x ] || git clone https://github.com/libretro/snes9x
+	cd snes9x
 	git pull
 
 	cd libretro
 	make clean
 	time make -j4
-	cp -v bsnes-jg_libretro.so /retroarch/cores/
+	cp -v snes9x_libretro.so /retroarch/cores/
 	cd - && cd ..
 fi
 
