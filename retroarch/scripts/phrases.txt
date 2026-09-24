@@ -67,6 +67,7 @@ Sir Greco picked your pocket!~\e[1;37mSir Greco\e[m picked your pocket!
 Crying will not help you!!~\e[1mCRYING\e[m WILL NOT HELP YOU!!
 I am the BEST, die like the REST!!~I AM THE \e[1mBEST\e[m, DIE LIKE THE \e[1mREST\e[m!!
 Goodbye, please call again
+Make Another Game Already~\e[1;31mM\e[make \e[1;37mA\e[mnother \e[1;34mG\e[mame \e[1;32mA\e[mlready
 There I was, there I was, there I was ... in the Congo
 I take it ALL!
 You can't escape me!

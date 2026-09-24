@@ -7,7 +7,7 @@ oneshot() {
 	frame "${PAD}   ${KEY} ${DOWN} ${OFF}" 2
 	frame "" 2
 	frame "Inspired by the Bruce Lee film ${ON}Game of Death${OFF}," 2
-	frame "which can be found here in Videos." 2
+	frame "which can be found here in the Ageless playlist." 2
 	pi500 mame fire2
 	anykey && arcade kungfum
 }

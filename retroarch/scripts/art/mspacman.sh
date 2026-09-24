@@ -13,4 +13,3 @@ out "\e[87C    ahahahahahahahahah\e[0;31mahah"
 out "\e[87C    \e[1;33mahahahahahahahahahahah"
 out "\e[87C      ahahahahahahahahah"
 out "\e[87C          ahahahahah    "
-

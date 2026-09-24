@@ -5,15 +5,16 @@
 # then came emulators: first on Amiga 1992, then DOS/Win 1997 and Linux 1999
 # modded a Gauntlet II cab using my C using SDL frontend: Time2Play kiosk 2006
 # replaced with my C++ using ClanLib frontend: My Arcade on CD-ROM 2008
-# perfected a number of VIC 20 homebrew games: 2008-2014
+# and I perfected a number of my VIC 20 homebrew games: 2008-2014
 # 
 # console Playlists menu authored by Robert Hurst: 2022-2026
 # these console scripts are for running EmulationStation kiosks
 # to launch RetroArch content
 #  - uses mainstream Linux distro tweaked for work & play
+#  - can use Sinden Lightgun included driver/service off Analog sub-menu
 #  - runs ideally on Raspberry Pi 500+ for its keyboard & performance
 #  - with Sony PS5 DualSense controllers for versatility & built-in features
-#  - and the X-Arcade Tankstick Max integration is coming soon
+#  - and X-Arcade Tankstick Max integration (coming soon)
 #
 shopt -s expand_aliases extglob
 alias out='echo -e'
@@ -626,11 +627,11 @@ main() {
 	frame "\e[A\e[50C ${ON}\x0elqqqqqqqqqqqqqqqqqqqqqqu${KEY}\x0eah\x0f \e[1mMy \e[0;47m${RED}A${YELLOW}r${GREEN}c${CYAN}a${BLUE}d${MAGENTA}e ${KEY}\x0eha${ON}tqqqqqqqqqqqqqqqqqqqqqq "
 	frame "                                                   ${ON}${VBAR}${OFF}  ${DOT}${DIM}a${OFF}  Asteroids        ${DOT}${DIM}n${OFF}  Donkey Kong     ${DOT}${DIM}A${OFF}  Astro Blaster"
 	frame " »${DIM}0${OFF}  COIN-OP       137   •${DIM}5${OFF}  Party Games       16  ${ON}${VBAR}${OFF}  ${DOT}${DIM}b${OFF}  Bubble Bobble    ${DOT}${DIM}o${OFF}  Jungle King     ${DOT}${DIM}B${OFF}  Black Tiger"
-	frame " »${DIM}1${OFF}  CART          379   •${DIM}6${OFF}  Pinball Sims       6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}c${OFF}  Carnival         ${DOT}${DIM}p${OFF}  Moon Patrol     ${DOT}${DIM}C${OFF}  Cyberball"
+	frame " »${DIM}1${OFF}  CART          380   •${DIM}6${OFF}  Pinball Sims       6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}c${OFF}  Carnival         ${DOT}${DIM}p${OFF}  Moon Patrol     ${DOT}${DIM}C${OFF}  Cyberball"
 	frame " »${DIM}2${OFF}  FLOPPY         71   •${DIM}7${OFF}  RTS / Turn-based   9  ${ON}${VBAR}${OFF}  ${DOT}${DIM}d${OFF}  Mr. Do!          ${DOT}${DIM}q${OFF}  Ripoff          ${DOT}${DIM}D${OFF}  Defender"
 	frame " »${DIM}3${OFF}  CD-ROM        103   •${DIM}8${OFF}  Analog Controls   30  ${ON}${VBAR}${OFF}  ${DOT}${DIM}e${OFF}  Elevator Action  ${DOT}${DIM}r${OFF}  Robotron: 2084  ${DOT}${DIM}F${OFF}  Phoenix"
 	frame " »${DIM}4${OFF}  HANDHELD       95   •${DIM}9${OFF}  Homebrews          5  ${ON}${VBAR}${OFF}  ${DOT}${DIM}f${OFF}  Frogger          ${DOT}${DIM}s${OFF}  Spiders         ${DOT}${DIM}G${OFF}  G.O.R.F."
-	frame " »${DIM}N${OFF}  Nostalgia     772   •${DIM}L${OFF}  Laserdiscs         6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}g${OFF}  Galaga           ${DOT}${DIM}t${OFF}  Time Pilot      ${DOT}${DIM}H${OFF}  Hat Trick"
+	frame " »${DIM}N${OFF}  Nostalgia     773   •${DIM}L${OFF}  Laserdiscs         6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}g${OFF}  Galaga           ${DOT}${DIM}t${OFF}  Time Pilot      ${DOT}${DIM}H${OFF}  Hat Trick"
 	frame "${KEY}${BLUE}TAB${OFF}  Archives   12,965   \e[47m${RED}F9${OFF}  Rob's Picks       96  ${ON}${VBAR}${OFF}  ${DOT}${DIM}h${OFF}  Satan's Hollow   ${DOT}${DIM}u${OFF}  Gyruss          ${DOT}${DIM}J${OFF}  Bomb Jack"
 	frame "\e[51C${ON}${VBAR}${OFF}  ${DOT}${DIM}i${OFF}  Space Invaders   ${DOT}${DIM}v${OFF}  Vanguard        ${DOT}${DIM}K${OFF}  Karate Champ"
 	frame "\x08${ON}\x0eqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu\x0f${OFF}  ${DOT}${DIM}j${OFF}  Joust            ${DOT}${DIM}w${OFF}  Galaxian        ${DOT}${DIM}Q${OFF}  Q*bert"
@@ -1541,8 +1542,8 @@ got=
 choice=
 content=
 roms=
-username="`grep _username $RA/cheevos.cfg | awk -F= '{print $2}' | tr -d [:punct:][:space:]`"
-password="`grep _password $RA/cheevos.cfg | awk -F= '{print $2}' | tr -d [:punct:][:space:]`"
+username="`grep cheevos_username $RA/retroarch-keychain.cfg | awk -F= '{print $2}' | tr -d [:punct:][:space:]`"
+password="`grep cheevos_password $RA/retroarch-keychain.cfg | awk -F= '{print $2}' | tr -d [:punct:][:space:]`"
 let n=1
 let L=0
 packages="All"
@@ -1786,7 +1787,6 @@ N)
 	pip "$YT/Preview/NOSTALGIA/`ls Videos/Preview/NOSTALGIA | shuf | head -1`" 1200
 	setterm --background black --foreground cyan --hbcolor bright white --store --clear=rest
 	frame
-	[ -n "$username" ] && nickname="$username" || nickname="TheFlyingApe"
 	if anykey ; then
 		arcade=${ARCADES[$(( RANDOM % ${#ARCADES[@]} ))]}
 		frame "${RIGHT} ${ON}${RED}Transporting${OFF} to ${ON}${arcade} ${DIM}${LEFT}"
@@ -1926,6 +1926,7 @@ attract)
 		volume "6%+"
 		audio "Radio Edit Alpha Team.mp3" &
 		# freshen stuff off my GDrive
+		rm $RA/.emulationstation/es_settings.cfg
 		tokens=$(grep 'token = ' $HOME/.config/rclone/rclone.conf | awk -F' = ' '{print $2}' | head -1)
 		sed -i 's|token = .*|token = '$tokens'|' $HOME/.config/rclone/rclone.conf
 		mkdir "$RT/Retro"
@@ -1984,8 +1985,14 @@ LALT)
 	;;
 LCTRL)
 	frame "Achievements require Internet and a login account."
+	if [ ! -f $RA/retroarch-keychain.cfg ]; then
+		cat > $RA/retroarch-keychain.cfg <<-EOD
+cheevos_username = ""
+cheevos_password = ""
+EOD
+	fi
 	if [ -n "$username" ]; then
-		frame "Change this account ${ON}$username${OFF} for ${ON}\e[33mRetroAchievements.org${OFF} badges? ${SC}" 1
+		frame "Change account '${ON}$username${OFF}' for ${ON}\e[33mRetroAchievements.org${OFF} badges? ${SC}" 1
 		input 6
 		[ "$got" = "y" ] && username= || frame "${RC}No"
 	fi
@@ -2001,14 +2008,14 @@ LCTRL)
 			frame "Username: ${ON}${SC}" 1
 			read -t 24 username
 			if [ -n "$username" ]; then
- 				sed -i 's/_username = ".*"/_username = "'$username'"/' $RA/cheevos.cfg
+ 				sed -i 's/cheevos_username = ".*"/cheevos_username = "'$username'"/' $RA/retroarch-keychain.cfg
 				sed -i 's/netplay.nickname" value=".*"/netplay.nickname" value="'$username'"/' $RA/.emulationstation/es_settings.cfg
 				sed -i 's/ts.username" value=".*"/ts.username" value="'$username'"/' $RA/.emulationstation/es_settings.cfg
 				frame "${OFF}Password: ${ON}${SC}" 1
 				read -t 24 password
 				if [ -n "$password" ] ; then
 					token="`curl -s https://retroachievements.org/dorequest.php?r=login\&u=$username\&p=$password | jq -r '.Token'`"
-					sed -i 's/_password = ".*"/_password = "'$password'"/' $RA/cheevos.cfg
+					sed -i 's/cheevos_password = ".*"/cheevos_password = "'$password'"/' $RA/retroarch-keychain.cfg
 					for cfg in $RA/.emulationstation/themesettings/*.sys ; do
 						sed -i 's/netplay.nickname" value=".*"/netplay.nickname" value="'$username'"/' $cfg
 						sed -i 's/ts.password" value=".*"/ts.password" value="'$password'"/' $cfg
