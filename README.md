@@ -6,9 +6,9 @@
 
 All updated content, configurations, documentation, and media is directly accessible out of my ☁️ Drive [📚 Bookshelf](https://drive.google.com/drive/folders/1IzpFmpW07yRvnkVU7aJVFchlY1OpmDS2?usp=drive_link) _and_ [💿💾 Retro](https://drive.google.com/drive/folders/1DspvB89066kRyLET83xgrOT3VGT6IpBz?usp=drive_link) folders
 
-> _My harvesting and personal contributions of digital content in support of retrogaming / [retrocomputing](https://robert.hurst-us.net/rob/retrocomputing) from **1976**_
-
 ## Boot image
+
+> _My harvesting and personal contributions of digital content in support of retrogaming / [retrocomputing](https://robert.hurst-us.net/rob/retrocomputing) from **1976**_
 
 Since November 2021, select digital content pulled off of my Drive folder to make this into a plug & play **RetroArch** configuration that loads from a Debian 13 [Trixie boot image](https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit) for a user & developer friendly 🍓 Raspberry Pi 4/400 or Pi 5/500/500+ desktop (or console).
 
