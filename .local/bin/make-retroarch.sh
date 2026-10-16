@@ -25,7 +25,7 @@ if [ "$V" = "new" ]; then
 	#	libx264-dev libx265-dev libxcb-shape0-dev libxcb-shm0-dev libxcb-xfixes0-dev \
 	#	libxcb1-dev libxml2-dev libzstd-dev lzma-dev qtbase5-dev vc-dev yasm zlib1g-dev
 	sudo apt install libasound2-dev libass-dev libavcodec-dev \
-		libavfilter-dev libavformat-dev libavutil-dev libdrm* libflac-dev \
+		libavfilter-dev libavformat-dev libavutil-dev libcec-dev libdrm* libflac-dev \
 		libhidapi-dev libpipewire-0.3-dev libsixel-dev libsystemd-dev \
 		libx264-dev libx265-dev
 	# SDL
@@ -116,6 +116,7 @@ if git pull ; then
 		mv -v /retroarch/bin/retroarch "/retroarch/bin/older/retroarch-${KEEP}"
 		make install
 		mv -v ~/.local/bin/retroarch* /retroarch/bin/
+		strip /retroarch/bin/retroarch
 		find /retroarch/bin -mtime +6 -name "retroarch-*" -exec rm -fv {} \;
 		gio trash ~/.local/share/applications/com.libretro.RetroArch.desktop \
 		|| rm -fv ~/.local/share/applications/com.libretro.RetroArch.desktop
@@ -147,28 +148,28 @@ if git pull ; then
 		cmake -DUSE_MESA_GLES=On -DGLES3=On -DENABLE_PULSE=On -DDISABLE_KODI=On . &> cmake.log
 		if time make -j4 ; then
 			ls -l emulationstation /retroarch/bin/
-			cp -v emulationstation /retroarch/bin/
+			#cp -v emulationstation /retroarch/bin/
+			strip -o /retroarch/bin/emulationstation emulationstation
 			rsync -acv resources /retroarch/
 		fi
 	fi
 fi
 cd -
 
+[ -d libretro-atari800 ] || git clone https://github.com/libretro/libretro-atari800
+cd libretro-atari800
+if git pull ; then
+	ls -lh /retroarch/cores/atari800_libretro.so
+	echo -n "Rebuild Atari 800 core? "
+	read yn
 
-ls -lh /retroarch/cores/atari800_libretro.so
-echo -n "Rebuild Atari 800 core? "
-read yn
-
-if [ "$yn" = "y" ]; then
-	[ -d libretro-atari800 ] || git clone https://github.com/libretro/libretro-atari800
-	cd libretro-atari800
-	git pull
-
-	make clean
-	time make -j4
-	cp -v atari800_libretro.so /retroarch/cores/
+	if [ "$yn" = "y" ]; then
+		make clean
+		time make -j4
+		cp -v atari800_libretro.so /retroarch/cores/
+	fi
 fi
-
+cd -
 
 ls -lh /retroarch/cores/bsnes-jg_libretro.so
 echo -n "Rebuild SNES (bsnes-jg) core for Pi 5? "
@@ -242,17 +243,6 @@ ls -lh /retroarch/cores/dosbox_pure_libretro.so
 echo -n "Rebuild DOSBox Pure core? "
 read yn
 
-if [ "$yn" = "y" ]; then
-	[ -d dosbox-pure ] || git clone https://github.com/schellingb/dosbox-pure
-	cd dosbox-pure
-	git pull
-
-	make clean
-	time make -j4
-	cp -v dosbox_pure_libretro.so /retroarch/cores/
-	cd -
-fi
-
 
 ls -lh /retroarch/cores/fbneo_libretro.so
 echo -n "Rebuild FinalBurn Neo (Light) core? "
@@ -283,7 +273,7 @@ if [ "$yn" = "y" ]; then
 
 	[ -d build ] && rm -rf build
 	mkdir build && cd build
-	cmake -DLIBRETRO=ON -DUSE_OPENGL=OFF ..
+	cmake -DLIBRETRO=ON -DUSE_OPENGL=ON -DUSE_GLES3=ON -DUSE_VULKAN=ON ..
 	time make -j4
 
 	cp -v flycast_libretro.so /retroarch/cores/
@@ -497,25 +487,25 @@ if [ "$yn" = "y" ]; then
 	cd - && cd ..
 fi
 
+[ -d stella ] || git clone https://github.com/stella-emu/stella
+cd stella
 
-ls -lh /retroarch/cores/stella_libretro.so
-echo -n "Rebuild Stella (Atari 2600) core? "
-read yn
+if git pull ; then
+	ls -lh /retroarch/cores/stella_libretro.so
+	echo -n "Rebuild Stella (Atari 2600) core? "
+	read yn
 
-if [ "$yn" = "y" ]; then
-	[ -d stella ] || git clone https://github.com/stella-emu/stella
-	cd stella
-	git pull
-
-	./configure --enable-release
-	time make -j4
-	cd src/os/libretro
-	time make -j4
-	cp -v stella_libretro.so /retroarch/cores/
-	cd -
-	cd ..
+	if [ "$yn" = "y" ]; then
+		./configure --enable-release
+		time make -j4
+		cd src/os/libretro
+		time make -j4
+		cp -v stella_libretro.so /retroarch/cores/
+		cd -
+		cd ..
+	fi
 fi
-
+cd -
 
 ls -lh /retroarch/cores/stella2014_libretro.so
 echo -n "Rebuild Stella 2014 (Atari 2600) core? "

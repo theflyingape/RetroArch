@@ -40,7 +40,7 @@ let net=$((`tail +2 /proc/net/arp | wc -l`+0))
 # mount access to my GDrive Bookshelf folder
 if ! pidof -q rclone ; then
 	sudo umount Bookshelf &> /dev/null
-	rclone mount Bookshelf: Bookshelf --daemon &
+	rclone mount Bookshelf: Bookshelf --read-only --daemon &
 fi
 # Plymouth startup
 #sudo plymouth-set-default-theme solar
@@ -51,6 +51,8 @@ RA=/retroarch
 [ -n "$XDG_RUNTIME_DIR" ] && RT="$XDG_RUNTIME_DIR" || RT=/run/user/$UID
 makelink "${RA}" "${HOME}/.config/"
 makelink "${RA}/playlists/builtin/content_favorites.lpl" "${RT}/"
+makelink "${RA}/retroarch-keychain.cfg" "${RT}/"
+makelink "${RA}/retroarch-keychain.key" "${RT}/"
 # ... and make a runtime copy of the base configuration
 [ -f $RT/retroarch.cfg ] || cp $RA/template.cfg $RT/retroarch.cfg
 makelink "${RT}/retroarch.cfg" "${RA}/"
@@ -73,16 +75,15 @@ case $MODEL in
 linux)
 	;;
 Pi4*)
+	sed -i 's/menu_shader_pipeline = ".*"/menu_shader_pipeline = "0"/' "$RA/retroarch.cfg"
 	makelink "libCameraInterface.pi4" "$RA/scripts/Lightgun/Application/libCameraInterface.so"
 	makelink "libSdlInterface.pi4" "$RA/scripts/Lightgun/Application/libSdlInterface.so"
 	shader=$( grep shader_enable "$RA/config/Beetle PCE/Beetle PCE.cfg" | awk -F= '{ print $2 }' | tr -d [:punct:][:space:] )
 	[ "$shader" = "false" ] || sed -i 's/shader_enable = ".*"/shader_enable = "false"/' "$RA/config/Beetle PCE/Beetle PCE.cfg"
 	replace '(bsnes-jg)' '(Snes9x - Current)' "$RA/playlists/Nintendo - Super Nintendo Entertainment System.lpl"
-	replace '(bsnes-jg)' '(Snes9x - Current)' "$RA/content_favorites.lpl"
-	replace '(bsnes-jg)' '(Snes9x - Current)' "$RA/playlists_consoles/content_favorites.lpl"
+	replace '(bsnes-jg)' '(Snes9x - Current)' "$RA/playlists/builtin/content_favorites.lpl"
 	replace 'bsnes-jg_' 'snes9x_' "$RA/playlists/Nintendo - Super Nintendo Entertainment System.lpl"
-	replace 'bsnes-jg_' 'snes9x_' "$RA/content_favorites.lpl"
-	replace 'bsnes-jg_' 'snes9x_' "$RA/playlists_consoles/content_favorites.lpl"
+	replace 'bsnes-jg_' 'snes9x_' "$RA/playlists/builtin/content_favorites.lpl"
 	makelink "Flycast.pi4" "$RA/config/Flycast/Flycast.opt"
 	makelink "Sega Dreamcast.pi4" "$RA/config/Flycast/Sega Dreamcast.cfg"
 	makelink "../zfast-crt.glslp" "$RA/config/MAME/MAME.glslp"
@@ -107,11 +108,9 @@ Pi5*)
 	shader=$( grep shader_enable "$RA/config/Beetle PCE/Beetle PCE.cfg" | awk -F= '{ print $2 }' | tr -d [:punct:][:space:] )
 	[ "$shader" = "true" ] || sed -i 's/shader_enable = ".*"/shader_enable = "true"/' "$RA/config/Beetle PCE/Beetle PCE.cfg"
 	replace '(Snes9x - Current)' '(bsnes-jg)' "$RA/playlists/Nintendo - Super Nintendo Entertainment System.lpl"
-	replace '(Snes9x - Current)' '(bsnes-jg)' "$RA/content_favorites.lpl"
-	replace '(Snes9x - Current)' '(bsnes-jg)' "$RA/playlists_consoles/content_favorites.lpl"
+	replace '(Snes9x - Current)' '(bsnes-jg)' "$RA/playlists/builtin/content_favorites.lpl"
 	replace 'snes9x_' 'bsnes-jg_' "$RA/playlists/Nintendo - Super Nintendo Entertainment System.lpl"
-	replace 'snes9x_' 'bsnes-jg_' "$RA/content_favorites.lpl"
-	replace 'snes9x_' 'bsnes-jg_' "$RA/playlists_consoles/content_favorites.lpl"
+	replace 'snes9x_' 'bsnes-jg_' "$RA/playlists/builtin/content_favorites.lpl"
 	makelink "Flycast.pi5" "$RA/config/Flycast/Flycast.opt"
 	makelink "Sega Dreamcast.pi5" "$RA/config/Flycast/Sega Dreamcast.cfg"
 	makelink "../zfast-composite.glslp" "$RA/config/MAME/MAME.glslp"

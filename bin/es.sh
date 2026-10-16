@@ -19,7 +19,7 @@ ffplay -autoexit -nodisp -loop 1 "$BGM" &> /dev/null &
 zenity --question --no-wrap --timeout=300 --width=512 \
 	--window-icon "$HOME/.local/share/icons/retroarch-96x96.png" \
 	--title="Batocera EmulationStation kiosk" \
-	--text="<big>Press <tt><b>F4</b></tt> to quit the kiosk menu\n</big>\n&#8230; <i>running</i> <tt>RetroArch</tt> content <b>hotkeys</b>\n<tt><b>CAPS LOCK </b></tt>toggles keyboard focus\n<tt><b>      F10 </b></tt>restart content\n<tt><b>   PrtScn </b></tt>take a screenshot\n<tt><b>   Delete </b></tt>quit content\n\n<i>Read the</i> <tt>HELP</tt> <i>document for full details.</i>\n<big>\n&#127482;&#127480;<tt> </tt><span foreground='red'><b>M</b>y <b>A</b>wesome <b>G</b>ames <b>A</b>rchive</span>\n</big><tt>    </tt>&#169;2021-2026<tt> </tt><span foreground='midnight blue' underline='none'><a href='https://github.com/theflyingape' title='GitHub'>The Flying Ape &#128279; </a></span>" \
+	--text="<big>Press <tt><b>F4</b></tt> to quit the kiosk menu\n</big>\n&#8230; <i>running</i> <tt>RetroArch</tt> content <b>hotkeys</b>\n<tt><b>BACKSPACE </b></tt>show Quick menu\n<tt><b>CAPS LOCK </b></tt>toggles keyboard focus\n<tt><b>   Delete </b></tt>close content\n<tt><b>      F10 </b></tt>restart content\n<tt><b>   PrtScn </b></tt>take a screenshot\n\n<i>Read the</i> <tt>HELP</tt> <i>document for full details.</i>\n<big>\n&#127482;&#127480;<tt> </tt><span foreground='red'><b>M</b>y <b>A</b>wesome <b>G</b>ames <b>A</b>rchive</span>\n</big><tt>    </tt>&#169;2021-2026<tt> </tt><span foreground='midnight blue' underline='none'><a href='https://github.com/theflyingape' title='GitHub'>The Flying Ape &#128279; </a></span>" \
 	 --cancel-label="🚫 Exit to Desktop" --ok-label="🎮 Shall we play a game?"
 declare -i PLAY=$?
 

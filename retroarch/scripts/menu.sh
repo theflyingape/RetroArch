@@ -85,9 +85,6 @@ fi
 which retroarch 2> /dev/null || export PATH=$RA/bin:$PATH
 
 trap "chvt 5; sleep 1.5; exit" 1 3 15
-#un-comment to mount an SD CARD imaged from the SSD
-#grep -qc /media/pi/bootfs /proc/mounts || sudo mount /dev/mmcblk0p1 -m /media/pi/bootfs
-#grep -qc /media/pi/rootfs /proc/mounts || sudo mount /dev/mmcblk0p2 -m /media/pi/rootfs
 
 [ -f $RA/assets/sounds/BGM.wav ] && rm $RA/assets/sounds/BGM.wav
 rm -f $RT/packages 2> /dev/null
@@ -626,11 +623,11 @@ main() {
 	crt
 	frame "\e[A\e[50C ${ON}\x0elqqqqqqqqqqqqqqqqqqqqqqu${KEY}\x0eah\x0f \e[1mMy \e[0;47m${RED}A${YELLOW}r${GREEN}c${CYAN}a${BLUE}d${MAGENTA}e ${KEY}\x0eha${ON}tqqqqqqqqqqqqqqqqqqqqqq "
 	frame "                                                   ${ON}${VBAR}${OFF}  ${DOT}${DIM}a${OFF}  Asteroids        ${DOT}${DIM}n${OFF}  Donkey Kong     ${DOT}${DIM}A${OFF}  Astro Blaster"
-	frame " »${DIM}0${OFF}  COIN-OP       137   •${DIM}5${OFF}  Party Games       16  ${ON}${VBAR}${OFF}  ${DOT}${DIM}b${OFF}  Bubble Bobble    ${DOT}${DIM}o${OFF}  Jungle King     ${DOT}${DIM}B${OFF}  Black Tiger"
-	frame " »${DIM}1${OFF}  CART          380   •${DIM}6${OFF}  Pinball Sims       6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}c${OFF}  Carnival         ${DOT}${DIM}p${OFF}  Moon Patrol     ${DOT}${DIM}C${OFF}  Cyberball"
-	frame " »${DIM}2${OFF}  FLOPPY         71   •${DIM}7${OFF}  RTS / Turn-based   9  ${ON}${VBAR}${OFF}  ${DOT}${DIM}d${OFF}  Mr. Do!          ${DOT}${DIM}q${OFF}  Ripoff          ${DOT}${DIM}D${OFF}  Defender"
+	frame " »${DIM}0${OFF}  COIN-OP       136   •${DIM}5${OFF}  Party Games       16  ${ON}${VBAR}${OFF}  ${DOT}${DIM}b${OFF}  Bubble Bobble    ${DOT}${DIM}o${OFF}  Jungle King     ${DOT}${DIM}B${OFF}  Black Tiger"
+	frame " »${DIM}1${OFF}  CART          392   •${DIM}6${OFF}  Pinball Sims       6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}c${OFF}  Carnival         ${DOT}${DIM}p${OFF}  Moon Patrol     ${DOT}${DIM}C${OFF}  Cyberball"
+	frame " »${DIM}2${OFF}  FLOPPY         71   •${DIM}7${OFF}  RTS / Turn-based  10  ${ON}${VBAR}${OFF}  ${DOT}${DIM}d${OFF}  Mr. Do!          ${DOT}${DIM}q${OFF}  Ripoff          ${DOT}${DIM}D${OFF}  Defender"
 	frame " »${DIM}3${OFF}  CD-ROM        103   •${DIM}8${OFF}  Analog Controls   30  ${ON}${VBAR}${OFF}  ${DOT}${DIM}e${OFF}  Elevator Action  ${DOT}${DIM}r${OFF}  Robotron: 2084  ${DOT}${DIM}F${OFF}  Phoenix"
-	frame " »${DIM}4${OFF}  HANDHELD       95   •${DIM}9${OFF}  Homebrews          5  ${ON}${VBAR}${OFF}  ${DOT}${DIM}f${OFF}  Frogger          ${DOT}${DIM}s${OFF}  Spiders         ${DOT}${DIM}G${OFF}  G.O.R.F."
+	frame " »${DIM}4${OFF}  HANDHELD       91   •${DIM}9${OFF}  Homebrews          5  ${ON}${VBAR}${OFF}  ${DOT}${DIM}f${OFF}  Frogger          ${DOT}${DIM}s${OFF}  Spiders         ${DOT}${DIM}G${OFF}  G.O.R.F."
 	frame " »${DIM}N${OFF}  Nostalgia     773   •${DIM}L${OFF}  Laserdiscs         6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}g${OFF}  Galaga           ${DOT}${DIM}t${OFF}  Time Pilot      ${DOT}${DIM}H${OFF}  Hat Trick"
 	frame "${KEY}${BLUE}TAB${OFF}  Archives   12,965   \e[47m${RED}F9${OFF}  Rob's Picks       96  ${ON}${VBAR}${OFF}  ${DOT}${DIM}h${OFF}  Satan's Hollow   ${DOT}${DIM}u${OFF}  Gyruss          ${DOT}${DIM}J${OFF}  Bomb Jack"
 	frame "\e[51C${ON}${VBAR}${OFF}  ${DOT}${DIM}i${OFF}  Space Invaders   ${DOT}${DIM}v${OFF}  Vanguard        ${DOT}${DIM}K${OFF}  Karate Champ"
@@ -781,17 +778,17 @@ pinball() {
 strategy() {
 	crt
 	frame "" 2
-	frame "${DOT}${DIM}0${OFF}  0 A.D."
-	frame "${DOT}${DIM}a${OFF}  Angband             ${DOT}${DIM}E${OFF}  Empire"
-	frame "${DOT}${DIM}d${OFF}  Dank Domain         ${DOT}${DIM}R${OFF}  Risk (~6P) or Ultimate (~8P)"
+	frame "${DOT}${DIM}0${OFF}  0 A.D.              ${DOT}${DIM}A${OFF}  Angband"
+	frame "${DOT}${DIM}d${OFF}  Dank Domain         ${DOT}${DIM}E${OFF}  Empire"
+	frame "${DOT}${DIM}r${OFF}  Star Raiders        ${DOT}${DIM}R${OFF}  Risk (~6P) or Ultimate (~8P)"
 	frame "${DOT}${DIM}s${OFF}  Stratego    (~2P)   ${DOT}${DIM}S${OFF}  Super Trek"
 	frame "${DOT}${DIM}w${OFF}  Warcraft            ${DOT}${DIM}W${OFF}  Warcraft II"
 	frame 
 	n=1
 
 	FOLDER=strategy
-	CHOICE=( "" "0" "a" "d" "s" "w" "E" "R" "S" "W" )
-	MENU=( "" "0 A.D." "Angband" "Dank Domain" "Stratego" "Warcraft" "Empire" "Risk / Ultimate" "Super Trek" "Warcraft II" )
+	CHOICE=( "" "0" "d" "r" "s" "w" "A" "E" "R" "S" "W" )
+	MENU=( "" "0 A.D." "Dank Domain" "Star Raiders" "Stratego" "Warcraft" "Angband" "Empire" "Risk / Ultimate" "Super Trek" "Warcraft II" )
 
 	frame 
 	frame "${OFF}\e[$(( $WIDTH - 16 ))C${KEY}\x0eah\x0f `date +'%a %I:%M%P'` \x0eha\x0f${OFF}\e[2A"
@@ -805,11 +802,14 @@ strategy() {
 	0)
 		src 0ad
 		;;
-	a)
+	A)
 		src angband
 		;;
 	d)
 		src vt240
+		;;
+	r)
+		src starraid
 		;;
 	s)
 		src stratego
@@ -1092,7 +1092,7 @@ prompt() {
 		if floppy "VIC20 - Friendly Guide.pdf" ; then
 			reset
 			pi500 comp
-			qstart -L vice_xvic "$RA/roms/Commodore/VIC-20 origins.m3u"
+			qstart -L vice_xvic "$RA/roms/Commodore/VIC-20 origins (NTSC).m3u"
 			gameover
 		fi
 		out -n "\e[2A"
@@ -1287,7 +1287,15 @@ kiosk()
 	case "$1" in
 	arcade)
 		pi500 mame es
-		ln -sf "themesettings/es-theme-Animatics-DX.sys" .emulationstation/es_settings.cfg
+		#ln -sf "themesettings/es-theme-Animatics-DX.sys" .emulationstation/es_settings.cfg
+		ln -sf "themesettings/es-theme-zmax.sys" .emulationstation/es_settings.cfg
+ 		prior=$( grep 'systems and lists' .emulationstation/themesettings/es-theme-zmax.sys | awk -F'"' '{print $4}' )
+ 		name="$prior"
+		readarray -t names < <( grep 'systems and lists' .emulationstation/themes/es-theme-zmax/theme.xml | awk -F'>' '{print $1}' | awk -F'=' '{print $3}' | tr -d '"' )
+		while [ "$name" = "$prior" ]; do
+			name="${names[$(( RANDOM % ${#names[@]} ))]}"
+		done
+ 		sed -i 's/systems and lists" value=".*"/systems and lists" value="'"$name"'"/' .emulationstation/themesettings/es-theme-zmax.sys
 		;;
 	cart)
 		pi500 game es
@@ -1427,8 +1435,8 @@ myinet() {
 		[ ${#NETWORK} -gt 15 ] && NETWORK="Internet ${ON}ON${OFF}"
 	else
 		NETWORK=""
-		nmcli device disconnect wlan0 &> /dev/null
-		nmcli device connect wlan0 &> /dev/null
+		#/etc/NetworkManager/system-connections/preconfigured.nmconnection
+		#autoconnect-retries=0
 	fi
 }
 
@@ -1542,8 +1550,8 @@ got=
 choice=
 content=
 roms=
-username="`grep cheevos_username $RA/retroarch-keychain.cfg | awk -F= '{print $2}' | tr -d [:punct:][:space:]`"
-password="`grep cheevos_password $RA/retroarch-keychain.cfg | awk -F= '{print $2}' | tr -d [:punct:][:space:]`"
+username="`grep cheevos_username $RA/cheevos.cfg | awk -F= '{print $2}' | tr -d [:punct:][:space:]`"
+password="`grep cheevos_password $RA/cheevos.cfg | awk -F= '{print $2}' | tr -d [:punct:][:space:]`"
 let n=1
 let L=0
 packages="All"
@@ -1985,15 +1993,12 @@ LALT)
 	;;
 LCTRL)
 	frame "Achievements require Internet and a login account."
-	if [ ! -f $RA/retroarch-keychain.cfg ]; then
-		cat > $RA/retroarch-keychain.cfg <<-EOD
-cheevos_username = ""
-cheevos_password = ""
-EOD
-	fi
+	frame "RetroArch Settings -> Account can be used to SWITCH"
+	frame "to another account for that session. Setup account"
+	frame "here as the primary Account used for both ES and RA."
 	if [ -n "$username" ]; then
-		frame "Change account '${ON}$username${OFF}' for ${ON}\e[33mRetroAchievements.org${OFF} badges? ${SC}" 1
-		input 6
+		frame "Change primary account '${ON}$username${OFF}' for ${ON}\e[33mRetroAchievements.org${OFF} badges? ${SC}" 1
+		input 15
 		[ "$got" = "y" ] && username= || frame "${RC}No"
 	fi
 	if [ -z "$username" ]; then
@@ -2001,21 +2006,21 @@ EOD
 		frame "Visit ${ON}\e[33mRetroAchievements.org${OFF} to create a free account, then"
 		frame "answer ${ON}y${OFF}es here to fill-in this account name & password."
 		frame "Fill-in now? ${ON}${SC}" 1
-		input 6
+		input 15
 		if [ "$got" = "y" ]; then
 			frame "${RC}Yes${OFF}"
 			mt ; stty echo
 			frame "Username: ${ON}${SC}" 1
 			read -t 24 username
 			if [ -n "$username" ]; then
- 				sed -i 's/cheevos_username = ".*"/cheevos_username = "'$username'"/' $RA/retroarch-keychain.cfg
+ 				sed -i 's/cheevos_username = ".*"/cheevos_username = "'$username'"/' $RA/cheevos.cfg
 				sed -i 's/netplay.nickname" value=".*"/netplay.nickname" value="'$username'"/' $RA/.emulationstation/es_settings.cfg
 				sed -i 's/ts.username" value=".*"/ts.username" value="'$username'"/' $RA/.emulationstation/es_settings.cfg
 				frame "${OFF}Password: ${ON}${SC}" 1
 				read -t 24 password
 				if [ -n "$password" ] ; then
 					token="`curl -s https://retroachievements.org/dorequest.php?r=login\&u=$username\&p=$password | jq -r '.Token'`"
-					sed -i 's/cheevos_password = ".*"/cheevos_password = "'$password'"/' $RA/retroarch-keychain.cfg
+					sed -i 's/cheevos_password = ".*"/cheevos_password = "'$password'"/' $RA/cheevos.cfg
 					for cfg in $RA/.emulationstation/themesettings/*.sys ; do
 						sed -i 's/netplay.nickname" value=".*"/netplay.nickname" value="'$username'"/' $cfg
 						sed -i 's/ts.password" value=".*"/ts.password" value="'$password'"/' $cfg
