@@ -623,13 +623,13 @@ main() {
 	crt
 	frame "\e[A\e[50C ${ON}\x0elqqqqqqqqqqqqqqqqqqqqqqu${KEY}\x0eah\x0f \e[1mMy \e[0;47m${RED}A${YELLOW}r${GREEN}c${CYAN}a${BLUE}d${MAGENTA}e ${KEY}\x0eha${ON}tqqqqqqqqqqqqqqqqqqqqqq "
 	frame "                                                   ${ON}${VBAR}${OFF}  ${DOT}${DIM}a${OFF}  Asteroids        ${DOT}${DIM}n${OFF}  Donkey Kong     ${DOT}${DIM}A${OFF}  Astro Blaster"
-	frame " »${DIM}0${OFF}  COIN-OP       136   •${DIM}5${OFF}  Party Games       16  ${ON}${VBAR}${OFF}  ${DOT}${DIM}b${OFF}  Bubble Bobble    ${DOT}${DIM}o${OFF}  Jungle King     ${DOT}${DIM}B${OFF}  Black Tiger"
-	frame " »${DIM}1${OFF}  CART          392   •${DIM}6${OFF}  Pinball Sims       6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}c${OFF}  Carnival         ${DOT}${DIM}p${OFF}  Moon Patrol     ${DOT}${DIM}C${OFF}  Cyberball"
-	frame " »${DIM}2${OFF}  FLOPPY         71   •${DIM}7${OFF}  RTS / Turn-based  10  ${ON}${VBAR}${OFF}  ${DOT}${DIM}d${OFF}  Mr. Do!          ${DOT}${DIM}q${OFF}  Ripoff          ${DOT}${DIM}D${OFF}  Defender"
-	frame " »${DIM}3${OFF}  CD-ROM        103   •${DIM}8${OFF}  Analog Controls   30  ${ON}${VBAR}${OFF}  ${DOT}${DIM}e${OFF}  Elevator Action  ${DOT}${DIM}r${OFF}  Robotron: 2084  ${DOT}${DIM}F${OFF}  Phoenix"
+	frame " »${DIM}0${OFF}  COIN-OP       137   •${DIM}5${OFF}  Party Games       16  ${ON}${VBAR}${OFF}  ${DOT}${DIM}b${OFF}  Bubble Bobble    ${DOT}${DIM}o${OFF}  Jungle King     ${DOT}${DIM}B${OFF}  Black Tiger"
+	frame " »${DIM}1${OFF}  CART          395   •${DIM}6${OFF}  Pinball Sims       6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}c${OFF}  Carnival         ${DOT}${DIM}p${OFF}  Moon Patrol     ${DOT}${DIM}C${OFF}  Cyberball"
+	frame " »${DIM}2${OFF}  FLOPPY        151   •${DIM}7${OFF}  RTS / Turn-based  10  ${ON}${VBAR}${OFF}  ${DOT}${DIM}d${OFF}  Mr. Do!          ${DOT}${DIM}q${OFF}  Ripoff          ${DOT}${DIM}D${OFF}  Defender"
+	frame " »${DIM}3${OFF}  CD-ROM        104   •${DIM}8${OFF}  Analog Controls   30  ${ON}${VBAR}${OFF}  ${DOT}${DIM}e${OFF}  Elevator Action  ${DOT}${DIM}r${OFF}  Robotron: 2084  ${DOT}${DIM}F${OFF}  Phoenix"
 	frame " »${DIM}4${OFF}  HANDHELD       91   •${DIM}9${OFF}  Homebrews          5  ${ON}${VBAR}${OFF}  ${DOT}${DIM}f${OFF}  Frogger          ${DOT}${DIM}s${OFF}  Spiders         ${DOT}${DIM}G${OFF}  G.O.R.F."
-	frame " »${DIM}N${OFF}  Nostalgia     773   •${DIM}L${OFF}  Laserdiscs         6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}g${OFF}  Galaga           ${DOT}${DIM}t${OFF}  Time Pilot      ${DOT}${DIM}H${OFF}  Hat Trick"
-	frame "${KEY}${BLUE}TAB${OFF}  Archives   12,965   \e[47m${RED}F9${OFF}  Rob's Picks       96  ${ON}${VBAR}${OFF}  ${DOT}${DIM}h${OFF}  Satan's Hollow   ${DOT}${DIM}u${OFF}  Gyruss          ${DOT}${DIM}J${OFF}  Bomb Jack"
+	frame " »${DIM}N${OFF}  Nostalgia     868   •${DIM}L${OFF}  Laserdiscs         6  ${ON}${VBAR}${OFF}  ${DOT}${DIM}g${OFF}  Galaga           ${DOT}${DIM}t${OFF}  Time Pilot      ${DOT}${DIM}H${OFF}  Hat Trick"
+	frame "${KEY}${BLUE}TAB${OFF}  Archives   13,003   \e[47m${RED}F9${OFF}  Rob's Picks       96  ${ON}${VBAR}${OFF}  ${DOT}${DIM}h${OFF}  Satan's Hollow   ${DOT}${DIM}u${OFF}  Gyruss          ${DOT}${DIM}J${OFF}  Bomb Jack"
 	frame "\e[51C${ON}${VBAR}${OFF}  ${DOT}${DIM}i${OFF}  Space Invaders   ${DOT}${DIM}v${OFF}  Vanguard        ${DOT}${DIM}K${OFF}  Karate Champ"
 	frame "\x08${ON}\x0eqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqu\x0f${OFF}  ${DOT}${DIM}j${OFF}  Joust            ${DOT}${DIM}w${OFF}  Galaxian        ${DOT}${DIM}Q${OFF}  Q*bert"
 	frame " ${DOT}${DIM}U${OFF}  Upgrade Linux       ${DOT}${DIM}Z${OFF}  Toggle boot: ${ON}${STARTUP}${OFF}  ${ON}${VBAR}${OFF}  ${DOT}${DIM}k${OFF}  Kung-Fu Master   ${DOT}${DIM}x${OFF}  Xevious         ${DOT}${DIM}S${OFF}  Space Duel"
@@ -1294,6 +1294,7 @@ kiosk()
 		readarray -t names < <( grep 'systems and lists' .emulationstation/themes/es-theme-zmax/theme.xml | awk -F'>' '{print $1}' | awk -F'=' '{print $3}' | tr -d '"' )
 		while [ "$name" = "$prior" ]; do
 			name="${names[$(( RANDOM % ${#names[@]} ))]}"
+			[ "$name" = "tutorial" ] && name="$prior"
 		done
  		sed -i 's/systems and lists" value=".*"/systems and lists" value="'"$name"'"/' .emulationstation/themesettings/es-theme-zmax.sys
 		;;

@@ -1,14 +1,10 @@
 #!/bin/bash
 #
-# My compile script for RetroArch targeted for Debian Bookworm arm64,
-# but running off a Pi 5 launched from Plasma (vk_wayland context) desktop 
+# My compile script for RetroArch targeted for Debian Trixie console,
+# but can run off a Pi 5 desktop (vk_wayland context)
 #
-cd ~
-[ -d build ] || mkdir build
 
-V="$1"
-
-if [ "$V" = "new" ]; then
+if [ "$1" = "deps" ]; then
 	# toolchain add-ons
 	sudo apt install autoconf automake bind9-dnsutils bison build-essential check cmake code
 		doxygen flex git graphviz imagemagick libtool mesa-utils meson micro nasm ninja-build \
@@ -61,13 +57,32 @@ if [ "$V" = "new" ]; then
 	sudo rpi-update
 
 	vulkaninfo | grep Info || exit
-
-	echo "pass 'git' or release version parameter as numeric major.minor.release to build/install"
-	exit
 fi
 
-cd build
+cd ~
+[ -d build ] || mkdir build
 
+echo 
+echo " 1) RetroArch           11) Genesis        21) Amiga"
+echo " 2) EmulationStation    12) MAME 2003+     22) Phillips CDi"
+echo " 3) Atari 800           13) MAME           23) SNES (Pi 4)"
+echo " 4) SNES (Pi 5)         14) NES            24) Atari 2600"
+echo " 5) Game Boy + Color    15) N64            25) Commodore 8-bit"
+echo " 6) Game Boy Advance    16) SuperGrafX     26) Sharp X68000"
+echo " 7) GameCube            17) Neo Geo CD     27) Super project"
+echo " 8) DOS                 18) 3DO            "
+echo " 9) FBNeo (Light)       19) PlayStation    "
+echo "10) Dreamcast           20) PSP            "
+echo 
+echo -n "Rebuild which core(s)? "
+read cores
+
+for core in $cores; do
+
+cd ~/build
+
+case $core in
+1)	
 [ -d RetroArch ] || git clone https://github.com/libretro/RetroArch
 cd RetroArch
 
@@ -123,9 +138,8 @@ if git pull ; then
 	fi
 	fi
 fi
-cd -
-
-
+	;;
+2)	
 if [ ! -d batocera-emulationstation ]; then
 	git clone --recursive https://github.com/batocera-linux/batocera-emulationstation.git
 	cd batocera-emulationstation
@@ -144,18 +158,19 @@ if git pull ; then
 	read yn
 
 	if [ "$yn" = "y" ]; then
-		#cmake -DUSE_MESA_GLES=On -DGL=On -DENABLE_PULSE=On -DDISABLE_KODI=On . &> cmake.log
-		cmake -DUSE_MESA_GLES=On -DGLES3=On -DENABLE_PULSE=On -DDISABLE_KODI=On . &> cmake.log
+		#cmake -DUSE_MESA_GLES=On -DGLES3=On -DENABLE_PULSE=On -DDISABLE_KODI=On . &> cmake.log
+		cmake -DGLES3=On -DENABLE_PULSE=On -DDISABLE_KODI=On . &> cmake.log
 		if time make -j4 ; then
-			ls -l emulationstation /retroarch/bin/
+			mv -v /retroarch/bin/emulationstation /retroarch/bin/older/
 			#cp -v emulationstation /retroarch/bin/
 			strip -o /retroarch/bin/emulationstation emulationstation
+			ls -l /retroarch/bin/older/emulationstation /retroarch/bin/emulationstation
 			rsync -acv resources /retroarch/
 		fi
 	fi
 fi
-cd -
-
+	;;
+3)	
 [ -d libretro-atari800 ] || git clone https://github.com/libretro/libretro-atari800
 cd libretro-atari800
 if git pull ; then
@@ -169,8 +184,8 @@ if git pull ; then
 		cp -v atari800_libretro.so /retroarch/cores/
 	fi
 fi
-cd -
-
+	;;
+4)	
 ls -lh /retroarch/cores/bsnes-jg_libretro.so
 echo -n "Rebuild SNES (bsnes-jg) core for Pi 5? "
 read yn
@@ -184,10 +199,9 @@ if [ "$yn" = "y" ]; then
 	make clean
 	time make -j4
 	cp -v bsnes-jg_libretro.so /retroarch/cores/
-	cd - && cd ..
 fi
-
-
+	;;
+5)	
 ls -lh /retroarch/cores/gambatte_libretro.so
 echo -n "Rebuild Game Boy + Color core? "
 read yn
@@ -199,10 +213,9 @@ if [ "$yn" = "y" ]; then
 
 	time make -j4 -f Makefile.libretro
 	cp -v gambatte_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+6)	
 ls -lh /retroarch/cores/gpsp_libretro.so
 echo -n "Rebuild Game Boy Advance core? "
 read yn
@@ -215,10 +228,9 @@ if [ "$yn" = "y" ]; then
 	make clean
 	time make -j4
 	cp -v gpsp_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+7)
 ls -lh /retroarch/cores/dolphin_libretro.so
 echo -n "Rebuild Dolphin core? "
 read yn
@@ -235,10 +247,9 @@ if [ "$yn" = "y" ]; then
 	cmake -DLIBRETRO=ON -DENABLE_TESTS=OFF ..
 	make clean
 	time make -j4 && cp -v dolphin_libretro.so /retroarch/cores/
-	cd - && cd ..
 fi
-
-
+	;;
+8)	
 ls -lh /retroarch/cores/dosbox_pure_libretro.so
 echo -n "Rebuild DOSBox Pure core? "
 read yn
@@ -257,10 +268,9 @@ if [ "$yn" = "y" ]; then
 	make -j4 -C src/burner/libretro LIGHT=1 generate-files
 	make -j4 -C src/burner/libretro LIGHT=1
 	cp -v src/burner/libretro/fbneo_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+9)	
 ls -lh /retroarch/cores/flycast_libretro.so
 echo -n "Rebuild Flycast (Dreamcast) core? "
 read yn
@@ -277,11 +287,9 @@ if [ "$yn" = "y" ]; then
 	time make -j4
 
 	cp -v flycast_libretro.so /retroarch/cores/
-	cd ..
-	cd ..
 fi
-
-
+	;;
+10)	
 ls -lh /retroarch/cores/genesis_plus_gx_libretro.so
 echo -n "Rebuild Genesis Plus GX core? "
 read yn
@@ -293,10 +301,9 @@ if [ "$yn" = "y" ]; then
 
 	time make -j4 -f Makefile.libretro
 	cp -v genesis_plus_gx_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+11)	
 ls -lh /retroarch/cores/mame2003_plus_libretro.so
 echo -n "Rebuild MAME 2003-plus core? "
 read yn
@@ -308,9 +315,9 @@ if [ "$yn" = "y" ]; then
 
 	time make -j4
 	cp -v mame2003_plus_libretro.so /retroarch/cores/
-	cd -
 fi
-
+	;;
+12)	
 ls -lh /retroarch/cores/mame_libretro.so
 echo -n "Rebuild MAME core (~6 hours)? "
 read yn
@@ -322,10 +329,9 @@ if [ "$yn" = "y" ]; then
 
 	make clean
 	time make -j4 -f Makefile.libretro && cp -v mame_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+13)	
 ls -lh /retroarch/cores/mesen_libretro.so
 echo -n "Rebuild Mesen (NES) core? "
 read yn
@@ -338,10 +344,9 @@ if [ "$yn" = "y" ]; then
 	cd Libretro
 	time make -j4
 	cp -v mesen_libretro.so /retroarch/cores/
-	cd - && cd ..
 fi
-
-
+	;;
+14)	
 ls -lh /retroarch/cores/mupen64plus_next_libretro.so
 echo -n "Rebuild Mupen64Plus-Next core? "
 read yn
@@ -355,10 +360,9 @@ if [ "$yn" = "y" ]; then
 	#time HAVE_PARALLEL_RDP=1 HAVE_PARALLEL_RSP=1 HAVE_THR_AL=1 HAVE_LLE=1 make -j4
 	time make -j4 FORCE_GLES3=1
 	cp -v mupen64plus_next_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+15)	
 ls -lh /retroarch/cores/mednafen_pce_libretro.so
 echo -n "Rebuild NEC PC Engine TG16-SuperGrafX (beetle fork) core? "
 read yn
@@ -371,10 +375,9 @@ if [ "$yn" = "y" ]; then
 	make clean
 	time make -j4 -f Makefile
 	cp -v mednafen_pce_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+16)	
 ls -lh /retroarch/cores/neocd_libretro.so
 echo -n "Rebuild Neo Geo CD (SNK) core? "
 read yn
@@ -387,10 +390,9 @@ if [ "$yn" = "y" ]; then
 	make clean
 	time make -j4 -f Makefile
 	cp -v neocd_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+17)	
 ls -lh /retroarch/cores/opera_libretro.so
 echo -n "Rebuild Opera (3DO) core? "
 read yn
@@ -403,10 +405,9 @@ if [ "$yn" = "y" ]; then
 	make clean
 	time make -j4
 	cp -v opera_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+18)	
 ls -lh /retroarch/cores/pcsx_rearmed_libretro.so
 echo -n "Rebuild PCSX Rearmed (PlayStation) core? "
 read yn
@@ -419,10 +420,9 @@ if [ "$yn" = "y" ]; then
 	make clean
 	time make -j4 -f Makefile.libretro
 	cp -v pcsx_rearmed_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+19)	
 ls -lh /retroarch/cores/ppsspp_libretro.so
 echo -n "Rebuild PPSSPP core only out of libretro-super? "
 read yn
@@ -436,10 +436,9 @@ if [ "$yn" = "y" ]; then
 	cd libretro-ppsspp
 	time ./b.sh --rpi64 --libretro
 	cp -v build/lib/ppsspp_libretro.so /retroarch/cores/
-	cd - &&	cd ..
 fi
-
-
+	;;
+20)	
 ls -lh /retroarch/cores/puae_libretro.so
 echo -n "Rebuild PUAE (Amiga) core? "
 read yn
@@ -451,10 +450,9 @@ if [ "$yn" = "y" ]; then
 
 	time make -j4
 	cp -v puae_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+21)	
 ls -lh /retroarch/cores/same_cdi_libretro.so
 echo -n "Rebuild SAME CDi core? "
 read yn
@@ -467,10 +465,9 @@ if [ "$yn" = "y" ]; then
 	# may need to add #include <cstdint> in src/osd/modules/lib/osdlib.h
 	time make -j4 -f Makefile.libretro
 	cp -v same_cdi_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+22)	
 ls -lh /retroarch/cores/snes9x_libretro.so
 echo -n "Rebuild SNES (snes9x) core for Pi 4/400? "
 read yn
@@ -486,7 +483,8 @@ if [ "$yn" = "y" ]; then
 	cp -v snes9x_libretro.so /retroarch/cores/
 	cd - && cd ..
 fi
-
+	;;
+23)	
 [ -d stella ] || git clone https://github.com/stella-emu/stella
 cd stella
 
@@ -501,12 +499,10 @@ if git pull ; then
 		cd src/os/libretro
 		time make -j4
 		cp -v stella_libretro.so /retroarch/cores/
-		cd -
-		cd ..
 	fi
 fi
-cd -
-
+	;;
+24)	
 ls -lh /retroarch/cores/stella2014_libretro.so
 echo -n "Rebuild Stella 2014 (Atari 2600) core? "
 read yn
@@ -518,10 +514,9 @@ if [ "$yn" = "y" ]; then
 
 	time make -j4
 	cp -v stella2014_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+25)	
 ls -lh /retroarch/cores/vice_*_libretro.so
 echo -n "Rebuild VICE (Commodore 8-bit) core? "
 read yn
@@ -536,10 +531,9 @@ if [ "$yn" = "y" ]; then
 		make -j4 EMUTYPE=${type}
 		cp -v vice_${type}_libretro.so /retroarch/cores/
 	done
-	cd -
 fi
-
-
+	;;
+26)	
 ls -lh /retroarch/cores/px68k_libretro.so
 echo -n "Rebuild X68000 (Sharp) core? "
 read yn
@@ -552,10 +546,9 @@ if [ "$yn" = "y" ]; then
 	make clean
 	time make -j4 -f Makefile
 	cp -v px68k_libretro.so /retroarch/cores/
-	cd -
 fi
-
-
+	;;
+27)	
 echo -n "Rebuild cores from Super project (Pi5: 6+ or Pi4: 20+ hours)? "
 read yn
 
@@ -566,5 +559,11 @@ if [ "$yn" = "y" ]; then
 
 	SHALLOW_CLONE=1 ./libretro-fetch.sh retroarch
 	time make -j4
-	cd -
 fi
+	;;
+*)
+	echo "'$core' ???"
+	;;
+esac
+
+done
